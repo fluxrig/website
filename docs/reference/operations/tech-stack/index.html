@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-v0.4.4 docs-doc-page docs-doc-id-reference/tech_stack" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Technical stack | fluxrig</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" property="og:image" content="https://fluxrig.org/img/fluxrig-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://fluxrig.org/img/fluxrig-social-card.jpg"><meta data-rh="true" property="og:url" content="https://fluxrig.org/docs/reference/operations/tech-stack"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="keywords" content="fluxrig, iot, edge computing, nats, jetstream, wasm, orchestration, industrial automation"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" name="docusaurus_version" content="v0.4.4"><meta data-rh="true" name="docusaurus_tag" content="docs-default-v0.4.4"><meta data-rh="true" name="docsearch:version" content="v0.4.4"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-v0.4.4"><meta data-rh="true" property="og:title" content="Technical stack | fluxrig"><meta data-rh="true" name="description" content="fluxrig is built on a modern, high-performance stack designed for reliability, extensibility, and long-term maintainability."><meta data-rh="true" property="og:description" content="fluxrig is built on a modern, high-performance stack designed for reliability, extensibility, and long-term maintainability."><link data-rh="true" rel="icon" href="/img/favicon.png"><link data-rh="true" rel="canonical" href="https://fluxrig.org/docs/reference/operations/tech-stack"><link data-rh="true" rel="alternate" href="https://fluxrig.org/docs/reference/operations/tech-stack" hreflang="en"><link data-rh="true" rel="alternate" href="https://fluxrig.org/docs/reference/operations/tech-stack" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Technical stack","item":"https://fluxrig.org/docs/reference/operations/tech-stack"}]}</script><link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T2JXEGJVQG"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-T2JXEGJVQG",{anonymize_ip:!0})</script>
+
+
+
+
+
+
+<script>window.gtag=window.gtag||function(){}</script>
+<script src="/js/zoom.js"></script>
+<script src="/js/keyboard_nav.js"></script>
+<script src="https://platform.twitter.com/widgets.js" async></script><link rel="stylesheet" href="/assets/css/styles.69dd7a08.css">
+<script src="/assets/js/runtime~main.a14eb37c.js" defer="defer"></script>
+<script src="/assets/js/main.3cab6093.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/logo.svg" alt="fluxrig logo" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/img/logo.svg" alt="fluxrig logo" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate"></b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/">Documentation</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/reference/operations/tech-stack">v0.4.4</a><a href="https://github.com/jaab-tech/fluxrig" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"><div class="navbar__search searchBarContainer_NW3z" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input searchInput_YFbd" value=""><div class="loadingRing_RJI3 searchBarLoadingRing_YnHq"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_mhZE"><button type="button" title="Collapse sidebar" aria-label="Collapse sidebar" class="button button--secondary button--outline collapseSidebarButton_JQG6"><svg width="20" height="20" aria-hidden="true" class="collapseSidebarButtonIcon_Iseg"><g fill="#7a7a7a"><path d="M9.992 10.023c0 .2-.062.399-.172.547l-4.996 7.492a.982.982 0 01-.828.454H1c-.55 0-1-.453-1-1 0-.2.059-.403.168-.551l4.629-6.942L.168 3.078A.939.939 0 010 2.528c0-.548.45-.997 1-.997h2.996c.352 0 .649.18.828.45L9.82 9.472c.11.148.172.347.172.55zm0 0"></path><path d="M19.98 10.023c0 .2-.058.399-.168.547l-4.996 7.492a.987.987 0 01-.828.454h-3c-.547 0-.996-.453-.996-1 0-.2.059-.403.168-.551l4.625-6.942-4.625-6.945a.939.939 0 01-.168-.55 1 1 0 01.996-.997h3c.348 0 .649.18.828.45l4.996 7.492c.11.148.168.347.168.55zm0 0"></path></g></svg></button><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_Y1UP"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="true" href="/docs/"><span title="Overview" class="categoryLinkLabel_W154">Overview</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/"><span title="Introduction" class="linkLabel_WmDU">Introduction</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/overview/foundation"><span title="Foundation" class="linkLabel_WmDU">Foundation</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/overview/roadmap"><span title="Roadmap" class="linkLabel_WmDU">Roadmap</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/changelog"><span title="Changelog" class="linkLabel_WmDU">Changelog</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/architecture/overview"><span title="Architecture" class="categoryLinkLabel_W154">Architecture</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/use_cases"><span title="fluxrig in action" class="categoryLinkLabel_W154">fluxrig in action</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/tutorials/writing_gears"><span title="Tutorials" class="categoryLinkLabel_W154">Tutorials</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/docs/development/contributing"><span title="Development" class="categoryLinkLabel_W154">Development</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/docs/reference"><span title="Reference" class="categoryLinkLabel_W154">Reference</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/reference"><span title="Introduction" class="linkLabel_WmDU">Introduction</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" tabindex="0" href="/docs/reference/core/data-model"><span title="Signals &amp; cables" class="categoryLinkLabel_W154">Signals &amp; cables</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/reference/core/data-model"><span title="Data model (fluxMsg)" class="linkLabel_WmDU">Data model (fluxMsg)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/reference/core/protocols"><span title="Wire protocol (snake)" class="linkLabel_WmDU">Wire protocol (snake)</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/reference/signals/ports"><span title="Ports and nomenclature" class="linkLabel_WmDU">Ports and nomenclature</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/reference/operations/tech-stack"><span title="Technical stack" class="linkLabel_WmDU">Technical stack</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/reference/core/configuration"><span title="Scores &amp; arrangements" class="categoryLinkLabel_W154">Scores &amp; arrangements</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/reference/gears/overview"><span title="Outboard rack" class="categoryLinkLabel_W154">Outboard rack</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/reference/operations/cli"><span title="Mixing console" class="categoryLinkLabel_W154">Mixing console</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" tabindex="0" href="/docs/reference/core/sdk"><span title="Master suite" class="categoryLinkLabel_W154">Master suite</span></a></div></li></ul></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Reference</span></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Signals &amp; cables</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Technical stack</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Technical stack</h1></header>
+<p><strong>fluxrig</strong> is built on a modern, high-performance stack designed for reliability, extensibility, and long-term maintainability.</p>
+<blockquote>
+<p><strong>Stand on the Shoulders of Giants</strong>: <strong>fluxrig</strong> is proudly built upon the open source ecosystem. We orchestrate best-in-class technologies to deliver a unified enterprise platform, giving full credit and gratitude to the communities maintaining these foundational projects.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="mixer--rack-oss">Mixer &amp; Rack (OSS)<a href="#mixer--rack-oss" class="hash-link" aria-label="Direct link to Mixer &amp; Rack (OSS)" title="Direct link to Mixer &amp; Rack (OSS)" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p><strong>Language</strong>: <a href="https://go.dev/" target="_blank" rel="noopener noreferrer" class="">Go (golang) 1.25+</a></p>
+<ul>
+<li class=""><strong>Stability policy</strong>: We adhere to the <strong>level n version policy</strong> (bleeding edge). We track the latest stable Go release.</li>
+<li class=""><strong>Rationale</strong>: To support modern integrations (e.g., bento, Wasm) and leverage cutting-edge ergonomics (iterators), we accept the trade-off of being on the latest release.</li>
+<li class=""><strong>Deployment targets</strong>: <code>CGO_ENABLED=0</code> creates statically linked binaries. Distributed as native Linux executables or <code>&lt;15MB</code> scratch Docker containers.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Orchestration</strong>: <a href="https://temporal.io/" target="_blank" rel="noopener noreferrer" class="">Temporal.io</a> (Go SDK)</p>
+<div class="markdown-alert markdown-alert-warning" dir="auto">
+<p class="markdown-alert-title" dir="auto"><svg class="octicon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>WARNING</p>
+<p></p>
+</div>
+<ul>
+<li class=""><strong>Wasm sandbox</strong>: <strong>[Roadmap]</strong> Secure, polyglot execution of custom business logic in Rust, Go, or TypeScript.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>ISO8583 library</strong>: <a href="https://github.com/moov-io/iso8583" target="_blank" rel="noopener noreferrer" class="">Moov-io/iso8583</a> (apache 2.0) - core parsing engine (used in both native core and Wasm gears).</p>
+</li>
+<li class="">
+<p><strong>API architecture</strong>: <a href="https://cbor.org/" target="_blank" rel="noopener noreferrer" class="">cbor</a> (data plane) + <a href="https://restfulapi.net/" target="_blank" rel="noopener noreferrer" class="">Rest</a> (control plane).</p>
+<ul>
+<li class=""><strong>Interface definition</strong>: Go structs (serialized via cbor).</li>
+<li class=""><strong>Control plane</strong>: Rest API (served by Mixer).</li>
+<li class=""><strong>Internal transport</strong>: cbor messages over NATS (snake protocol).</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Messaging &amp; streaming</strong>:</p>
+<ul>
+<li class=""><strong>Transport</strong>: <a href="https://nats.io/" target="_blank" rel="noopener noreferrer" class="">NATS JetStream</a> (<a href="https://nats.synadia.com" target="_blank" rel="noopener noreferrer" class="">Synadia</a>) - chosen for high-performance, distributed persistence (snake protocol).<!-- -->
+<ul>
+<li class=""><strong>Streams</strong>: See <strong><a class="" href="/docs/reference/core/protocols">wire protocols</a></strong> for the detailed subject topology (<code>fluxrig.control</code>, <code>fluxrig.data</code>).</li>
+</ul>
+</li>
+<li class=""><strong>Library</strong>: <a href="https://watermill.io/" target="_blank" rel="noopener noreferrer" class="">Watermill</a> (mit) - Go library for building event-driven applications.<!-- -->
+<ul>
+<li class=""><strong>Role</strong>: Standardizes the &quot;publisher/subscriber&quot; interface. Current: <strong>NATS</strong> (durable). Planned: <strong>gochannel</strong> (RAM) for &quot;turbo wire&quot;.</li>
+<li class=""><strong>Benefits</strong>: Middleware (OTel, pivot tracing), mockability, and router pattern.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="">
+<p><strong>CLI framework</strong>: <a href="https://github.com/spf13/cobra" target="_blank" rel="noopener noreferrer" class="">Cobra</a> (apache 2.0) - standard library for building powerful CLI applications.</p>
+<ul>
+<li class=""><strong>Key commands</strong>: <code>Run</code>, <code>inspect config</code>, <code>inspect logs</code>, <code>logs</code>, <code>data query</code></li>
+</ul>
+</li>
+<li class="">
+<p><strong>Configuration</strong>: <a href="https://github.com/knadh/koanf" target="_blank" rel="noopener noreferrer" class="">Koanf</a> (mit) - lightweight, extensible configuration management (toml/yaml/env) replacing viper.</p>
+</li>
+<li class="">
+<p><strong>Logging</strong>:</p>
+<ul>
+<li class=""><strong>Library</strong>: <a href="https://pkg.go.dev/log/slog" target="_blank" rel="noopener noreferrer" class="">Log/slog</a> (Go stdlib) - structured, high-performance logging.</li>
+<li class=""><strong>Rotation</strong>: <a href="https://github.com/natefinch/lumberjack" target="_blank" rel="noopener noreferrer" class="">Lumberjack</a> (mit).</li>
+<li class=""><strong>Environment overrides</strong>:<!-- -->
+<ul>
+<li class=""><code>FLUXRIG_TRACE=1</code> - Override all log levels to <code>trace</code> (useful for debugging).</li>
+<li class=""><code>FLUXRIG_DISABLE_TELEMETRY=1</code> - Disable telemetry shipping.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Gear runtime</strong>: <a href="https://wazero.io/" target="_blank" rel="noopener noreferrer" class="">Wazero</a> (apache 2.0)</p>
+<div class="markdown-alert markdown-alert-warning" dir="auto">
+<p class="markdown-alert-title" dir="auto"><svg class="octicon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>WARNING</p>
+<p><strong>[Roadmap]</strong>: Zero dependency WebAssembly runtime for Go. Enables secure, platform-independent gear execution.</p>
+</div>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="integration--ecosystem">Integration &amp; ecosystem<a href="#integration--ecosystem" class="hash-link" aria-label="Direct link to Integration &amp; ecosystem" title="Direct link to Integration &amp; ecosystem" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Universal I/O engine</strong>: <a href="https://github.com/warpstreamlabs/bento" target="_blank" rel="noopener noreferrer" class="">Bento</a> (mit)<!-- -->
+<ul>
+<li class=""><strong>Fork</strong>: We explicitly use the <strong>WarpStream Labs</strong> fork (mit) to ensure permissive licensing, avoiding the Benthos/Redpanda (BSL) restrictions.</li>
+<li class=""><strong>Role</strong>: Provides 100+ native connectors (Kafka, s3, amqp, etc.) and the <a href="https://warpstreamlabs.github.io/bento/docs/guides/bloblang/about" target="_blank" rel="noopener noreferrer" class="">bloblang</a> mapping language.</li>
+<li class=""><strong>Integration</strong>: Wrapped as a <strong>native Gear</strong> (<code>pkg/gears/native/bento</code>).</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="data--analytics">Data &amp; analytics<a href="#data--analytics" class="hash-link" aria-label="Direct link to Data &amp; analytics" title="Direct link to Data &amp; analytics" translate="no">​</a></h2>
+<ul>
+<li class="">
+<p><strong>Operational db</strong>:</p>
+<ul>
+<li class=""><strong>Standard tier</strong>: <a href="https://duckdb.org/" target="_blank" rel="noopener noreferrer" class="">DuckDB</a> (embedded). high-performance OLAP + oltp for local state.</li>
+<li class=""><strong>Enterprise</strong>: <a href="https://en.wikipedia.org/wiki/Distributed_SQL" target="_blank" rel="noopener noreferrer" class="">Distributed sql</a> (external). supports ha, replication, and concurrency for Mixer state.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Analytics dw</strong>: <a href="https://duckdb.org/" target="_blank" rel="noopener noreferrer" class="">DuckDB</a> (mit) + <a href="https://parquet.apache.org/" target="_blank" rel="noopener noreferrer" class="">parquet</a> (apache 2.0) - high-performance OLAP on local storage.</p>
+</li>
+<li class="">
+<p><strong>Visualization</strong>:</p>
+<ul>
+<li class=""><strong>Oss</strong>: <a href="https://grafana.com/" target="_blank" rel="noopener noreferrer" class="">Grafana</a> - industry standard for observability dashboards.</li>
+<li class=""><strong>Enterprise</strong>: <strong>Signoz</strong> (open source apm) - evaluation candidate (full-stack apm &amp; tracing ui).</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Secure store</strong>:</p>
+<ul>
+<li class=""><strong>OSS</strong>: AES-256-GCM (software encryption).</li>
+<li class=""><strong>Enterprise</strong>: <a href="https://developer.hashicorp.com/vault" target="_blank" rel="noopener noreferrer" class="">HashiCorp Vault</a> or <a href="https://aws.amazon.com/kms/" target="_blank" rel="noopener noreferrer" class="">AWS KMS</a>.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="web-management-ui-enterprise">Web management UI (enterprise)<a href="#web-management-ui-enterprise" class="hash-link" aria-label="Direct link to Web management UI (enterprise)" title="Direct link to Web management UI (enterprise)" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Framework</strong>: <a href="https://reflex.dev/" target="_blank" rel="noopener noreferrer" class="">Reflex</a> (apache 2.0) - pure Python web framework that compiles to react/next.js.</li>
+<li class=""><strong>Ui library</strong>: <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer" class="">Tailwindcss</a> (mit) + <a href="https://www.radix-ui.com/" target="_blank" rel="noopener noreferrer" class="">radix ui</a> (mit).</li>
+<li class=""><strong>Visual editor</strong>: <a href="https://reactflow.dev/" target="_blank" rel="noopener noreferrer" class="">React flow</a> (mit) - node-based graph editor for designing scenarios.</li>
+<li class=""><strong>Code editor</strong>: <a href="https://microsoft.github.io/monaco-editor/" target="_blank" rel="noopener noreferrer" class="">Monaco editor</a> (mit) - embedded for editing specs and scripts.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="ai--analytics-local--future--research">AI &amp; analytics (local) — future / research<a href="#ai--analytics-local--future--research" class="hash-link" aria-label="Direct link to AI &amp; analytics (local) — future / research" title="Direct link to AI &amp; analytics (local) — future / research" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Inference engine</strong>: <a href="https://onnxruntime.ai/" target="_blank" rel="noopener noreferrer" class="">ONNX Runtime</a> / <a href="https://github.com/ggerganov/llama.cpp" target="_blank" rel="noopener noreferrer" class="">llama.cpp</a> - for running AI models locally within the container.</li>
+<li class=""><strong>Models</strong>:<!-- -->
+<ul>
+<li class=""><a href="https://scikit-learn.org/" target="_blank" rel="noopener noreferrer" class="">Scikit-Learn</a> (BSD) (Isolation Forest) for Anomaly Detection.</li>
+<li class="">Quantized LLMs (e.g., Llama-3) (Community License) for the Natural Language Assistant.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="observability-tracing--id-generation">Observability, tracing &amp; ID generation<a href="#observability-tracing--id-generation" class="hash-link" aria-label="Direct link to Observability, tracing &amp; ID generation" title="Direct link to Observability, tracing &amp; ID generation" translate="no">​</a></h2>
+<p><strong>fluxrig</strong> uses a simplified observability strategy based on <strong>OpenTelemetry</strong> and the <strong>DuckLake</strong> pattern:</p>
+<table><thead><tr><th style="text-align:left">Tier</th><th style="text-align:left">Backend(s)</th><th style="text-align:left">Scale</th><th style="text-align:left">Phase</th></tr></thead><tbody><tr><td style="text-align:left"><strong>Embedded</strong></td><td style="text-align:left">DuckDB + Parquet (S3/Local)</td><td style="text-align:left">&lt; 100M events/day</td><td style="text-align:left"><strong>[Roadmap]</strong></td></tr><tr><td style="text-align:left"><strong>Standard</strong></td><td style="text-align:left">Arc + OpenSearch</td><td style="text-align:left">Team deployments</td><td style="text-align:left"><strong>[Roadmap]</strong></td></tr><tr><td style="text-align:left"><strong>Enterprise</strong></td><td style="text-align:left">ClickHouse + SigNoz</td><td style="text-align:left">Petabyte scale</td><td style="text-align:left"><strong>[Roadmap]</strong></td></tr></tbody></table>
+<table><thead><tr><th style="text-align:left">Category</th><th style="text-align:left">Tool/Library</th><th style="text-align:left">Type</th><th style="text-align:left">Purpose</th></tr></thead><tbody><tr><td style="text-align:left"><strong>Telemetry SDK</strong></td><td style="text-align:left"><strong><a href="https://opentelemetry.io/" target="_blank" rel="noopener noreferrer" class="">OpenTelemetry Go</a></strong> (Apache 2.0)</td><td style="text-align:left">Library</td><td style="text-align:left">Metrics, Logs, &amp; Distributed Tracing.</td></tr><tr><td style="text-align:left"><strong>Query Engine</strong></td><td style="text-align:left"><strong><a href="https://duckdb.org/" target="_blank" rel="noopener noreferrer" class="">DuckDB</a></strong> (MIT)</td><td style="text-align:left">OLAP</td><td style="text-align:left">Stateless SQL engine for Metrics &amp; Traces (Embedded).</td></tr><tr><td style="text-align:left"><strong>Query Lang</strong></td><td style="text-align:left"><strong><a href="https://prql-lang.org/" target="_blank" rel="noopener noreferrer" class="">PRQL</a></strong> (Apache 2.0)</td><td style="text-align:left">Language</td><td style="text-align:left">Time-series optimized query language (compiles to SQL).</td></tr><tr><td style="text-align:left"><strong>Logs</strong></td><td style="text-align:left"><strong><a href="https://opensearch.org/" target="_blank" rel="noopener noreferrer" class="">OpenSearch</a></strong> (Apache 2.0)</td><td style="text-align:left">Search</td><td style="text-align:left">Evaluation Candidate for Log Search.</td></tr><tr><td style="text-align:left"><strong>Analytics</strong></td><td style="text-align:left"><strong><a href="https://clickhouse.com/" target="_blank" rel="noopener noreferrer" class="">ClickHouse</a></strong> (Apache 2.0)</td><td style="text-align:left">Database</td><td style="text-align:left">Evaluation Candidate for Petabyte-scale OLAP (Enterprise).</td></tr><tr><td style="text-align:left"><strong>ID Generation</strong></td><td style="text-align:left"><strong><a href="https://github.com/sony/sonyflake" target="_blank" rel="noopener noreferrer" class="">Sonyflake</a></strong> (Apache 2.0)</td><td style="text-align:left">Library</td><td style="text-align:left">Distributed k-sortable 64-bit IDs (<code>pkg/idgen</code>)</td></tr><tr><td style="text-align:left"><strong>OTLP Export</strong></td><td style="text-align:left"><strong><a href="https://opentelemetry.io/docs/specs/otlp/" target="_blank" rel="noopener noreferrer" class="">OTLP</a></strong></td><td style="text-align:left">Standard</td><td style="text-align:left">Vendor-neutral export to any OTel-compatible backend.</td></tr></tbody></table>
+<blockquote>
+<p><strong>Ref</strong>: See <a class="" href="/docs/architecture/observability">Observability Architecture</a> for detailed tier documentation.</p>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="testing-security--compliance">Testing, security &amp; compliance<a href="#testing-security--compliance" class="hash-link" aria-label="Direct link to Testing, security &amp; compliance" title="Direct link to Testing, security &amp; compliance" translate="no">​</a></h2>
+<blockquote>
+<p><strong>Security First</strong>: <strong>fluxrig</strong> development follows strict security standards (PCI-DSS, OWASP, SSF) from the very beginning. All architectural decisions, dependency choices, and coding practices are audited to ensure compliance.</p>
+</blockquote>
+<ul>
+<li class="">
+<p><strong>Testing frameworks</strong>:</p>
+<ul>
+<li class=""><strong><a href="https://robotframework.org/" target="_blank" rel="noopener noreferrer" class="">Robot framework</a></strong> (Apache 2.0): Keyword-driven testing for E2E and Acceptance testing.</li>
+<li class=""><strong><a href="https://www.python.org/" target="_blank" rel="noopener noreferrer" class="">Python</a></strong> (PSF): Scripting language for advanced test scenarios and the <strong>fluxrig</strong> SDK.</li>
+<li class=""><strong><a href="https://testcontainers.com/" target="_blank" rel="noopener noreferrer" class="">Testcontainers</a></strong> (MIT): Ephemeral Docker containers for integration testing.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Static analysis (SAST)</strong>:</p>
+<ul>
+<li class=""><strong><a href="https://github.com/securego/gosec" target="_blank" rel="noopener noreferrer" class="">Gosec</a></strong> (Apache 2.0): Go security checker (SQLi, credentials, etc.).</li>
+<li class=""><strong><a href="https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck" target="_blank" rel="noopener noreferrer" class="">Govulncheck</a></strong> (BSD): Go vulnerability database checker.</li>
+<li class=""><strong><a href="https://github.com/pycqa/bandit" target="_blank" rel="noopener noreferrer" class="">Bandit</a></strong> (Apache 2.0): Python security linter.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Container &amp; secret security</strong>:</p>
+<ul>
+<li class=""><strong><a href="https://github.com/aquasecurity/trivy" target="_blank" rel="noopener noreferrer" class="">Trivy</a></strong> (Apache 2.0): Comprehensive container and filesystem vulnerability scanner.</li>
+<li class=""><strong><a href="https://github.com/trufflesecurity/trufflehog" target="_blank" rel="noopener noreferrer" class="">Trufflehog</a></strong> (AGPL - External CLI): Scans git history for high-entropy secrets.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Code coverage</strong>:</p>
+<ul>
+<li class=""><strong>Go cover</strong>: Built-in <code>Go test -coverprofile</code> for tracking unit test coverage.</li>
+<li class=""><strong>Standards</strong>:<!-- -->
+<ul>
+<li class=""><strong>Core Libraries (<code>pkg/*</code>)</strong>: <strong>&gt; 70%</strong> required.</li>
+<li class=""><strong>Overall project</strong>: <strong>&gt; 60%</strong> required.</li>
+</ul>
+</li>
+<li class=""><strong>Coverage.py</strong>: Code coverage measurement for Python scripts.</li>
+</ul>
+</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="utility-libraries">Utility libraries<a href="#utility-libraries" class="hash-link" aria-label="Direct link to Utility libraries" title="Direct link to Utility libraries" translate="no">​</a></h2>
+<p><strong>fluxrig</strong> also utilizes these key utility libraries:</p>
+<ul>
+<li class=""><strong><a href="https://github.com/gin-gonic/gin" target="_blank" rel="noopener noreferrer" class="">Gin</a></strong>: High-performance http web framework.</li>
+<li class=""><strong><a href="https://github.com/google/uuid" target="_blank" rel="noopener noreferrer" class="">Google/uuid</a></strong>: Robust uuid generation.</li>
+<li class=""><strong><a href="https://github.com/go-yaml/yaml" target="_blank" rel="noopener noreferrer" class="">Gopkg.in/yaml.v3</a></strong>: Strict yaml marshaling/unmarshaling.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="documentation--build">Documentation &amp; build<a href="#documentation--build" class="hash-link" aria-label="Direct link to Documentation &amp; build" title="Direct link to Documentation &amp; build" translate="no">​</a></h2>
+<p>The documentation site and PDF generation are powered by:</p>
+<ul>
+<li class=""><strong><a href="https://docusaurus.io/" target="_blank" rel="noopener noreferrer" class="">Docusaurus</a></strong>: Modern static site generator (Web version).</li>
+<li class=""><strong><a href="https://www.mkdocs.org/" target="_blank" rel="noopener noreferrer" class="">MkDocs</a></strong>: Static site generator (PDF Core version).</li>
+<li class=""><strong><a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener noreferrer" class="">Material for MkDocs</a></strong>: Theming and UX for the PDF pipeline.</li>
+<li class=""><strong><a href="https://github.com/jimporter/mike" target="_blank" rel="noopener noreferrer" class="">Mike</a></strong>: Versioning management for MkDocs (git-based).</li>
+<li class=""><strong>Docusaurus OpenAPI</strong>: Modern OpenAPI reference renderer (Scalar/Redocusaurus).</li>
+<li class=""><strong><a href="https://github.com/orzih/mkdocs-with-pdf" target="_blank" rel="noopener noreferrer" class="">Mkdocs-with-pdf</a></strong>: PDF generation plugin (using <strong>weasyprint</strong>).</li>
+<li class=""><strong><a href="https://mermaid.js.org/" target="_blank" rel="noopener noreferrer" class="">Mermaid</a></strong>: Diagramming and visualization (rendered via <code>mmdc</code> CLI).</li>
+<li class=""><strong><a href="https://www.python.org/" target="_blank" rel="noopener noreferrer" class="">Python</a></strong>: Pre-processing scripts for validation and layout.</li>
+</ul></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/reference/signals/ports"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Ports and nomenclature</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/reference/core/configuration"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Platform configuration</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#mixer--rack-oss" class="table-of-contents__link toc-highlight">Mixer &amp; Rack (OSS)</a></li><li><a href="#integration--ecosystem" class="table-of-contents__link toc-highlight">Integration &amp; ecosystem</a></li><li><a href="#data--analytics" class="table-of-contents__link toc-highlight">Data &amp; analytics</a></li><li><a href="#web-management-ui-enterprise" class="table-of-contents__link toc-highlight">Web management UI (enterprise)</a></li><li><a href="#ai--analytics-local--future--research" class="table-of-contents__link toc-highlight">AI &amp; analytics (local) — future / research</a></li><li><a href="#observability-tracing--id-generation" class="table-of-contents__link toc-highlight">Observability, tracing &amp; ID generation</a></li><li><a href="#testing-security--compliance" class="table-of-contents__link toc-highlight">Testing, security &amp; compliance</a></li><li><a href="#utility-libraries" class="table-of-contents__link toc-highlight">Utility libraries</a></li><li><a href="#documentation--build" class="table-of-contents__link toc-highlight">Documentation &amp; build</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright"><div class="footer__custom-container">
+                    <span class="footer__ops-ref">#ops: a50ee0c</span>
+                    <span class="footer__copyright-text">Copyright © 2026 <a href="https://jaab.tech" target="_blank" rel="noopener noreferrer">JAAB Tech</a>. Built with <a href="https://docusaurus.io/" target="_blank" rel="noopener noreferrer">Docusaurus</a>.</span>
+                  </div></div></div></div></footer></div>
+</body>
+</html>
