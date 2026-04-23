@@ -17,8 +17,8 @@
 <script src="/js/zoom.js"></script>
 <script src="/js/keyboard_nav.js"></script>
 <script src="https://platform.twitter.com/widgets.js" async></script><link rel="stylesheet" href="/assets/css/styles.69dd7a08.css">
-<script src="/assets/js/runtime~main.a14eb37c.js" defer="defer"></script>
-<script src="/assets/js/main.3cab6093.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.4bd374b3.js" defer="defer"></script>
+<script src="/assets/js/main.d20442c1.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -102,7 +102,7 @@ Currently, the gear relies on both OS-level <code>ulimit -n</code> and an intern
 <li class=""><strong>Ingress</strong>: If the downstream pipeline (NATS) is overwhelmed, publishing blocks. This causes the internal Go buffers to fill, which naturally applies backpressure to the TCP read operation, causing the client&#x27;s TCP window to close.</li>
 <li class=""><strong>Egress</strong>: If the remote client reads too slowly, the outbound socket buffer fills, applying backpressure to the NATS consumer, preventing memory bloat inside the Rack process.</li>
 </ul></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/reference/gears/overview"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Catalog overview</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/reference/gears/io_iso8583"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">ISO8583 I/O gear</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#architecture" class="table-of-contents__link toc-highlight">Architecture</a></li><li><a href="#configuration" class="table-of-contents__link toc-highlight">Configuration</a><ul><li><a href="#common-options" class="table-of-contents__link toc-highlight">Common options</a></li><li><a href="#mode-server-listener" class="table-of-contents__link toc-highlight">Mode: server (listener)</a></li><li><a href="#mode-client-initiator" class="table-of-contents__link toc-highlight">Mode: client (initiator)</a></li></ul></li><li><a href="#framing-strategies" class="table-of-contents__link toc-highlight">Framing strategies</a></li><li><a href="#description" class="table-of-contents__link toc-highlight">Description</a></li><li><a href="#control-plane-integration-the-kill-switch" class="table-of-contents__link toc-highlight">Control plane integration (the &quot;kill switch&quot;)</a></li><li><a href="#rationale--extended-info" class="table-of-contents__link toc-highlight">Rationale &amp; extended info</a><ul><li><a href="#observability" class="table-of-contents__link toc-highlight">Observability</a></li><li><a href="#resource-limits" class="table-of-contents__link toc-highlight">Resource limits</a></li><li><a href="#backpressure-handling" class="table-of-contents__link toc-highlight">Backpressure handling</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="footer__bottom text--center"><div class="footer__copyright"><div class="footer__custom-container">
-                    <span class="footer__ops-ref">#ops: a50ee0c</span>
+                    <span class="footer__ops-ref">#ops: 90d72c3</span>
                     <span class="footer__copyright-text">Copyright © 2026 <a href="https://jaab.tech" target="_blank" rel="noopener noreferrer">JAAB Tech</a>. Built with <a href="https://docusaurus.io/" target="_blank" rel="noopener noreferrer">Docusaurus</a>.</span>
                   </div></div></div></div></footer></div>
 </body>
