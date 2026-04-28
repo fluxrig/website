@@ -1,0 +1,19 @@
+
+    @media print {
+        body::before {
+            content: "CONFIDENTIAL DRAFT";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80pt;
+            font-weight: bold;
+            color: rgba(200, 50, 50, 0.15); /* Faint Red */
+            z-index: 99999;
+            pointer-events: none;
+            white-space: nowrap;
+            width: 150%; 
+            text-align: center;
+        }
+    }
+    

@@ -1,0 +1,156 @@
+---
+slug: /architecture/overview
+title: Architectural overview
+sidebar_label: System Design
+---
+
+# Architectural overview
+
+The **fluxrig** architecture is a modular, event-driven system designed to separate centralized orchestration from distributed execution. It functions as a high-performance connectivity layer that enables deterministic processing across heterogeneous distributed environments.
+
+> **Core Principle**: **Wires are Persistent Signal Paths** (NATS JetStream).
+> Intra-Rack and Inter-Rack communication use the *same* high-fidelity protocol (`fluxMsg`), ensuring location transparency and uniform observability across the entire mesh.
+
+## Design Philosophy
+
+While the platform is technically a distributed system, its architecture is inspired by the modularity and signal integrity of professional audio studios. 
+
+> **[Read more about the professional audio logic →](../overview/philosophy.md)**
+
+## System components
+
+The platform is built on a modular architectural model that strictly separates centralized orchestration from distributed execution.
+
+| Component | Role | Description |
+| :--- | :--- | :--- |
+| **Mixer** | Control Plane | The central orchestration node and entity registry. Manages global state and configuration. |
+| **Rack** | Distributed Node | A decentralized execution node running the processing logic (Gears) defined in a Scenario. |
+| **Gear** | Logic Unit | A modular unit of processing logic (Native/Wasm) responsible for specific tasks. |
+| **Wire** | Signal Path | A deterministic, unidirectional persistent queue (NATS JetStream) connecting gears. |
+| **Snake** | Secure Tunnel | The persistent, outbound-only **mTLS** connection between a Rack and the Mixer. |
+| **Scenario**| Topology Config | Declarative YAML defining the execution topology and signal routes. |
+| **Spec** | Schema | Defines the structure of external payloads natively via **SDL**. |
+| **Registry** | Identity Ledger | The centralized source of truth for node identity, security secrets, and telemetry indexing. |
+| **fluxMsg** | Data Model | The universal binary data structure (CBOR) for all internal signals. |
+| **Warehouse**| Storage | *[Roadmap]* Partitioned cold storage for audit logs and historical telemetry (Parquet). |
+| **Studio** | Console UI | *[Roadmap]* The browser-based management console for visual topology building. |
+
+---
+
+## The gear model
+
+A **Gear** is the primary logic unit. It functions as a pluggable, high-resolution signal processor that can be chained together via **Wires** to form complex, low-latency pipelines.
+
+*   **Execution Strategy**: Supports high-performance **Native Gears** (compiled Go) and agile, sandboxed **Wasm Gears** (pluggable logic).
+*   **The Port Model**: Communication is strictly governed by standardized entry and exit points (**Ports**) that enforce signal integrity.
+*   **Observability**: Every Gear is observable by default, with throughput and latency telemetry tapped directly from the execution path.
+
+```mermaid
+graph LR
+    subgraph Rack ["The Rack (Execution Pipeline)"]
+        Ingress[I/O Gear] --> Codec[Codec Gear]
+        Codec --> Logic[Logic Gear]
+        Logic --> Egress[I/O Gear]
+    end
+    Source((External)) --> Ingress
+    Egress --> Sink((System))
+```
+
+> [!NOTE]
+> For a deep dive into implementation models, port anatomy, and the Gear lifecycle, see the **[Architecture: Gear](./gear.md)** guide.
+
+---
+
+## The rack (distributed execution)
+
+The Rack is the "execution case" running locally or at the edge. It is designed to be **Static, Self-Contained, and High-Performance**, acting as the runtime environment for local signal processing.
+
+*   **Core**: A compiled **Go binary** (`fluxrig-rack`).
+*   **Deterministic Engine**: Embeds NATS JetStream and the Wasm runtime.
+*   **Zero-Agent Footprint**: Observability (OTel) and configuration management are embedded directly in the binary.
+*   **Hosted Gears**: Executes gateways, codecs, and logic units as a unified pipeline.
+
+### Sovereign autonomy
+The Rack is designed for **Sovereign Continuity**. Unlike traditional thin clients, it continues functioning in "offline mode" if the Mixer is unreachable, maintaining local data processing and transformation integrity even during backhaul failure.
+
+```mermaid
+graph LR
+    subgraph "The Rack (Distributed Execution Node)"
+        subgraph Pipeline ["Pipeline Execution"]
+            direction TB
+            Ingress["I/O Gear (In)"] --"fluxMsg"--> Logic["Filter Gear (Wasm)"]
+            Logic --"fluxMsg"--> Egress["I/O Gear (Out)"]
+        end
+        subgraph Services ["Embedded Services"]
+            KV[("NATS JetStream")]
+            OTel["OTel SDK"]
+        end
+        Pipeline <--> Services
+    end
+    Services <--> Snake(("High-Fidelity Tunnel"))
+```
+
+---
+
+## The control plane (Mixer)
+The **Mixer** is the central nervous system and **Project Authority** for the rig. It governs identity, orchestrates topology updates, and aggregates telemetry.
+
+*   **The Operational Ledger (Registry)**: A hybrid source of truth that maintains node identity, security secrets, and a distributed telemetry index. It leverages **DuckDB** for active state and **Parquet partitions** for historical analysis.
+*   **Analytics**: A high-performance telemetry engine providing real-time operational visibility through the Ledger.
+*   **Orchestrator**: Manages the deployment and hot-reloading of **Scenarios** across the fleet.
+
+### The ledger architecture
+The Registry functions as a **Unified Operational Ledger**. In {{VERS}}, it provides a single gateway to query both the **Active State** (currently connected nodes) and **Cold Storage** (historical logs and metrics partitioned by time).
+
+- **SQL Access**: Direct querying of the active registry schema.
+- **Unified Query**: Transparently joins active data with Parquet-backed historical trails using DuckDB's `read_parquet` extensions.
+
+---
+
+## The data plane (Rack)
+The **Rack** is the high-performance execution engine that lives locally or at the infrastructure boundary. It is designed for absolute autonomy and wire-speed performance.
+
+*   **Gear Runtime**: A lightweight, non-blocking execution environment.
+*   **Sovereign Autonomy**: Racks execute logic based on their local **Passports** (cryptographically-signed configuration snapshots), ensuring zero business downtime even if the Control Plane becomes unreachable.
+*   **OTel Ingest**: Local telemetry collection and buffering with resilient outbound delivery.
+
+---
+
+## The orchestration spectrum
+
+Unlike monolithic gateways, **fluxrig** operates across a high-fidelity **Orchestration Spectrum**. We separate the "Hot Path" (Mission-Critical Signal Processing) from the "Cold Path" (High-Assurance Business Orchestration).
+
+1.  **Passive Monitoring**: Non-intrusive shadow mirroring of traffic for risk-free validation.
+2.  **Mission-Critical Signal Processing**: The low-latency Rack pipeline for protocol normalization and localized logic.
+3.  **High-Assurance Business Orchestration**: The Mixer-hosted **Durable Orchestration** engine for long-running processes (e.g., settlements, disputes).
+
+> [!TIP]
+> For sector-specific implementations of this spectrum, see the **[Payment](../use_cases/payments.md)**, **[IoT](../use_cases/iot.md)**, and **[Industrial](../use_cases/industrial.md)** architectual spectrums.
+
+---
+
+## Transaction flow strategy (two-speed)
+
+### The hot path: mission-critical signal processing
+*   **Scope**: Real-time signal processing and authorization.
+*   **Performance**: Sub-millisecond overhead (< 500µs typical).
+*   **Engine**: **Native Rack pipeline**.
+
+### The cold path: high-assurance business orchestration **[Roadmap]**
+*   **Scope**: Long-running, stateful business processes (e.g., smart reversals, settlements).
+*   **Goal**: Ensure eventual consistency and correctness for complex workflows.
+*   **Engine**: **[Roadmap]** Durable Orchestration (Temporal).
+
+### Workflow vs execution
+
+| Feature | **Durable Orchestration** [Roadmap] | **Deterministic Processing** |
+| :--- | :--- | :--- |
+| **Role** | **Director**: Decides *what* and *when*. | **Processor**: Decides *how* (I/O & Logic). |
+| **State** | **Stateful**: Full workflow history. | **Stateless**: Message-at-a-time. |
+| **Latency** | **High** (ms to days). | **Ultra-Low**: (microseconds). |
+| **Example** | **Example**: "Run Reconciliation A, then B." | "Transform ISO8583 to CBOR." |
+
+---
+
+## Security & data sovereignty
+For detail on the **Snake Protocol (mTLS)** and **Air-Gapped Operation**, please refer to the dedicated **[Security Architecture](security.md)** and **[Data Architecture](data.md)** documents.
