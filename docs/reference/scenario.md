@@ -1,0 +1,143 @@
+---
+slug: /reference/core/scenarios
+title: Orchestration scenarios
+---
+
+# Orchestration scenarios
+
+A **Scenario** is a declarative YAML file that defines the operational topology for the entire environment, which Gears run, how they connect, and what specs they reference.
+
+## Lifecycle
+
+1. **Author** a scenario YAML (locally or in version control).
+2. **Import** into the CAS store with a `name:tag` reference:
+
+   ```bash
+   fluxrig scenario import payment_flow.yaml --name payment-flow --tag v1.0.0
+   ```
+
+3. **Load** at Mixer startup via CLI flag or configuration:
+
+   ```bash
+   fluxrig-mixer -s payment-flow:v1.0.0     # From store
+   fluxrig-mixer -s ./scenarios/test.yaml    # From file
+   fluxrig-mixer                             # Resume last active
+   ```
+
+4. **Activate**, the Mixer validates, persists, and wires the scenario.
+
+### Hot-reloading & rollbacks
+
+> [!IMPORTANT]
+> **Implementation Note ({{VERS}})**: Currently, applying a scenario update triggers a **full Gear Restart cycle**. All active gears are stopped and re-initialized with the new configuration. This introduces a sub-second processing gap and closes established I/O connections (e.g., TCP sessions). 
+
+**Future Roadmap**: Achieving true **Zero-Downtime Reload** (where unaffected gears continue processing while new configurations are swapped in) is a primary engineering objective for the **v0.5.0 milestone**.
+
+If you import a broken scenario containing invalid wires or missing specs, the Mixer performs **pre-flight validation** and rejects the transition, ensuring the cluster remains on the last known good state.
+
+## Startup resolution
+
+When the Mixer starts, the `startup_scenario` reference is resolved using three strategies:
+
+| Reference Format | Example | Behavior |
+| :--- | :--- | :--- |
+| *(empty)* | `""` | Resume the last active scenario from the store (non-fatal if none found). |
+| File path (contains `/`) | `./scenario.yaml` | Read YAML from file, import, and activate. Fatal on error. |
+| `name:tag` URN | `payment-flow:v1.0.0` | Resolve from the CAS store via `manager.Load()`, import, and activate. |
+
+The `file://` prefix is optional for file paths (e.g., `file://./scenario.yaml`).
+
+## YAML schema
+
+```yaml
+meta:
+  name: Payment Processing       # Required. Human-readable name.
+  version: 1.0.0                 # Required. Semantic version.
+
+racks:
+  - name: rack-prod-01           # Explicit target.
+    config:
+      location: "montevideo-dc1"
+
+  - group: edge-gateways         # Target group.
+    match:
+      labels:
+        role: "gateway"
+    defaults:
+      log_level: "info"
+
+gears:
+  - name: iso-inbound
+    type: iso8583-server
+    deploy: edge-gateways        # References a group or specific rack.
+    config:
+      port: 8080
+
+wires:
+  - from: iso-inbound.out
+    to:   router.in
+```
+
+## Gear deployment
+
+The `gears` section defines which logic units are active and where they are executed.
+
+```yaml
+gears:
+  - name: iso-inbound
+    type: iso8583
+    deploy: rack-alpha           # Optional. Target Rack name.
+```
+
+### Global gears
+
+If a gear does not specify a `deploy` target, it is treated as a **Global Gear**. 
+
+*   **Behavior**: The gear will be pushed to and executed by **every Rack** that connects to the Mixer and receives the scenario.
+*   **Use Case**: This is ideal for "Zero-Config" Getting Started scenarios or for deploying universal monitoring/diagnostic gears across a distributed cluster without knowing the dynamic Rack names in advance.
+```
+
+## Pipe configuration
+
+The `wires` (or `pipes`) section defines how data flows between Gears.
+
+### Transport modes
+
+| Value | Mode | Description |
+| :--- | :--- | :--- |
+| `standard` | **NATS JetStream** | **Default**. Durable, persistent, and observable via NATS CLI. Safe for financial data. |
+| `memory` | **Go Channel** | **Turbo**. Volatile, in-memory pointer passing. Zero-copy (if within same process). Fastest possible speed, but no durability. |
+
+### Example: hybrid wiring
+
+```yaml
+meta:
+  name: High-Freq Vibration Monitoring
+  version: 1.0.0
+
+wires:
+  #  TURBO MODE: 1000Hz Vibration Data
+  # We pipe raw specs to the filter in RAM to avoid disk I/O overhead.
+  - from: mqtt-in.out
+    to:   noise-filter.in
+    transport: memory
+
+  # STANDARD MODE: Aggregated Alerts
+  # The filter outputs only 1 msg/sec (Anomalies).
+  # We WANT this to be durable and visible on the NATS bus.
+  - from: noise-filter.alert
+    to:   cloud-uplink.req
+    # transport: standard (Implicit)
+```
+
+## Versioning & storage
+
+Scenarios are stored in the same Content-Addressable Store (CAS) as Specs. Each imported scenario is:
+
+- Hashed (SHA-256) and stored as an immutable blob.
+- Indexed under `name → tag → hash`.
+- Retrievable via `name:tag` or `sha256:hash`.
+
+The special tag `latest` resolves to the highest SemVer tag for a given name.
+
+See [Spec & Scenario Manager](spec_manager.md) for details on CAS internals and the `fluxrig scenario` CLI.

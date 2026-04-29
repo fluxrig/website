@@ -1,0 +1,359 @@
+/*
+ * Copyright (c) 2025 JAAB Tech SAS, Uruguay All Rights Reserved
+ * See https://jaab.tech
+ */
+
+/* --- Page Layout & Header Logo --- */
+
+/* Named page for Cover to exclude header */
+@page cover {
+    margin: 0;
+
+    /* Full bleed for cover */
+    @top-left {
+        content: none;
+    }
+
+    @top-center {
+        content: none;
+    }
+
+    @top-right {
+        content: none;
+    }
+}
+
+.pdf-cover {
+    page: cover;
+}
+
+/* Default Page Style (Normal Pages) */
+@page {
+    margin: 2cm;
+    margin-top: 2.5cm; /* Ensure space for header */
+
+    @top-left {
+        content: " ";
+        background-image: url('../assets/fluxrig_logo.svg');
+        background-repeat: no-repeat;
+        background-position: left center;
+        background-size: auto 25%;
+        width: 25mm;
+    }
+}
+
+/* Fonts */
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    src: url('../fonts/PlusJakartaSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    src: url('../fonts/PlusJakartaSans-SemiBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Apply Font */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li,
+a,
+span,
+div {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* --- Brand Coloring for PDF Text --- */
+/* In PDF/Print, we are always on White Background. Text MUST be Dark. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.pdf-chapter-title,
+.pdf-toc-title,
+#toc-title {
+    color: #2F627D !important;
+    /* flux-blue-2 */
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Fix "Red Line" - Make it Brand Accent Color */
+h1,
+h2,
+.pdf-chapter-title,
+.pdf-toc-title,
+#toc-title {
+    border-bottom: 2px solid #2CB2A7 !important;
+    /* flux-green-1 */
+}
+
+/* --- Links (Fix "Invisible Links") --- */
+a,
+a:visited,
+a:hover,
+a:active {
+    color: #2F627D !important;
+    /* flux-blue-2 per user request */
+    text-decoration: underline !important;
+}
+
+/* --- Logo Sizing in Content --- */
+/* User Request: "fluxrig logo in first section... not more than 30% of page width" */
+img[alt="fluxrig Logo"] {
+    width: 30% !important;
+    max-width: 30% !important;
+}
+
+/* --- Diagram Centering (Fix "Not Centered") --- */
+.mermaid-container {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    margin: 20px 0 !important;
+    page-break-inside: auto; /* Fallback from avoid */
+}
+
+/* Target the SVG specifically with margin auto */
+.mermaid-container svg,
+.mermaid-container img {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 80% !important;
+}
+
+/* --- List Indentation --- */
+ul,
+ol {
+    margin-left: 2em !important;
+    padding-left: 1em !important;
+}
+
+li {
+    margin-bottom: 0.5em;
+    line-height: 1.4;
+    color: #303030 !important;
+    /* flux-black-2 */
+}
+
+p {
+    color: #303030 !important;
+}
+
+/* Ensure markers are visible */
+ul {
+    list-style-type: disc;
+}
+
+ol {
+    list-style-type: decimal;
+}
+
+/* Admonition/Blockquote */
+blockquote {
+    border-left: 4px solid #2F627D;
+    padding: 0.8em 1em;
+    margin: 1em 0;
+    color: #444;
+    background-color: #f8fbfc;
+    page-break-inside: auto;
+}
+
+/* Material-style Admonitions */
+div.admonition {
+    padding: 1em;
+    margin: 1.5em 0;
+    border-left: 0.4rem solid #448aff;
+    background-color: #f8fbfc;
+    page-break-inside: auto;
+    border-radius: 2px;
+}
+
+.admonition-title {
+    font-weight: bold;
+    margin-bottom: 0.5em !important;
+    display: block !important;
+    color: #2F627D !important;
+    font-size: 0.95em !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    padding-left: 3.5rem !important;
+    position: relative !important;
+}
+
+.admonition-title::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 1rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    display: block !important;
+}
+
+/* Specific fix for NOTE icon to remove square background */
+.md-typeset .admonition.note>.admonition-title::before {
+    background-color: var(--flux-blue-1) !important;
+    mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>') !important;
+    -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>') !important;
+}
+
+/* Ensure JAAB logo is centered and visible */
+img[src*="jaab_logo"] {
+    display: block !important;
+    margin: 20px auto !important;
+    max-width: 250px !important;
+    height: auto !important;
+}
+
+
+/* Specific Admonition Colors */
+div.admonition.note { border-left-color: #2F627D; }
+div.admonition.tip { border-left-color: #2CB2A7; }
+div.admonition.important, div.admonition.warning { border-left-color: #e65100; }
+div.admonition.caution { border-left-color: #d32f2f; }
+
+/* Code blocks */
+pre {
+    background-color: #f5f7f9 !important;
+    border: 1px solid #dfe3e6;
+    padding: 1em;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+    page-break-inside: auto;
+    color: #24292e !important;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+    page-break-inside: auto;
+}
+
+th, td {
+    border: 1px solid #dfe3e6;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f1f4f6;
+    color: #2F627D;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f8fbfc;
+}
+
+/* --- Table of Contents Visibility & Formatting --- */
+.pdf-manual-toc {
+    display: block !important;
+    visibility: visible !important;
+    color: #2F627D !important;
+}
+
+.pdf-manual-toc h1 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.pdf-manual-toc ul {
+    display: block !important;
+    list-style-type: none !important;
+    padding: 0 !important;
+    margin: 0.5em 0 !important;
+}
+
+/* Ensure nested lists are indented */
+.pdf-manual-toc ul ul {
+    padding-left: 1.5em !important;
+    margin: 0.2em 0 !important;
+}
+
+.pdf-manual-toc li {
+    display: block !important;
+    margin-bottom: 0.3em !important;
+    page-break-inside: auto;
+}
+
+.pdf-manual-toc a {
+    display: inline-block !important; /* Allow proper wrapping */
+    text-decoration: none !important;
+    color: #2F627D !important;
+    font-size: 1.05em;
+}
+
+/* Fix Header Isolation - Temporarily disabled to avoid WeasyPrint truncation */
+/* h1, h2, h3, h4 {
+    page-break-after: avoid !important;
+} */
+
+h1 {
+    margin-bottom: 2rem !important;
+}
+
+h2, h3 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1rem !important;
+}
+
+
+/* --- Centering Utilities --- */
+.pdf-center {
+    text-align: center !important;
+    width: 100% !important;
+    display: block !important;
+    margin: 20px auto !important;
+}
+
+.pdf-center img {
+    display: inline-block !important;
+    margin: 0 auto !important;
+}
+
+
+/* --- DANGEROUS LAYOUT KILLERS --- */
+/* Sticky/Fixed elements in MkDocs Material can break WeasyPrint pagination */
+header, 
+footer, 
+.md-header, 
+.md-footer, 
+.md-sidebar, 
+.md-nav, 
+.md-top, 
+.md-progress {
+    position: static !important;
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+body, html {
+    overflow: visible !important;
+    height: auto !important;
+}

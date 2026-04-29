@@ -1,0 +1,32 @@
+{
+    "theme": "neutral",
+    "themeVariables": {
+        "fontFamily": "arial",
+        "fontSize": "16px",
+        "primaryColor": "#ffffff",
+        "primaryBorderColor": "#000000",
+        "primaryTextColor": "#000000",
+        "lineColor": "#000000"
+    },
+    "flowchart": {
+        "htmlLabels": false
+    },
+    "sequence": {
+        "htmlLabels": false
+    },
+    "gantt": {
+        "htmlLabels": false
+    },
+    "class": {
+        "htmlLabels": false
+    },
+    "er": {
+        "htmlLabels": false
+    },
+    "journey": {
+        "htmlLabels": false
+    },
+    "state": {
+        "htmlLabels": false
+    }
+}
