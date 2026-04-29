@@ -1,0 +1,745 @@
+/* 
+ * Copyright (c) 2025 JAAB Tech SAS, Uruguay All Rights Reserved
+ * See https://jaab.tech
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
+
+:root {
+    /* --- fluxrig Brand Palette --- */
+    --flux-blue-1: #347798;
+    --flux-blue-2: #2F627D;
+    --flux-blue-3: #385665;
+
+    --flux-green-1: #2CB2A7;
+    --flux-green-2: #3A8781;
+    --flux-green-3: #35726D;
+
+    --flux-yellow-1: #D5EB74;
+    --flux-yellow-2: #A1AE64;
+    --flux-yellow-3: #767D4E;
+
+    --flux-black-1: #383838;
+    --flux-black-2: #303030;
+    --flux-black-3: #212121;
+
+    /* --- MkDocs Material Overrides --- */
+    /* Primary Color (Header) -> White in Light Mode */
+    --md-primary-fg-color: #ffffff !important;
+    --md-primary-fg-color--light: #f5f5f5 !important;
+    --md-primary-fg-color--dark: #ffffff !important;
+
+    /* Primary Color (Header) -> White in Light Mode */
+    --md-primary-fg-color: #ffffff !important;
+    --md-primary-fg-color--light: #f5f5f5 !important;
+    --md-primary-fg-color--dark: #ffffff !important;
+
+    /* Header Text/Icons in Light Mode -> Branded (Flux Blue 2) */
+    --md-primary-bg-color: var(--flux-blue-2) !important;
+
+    /* Accent Color (Links, Buttons) -> Green 1 (Branding) */
+    --md-accent-fg-color: var(--flux-green-1) !important;
+    --md-accent-fg-color--transparent: rgba(44, 178, 167, 0.1);
+
+    /* Text Colors */
+    --md-text-color-base: var(--flux-black-2);
+    
+    /* Typography Overrides */
+    --md-text-font: "Plus Jakarta Sans", sans-serif;
+    --md-code-font: "Roboto Mono", monospace;
+}
+
+body {
+    font-family: var(--md-text-font);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .md-nav__link {
+    font-family: "Outfit", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* --- LIGHT MODE HEADER FIXES --- */
+/* Target default scheme explicitly, or body without slate */
+[data-md-color-scheme="default"] .md-header {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--flux-blue-2) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Force Icons & Links to be Blue on White Header */
+[data-md-color-scheme="default"] .md-header .md-header__button,
+[data-md-color-scheme="default"] .md-header .md-tabs__link {
+    color: var(--flux-blue-2) !important;
+}
+
+/* Light Mode Menu Background: Brand Color (Blue-2) */
+[data-md-color-scheme="default"] .md-tabs {
+    background-color: var(--flux-blue-2) !important;
+    color: #ffffff !important;
+    /* White text on Blue menu */
+}
+
+[data-md-color-scheme="default"] .md-tabs .md-tabs__item .md-tabs__link {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-md-color-scheme="default"] .md-tabs .md-tabs__item--active .md-tabs__link {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+
+/* --- DARK MODE OVERRIDES --- */
+[data-md-color-scheme="slate"] {
+    --md-text-color-base: #e0e0e0;
+
+    /* Header -> Black 3 in Dark Mode */
+    --md-primary-fg-color: var(--flux-black-3) !important;
+    --md-primary-fg-color--dark: var(--flux-black-3) !important;
+
+    /* Keep brand identity even in dark mode */
+    --md-accent-fg-color: var(--flux-green-1) !important;
+}
+
+/* --- DARK MODE HEADER FIXES --- */
+[data-md-color-scheme="slate"] .md-header {
+    background-color: var(--flux-black-3) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+    /* Strong Shadow */
+    color: #ffffff !important;
+    /* Ensure icons are white */
+}
+
+/* Ensure Icons are White in Dark Mode */
+[data-md-color-scheme="slate"] .md-header .md-header__button,
+[data-md-color-scheme="slate"] .md-header .md-tabs__link {
+    color: #ffffff !important;
+}
+
+/* Dark Mode Menu Background: Blue-3 */
+[data-md-color-scheme="slate"] .md-tabs {
+    background-color: var(--flux-blue-3) !important;
+    color: #ffffff !important;
+}
+
+[data-md-color-scheme="slate"] .md-tabs .md-tabs__item .md-tabs__link {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-md-color-scheme="slate"] .md-tabs .md-tabs__item--active .md-tabs__link {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+/* --- LOGO FIX --- */
+/* Light Mode: Logo is natively Dark Blue/Teal. */
+[data-md-color-scheme="default"] .md-header__logo img {
+    filter: none !important;
+}
+
+/* Dark Mode: Use specific White Logotype */
+[data-md-color-scheme="slate"] .md-header__logo img {
+    content: url("../assets/Logotype Color W.svg") !important;
+    width: auto;
+    /* Ensure aspect ratio is preserved */
+}
+
+/* --- HEADER TEXT REMOVAL (User Request: "remove dynamic text") --- */
+/* Hide the text site title/topic (grandchild), showing ONLY the logo */
+.md-header__title .md-header__topic:first-child {
+    display: none !important;
+}
+
+/* --- MOBILE MENU / DRAWER FIXES --- */
+/* Light Mode Mobile Menu Header -> Match Desktop Header (White) */
+[data-md-color-scheme="default"] .md-nav__title {
+    background-color: #ffffff !important;
+    color: var(--flux-blue-2) !important;
+    /* Branded Blue text on White */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* Subtle shadow separator */
+}
+
+/* Dark Mode Mobile Menu Header -> Match Desktop Header (Black-3) */
+[data-md-color-scheme="slate"] .md-nav__title {
+    background-color: var(--flux-black-3) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark Mode Mobile Menu Body (Fixes white background in dark mode) */
+[data-md-color-scheme="slate"] .md-nav--primary,
+[data-md-color-scheme="slate"] .md-nav--primary .md-nav__list {
+    background-color: var(--flux-black-3) !important;
+    color: #e0e0e0 !important;
+}
+
+/* --- TEXT HEADER CONTRAST FIXES --- */
+/* Light Mode: Headers are Branded Blue */
+[data-md-color-scheme="default"] .md-typeset h1,
+[data-md-color-scheme="default"] .md-typeset h2,
+[data-md-color-scheme="default"] .md-typeset h3,
+[data-md-color-scheme="default"] .md-typeset h4 {
+    color: var(--flux-blue-2) !important;
+}
+
+/* Dark Mode: Headers must be Light (Standard Text Color or White) */
+[data-md-color-scheme="slate"] .md-typeset h1,
+[data-md-color-scheme="slate"] .md-typeset h2,
+[data-md-color-scheme="slate"] .md-typeset h3,
+[data-md-color-scheme="slate"] .md-typeset h4 {
+    color: var(--md-text-color-base) !important;
+}
+
+/* --- BLOCKQUOTE / CALLOUT FIXES --- */
+blockquote {
+    border-left: 4px solid var(--flux-green-1);
+    background-color: rgba(44, 178, 167, 0.05);
+    /* very light green tint */
+    color: var(--md-text-color-base);
+    padding: 10px 20px;
+    margin: 20px 0;
+}
+
+[data-md-color-scheme="slate"] blockquote {
+    background-color: rgba(44, 178, 167, 0.1);
+    color: #f5f5f5;
+}
+
+/* Ensure Admonitions (Note/Tip) use brand colors */
+.md-typeset .admonition.note,
+.md-typeset .admonition.info {
+    border-color: var(--flux-blue-1) !important;
+}
+
+.md-typeset .admonition.note>.admonition-title,
+.md-typeset .admonition.info>.admonition-title {
+    background-color: rgba(52, 119, 152, 0.1) !important;
+    border-color: var(--flux-blue-1) !important;
+}
+
+.md-typeset .admonition.note>.admonition-title:before,
+.md-typeset .admonition.info>.admonition-title:before {
+    background-color: var(--flux-blue-1) !important;
+}
+
+/* --- BUTTON FIXES --- */
+/* Light Mode Primary Button: Blue Background, White Text */
+[data-md-color-scheme="default"] .md-button--primary {
+    background-color: var(--flux-blue-2) !important;
+    color: #ffffff !important;
+    border-color: var(--flux-blue-2) !important;
+}
+
+[data-md-color-scheme="default"] .md-button--primary:hover {
+    background-color: var(--flux-blue-1) !important;
+}
+
+/* Dark Mode Primary Button: Green Background, Dark Text */
+[data-md-color-scheme="slate"] .md-button--primary {
+    background-color: var(--flux-green-1) !important;
+    color: var(--flux-black-3) !important;
+    border-color: var(--flux-green-1) !important;
+}
+
+[data-md-color-scheme="slate"] .md-button--primary:hover {
+    background-color: var(--flux-green-2) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(44, 178, 167, 0.3);
+}
+
+.md-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 8px !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
+}
+
+/* Micro-animations for links */
+.md-typeset a {
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.md-typeset a:hover {
+    border-bottom-color: var(--md-accent-fg-color);
+}
+
+/* --- DARK MODE TEXT CONTRAST ENFORCEMENT --- */
+/* Ensure body text is light gray in dark mode */
+[data-md-color-scheme="slate"] .md-typeset {
+    color: #e0e0e0 !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset p,
+[data-md-color-scheme="slate"] .md-typeset li,
+[data-md-color-scheme="slate"] .md-typeset ul,
+[data-md-color-scheme="slate"] .md-typeset ol {
+    color: #e0e0e0 !important;
+}
+
+/* --- Mermaid Diagram Overrides --- */
+/* 1. Remove Yellow Backgrounds from Clusters/Rects */
+/* Force clean backgrounds for subgraphs/clusters */
+.mermaid .cluster rect,
+.mermaid .label rect,
+.mermaid .node rect {
+    fill: transparent !important;
+    stroke: var(--flux-blue-2) !important;
+}
+
+/* Light Mode Specifics for readability on white */
+[data-md-color-scheme="default"] .mermaid .node rect {
+    fill: #ffffff !important;
+    stroke: var(--flux-blue-2) !important;
+    stroke-width: 2px !important;
+}
+
+/* Dark Mode Specifics: Ensure NO YELLOW and High Contrast Text */
+/* SCOPED to .md-content to avoid breaking the White Modal */
+[data-md-color-scheme="slate"] .md-content .mermaid rect,
+[data-md-color-scheme="slate"] .md-content .mermaid polygon,
+[data-md-color-scheme="slate"] .md-content .mermaid circle {
+    fill: var(--flux-black-2) !important;
+    /* Dark node background */
+    stroke: var(--flux-green-1) !important;
+    /* Brand accent stroke */
+}
+
+/* 2. Fix Text Visibility in Dark Mode - BROADENED */
+[data-md-color-scheme="slate"] .md-content .mermaid text,
+[data-md-color-scheme="slate"] .md-content .mermaid tspan,
+[data-md-color-scheme="slate"] .md-content .mermaid .label,
+[data-md-color-scheme="slate"] .md-content .mermaid .edgeLabel,
+[data-md-color-scheme="slate"] .md-content .mermaid .nodeLabel,
+[data-md-color-scheme="slate"] .md-content .mermaid span,
+[data-md-color-scheme="slate"] .md-content .mermaid p {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+    font-weight: bold;
+    opacity: 1 !important;
+}
+
+/* 3. Fix Line/Arrow Colors in Dark Mode - FORCED VISIBILITY */
+[data-md-color-scheme="slate"] .md-content .mermaid path,
+[data-md-color-scheme="slate"] .md-content .mermaid line,
+[data-md-color-scheme="slate"] .md-content .mermaid .flowchart-link,
+[data-md-color-scheme="slate"] .md-content .mermaid .edgebase-edge-path,
+[data-md-color-scheme="slate"] .md-content .mermaid .edgePath .path {
+    stroke: #ffffff !important;
+    stroke-width: 2px !important;
+    opacity: 1 !important;
+    fill: none !important;
+}
+
+/* Fix Arrowheads/Markers in Dark Mode */
+[data-md-color-scheme="slate"] .md-content .mermaid .marker,
+[data-md-color-scheme="slate"] .md-content .mermaid #arrowhead path {
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+}
+
+/* OSS Component specific overrides */
+/* OSS Component specific overrides */
+[data-md-color-scheme="default"] .mermaid .node.oss text,
+[data-md-color-scheme="default"] .mermaid .node.oss tspan {
+    fill: #000000 !important;
+    /* Keep black text if background is white in Light Mode */
+}
+
+/* In Dark Mode, let the global white text rule apply, or force it here if needed */
+[data-md-color-scheme="slate"] .md-content .mermaid .node.oss text,
+[data-md-color-scheme="slate"] .md-content .mermaid .node.oss tspan {
+    fill: #ffffff !important;
+}
+
+/* FORCE OSS Background to Dark in Dark Mode (High Specificity Override) */
+[data-md-color-scheme="slate"] .md-content .mermaid g.node.oss rect,
+[data-md-color-scheme="slate"] .md-content .mermaid g.node.oss polygon,
+[data-md-color-scheme="slate"] .md-content .mermaid g.node.oss circle {
+    fill: var(--flux-black-2) !important;
+    stroke: var(--flux-green-1) !important;
+}
+
+/* FORCE TEXT VISIBILITY IN DARK MODE (Catch-all for HTML labels) */
+[data-md-color-scheme="slate"] .md-content .mermaid .nodeLabel p,
+[data-md-color-scheme="slate"] .md-content .mermaid .nodeLabel div,
+[data-md-color-scheme="slate"] .md-content .mermaid .nodeLabel span,
+[data-md-color-scheme="slate"] .md-content .mermaid foreignObject div,
+[data-md-color-scheme="slate"] .md-content .mermaid foreignObject p,
+[data-md-color-scheme="slate"] .md-content .mermaid foreignObject span {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* --- DEFINED NODE STYLES (Moved from Mermaid classDef) --- */
+
+/* OSS Component (Standard) */
+/* Light Mode: White Background, Black Text */
+.mermaid .node.oss rect,
+.mermaid .node.oss polygon,
+.mermaid .node.oss circle {
+    fill: #ffffff !important;
+    stroke: #000000 !important;
+    stroke-width: 2px !important;
+}
+
+.mermaid .node.oss text,
+.mermaid .node.oss tspan {
+    fill: #000000 !important;
+}
+
+/* Dark Mode: Dark Background, White Text */
+[data-md-color-scheme="slate"] .mermaid .node.oss rect,
+[data-md-color-scheme="slate"] .mermaid .node.oss polygon,
+[data-md-color-scheme="slate"] .mermaid .node.oss circle,
+[data-md-color-scheme="slate"] .mermaid g.node.oss rect,
+[data-md-color-scheme="slate"] .mermaid g.node.oss polygon,
+[data-md-color-scheme="slate"] .mermaid g.node.oss circle {
+    fill: var(--flux-black-2) !important;
+    stroke: var(--flux-green-1) !important;
+}
+
+[data-md-color-scheme="slate"] .mermaid .node.oss text,
+[data-md-color-scheme="slate"] .mermaid .node.oss tspan,
+[data-md-color-scheme="slate"] .mermaid g.node.oss .nodeLabel,
+[data-md-color-scheme="slate"] .mermaid g.node.oss .label {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Enterprise Component */
+.mermaid .node.ent rect,
+.mermaid .node.ent polygon,
+.mermaid .node.ent circle {
+    fill: #1b5e20 !important;
+    stroke: #81c784 !important;
+    stroke-width: 2px !important;
+}
+
+.mermaid .node.ent text,
+.mermaid .node.ent tspan {
+    fill: #ffffff !important;
+}
+
+/* Ext/SUT Component */
+.mermaid .node.ext rect,
+.mermaid .node.ext polygon,
+.mermaid .node.ext circle {
+    fill: #000000 !important;
+    stroke: #ffffff !important;
+    stroke-width: 2px !important;
+}
+
+/* Enterprise Component - Text Always White */
+.mermaid .node.ent text,
+.mermaid .node.ent tspan,
+.mermaid .node.ent .nodeLabel,
+.mermaid .node.ent .label,
+.mermaid .node.ent foreignObject div,
+.mermaid .node.ent foreignObject p {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Ext/SUT Component - Text Always White (Black Background) */
+.mermaid .node.ext rect,
+.mermaid .node.ext polygon,
+.mermaid .node.ext circle {
+    fill: #000000 !important;
+    stroke: #ffffff !important;
+    stroke-width: 2px !important;
+}
+
+.mermaid .node.ext text,
+.mermaid .node.ext tspan,
+.mermaid .node.ext .nodeLabel,
+.mermaid .node.ext .label,
+.mermaid .node.ext foreignObject div,
+.mermaid .node.ext foreignObject p {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* --- DIAGRAM LAYOUT --- */
+.mermaid-container {
+    position: relative;
+    display: flex;
+    /* Center content */
+    justify-content: center;
+
+    /* 1. Width Constraint: 80% of the text column */
+    width: 80%;
+    margin: 2rem auto;
+    /* Centered with vertical spacing */
+
+    cursor: zoom-in;
+    border: 1px solid transparent;
+}
+
+/* Ensure intermediate div fills container */
+.mermaid-container .mermaid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: transparent !important;
+    /* No background here */
+}
+
+/* Ensure SVG fills the 80% container but respects height limit */
+.mermaid-container svg {
+    width: 100%;
+    /* Fill the 80% container */
+    max-width: 100%;
+    height: auto;
+    /* Maintain aspect ratio */
+
+    /* 2. Height Constraint: 70% of viewport */
+    max-height: 70vh;
+
+    display: block;
+}
+
+/* Zoom Button */
+.mermaid-zoom-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(47, 98, 125, 0.9);
+    /* Flux Blue 2 */
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 1;
+    /* ALWAYS VISIBLE */
+    transition: background 0.3s;
+    font-size: 16px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mermaid-zoom-btn:hover {
+    background: var(--flux-blue-1);
+}
+
+/* --- ZOOM MODAL STYLES --- */
+.mermaid-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    /* Dark Overlay */
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    overflow: hidden;
+}
+
+.mermaid-modal.active {
+    opacity: 1;
+    pointer-events: all;
+    cursor: grab;
+}
+
+.mermaid-modal.active:active {
+    cursor: grabbing;
+}
+
+.mermaid-modal-content {
+    background-color: #ffffff !important;
+    /* Force White Background */
+    transform-origin: center;
+    transition: transform 0.05s linear;
+    width: auto;
+    height: auto;
+    padding: 50px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+
+    /* Ensure content is centered */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-diagram g.node.oss polygon,
+.modal-diagram g.node.oss circle {
+    fill: #ffffff !important;
+    stroke: #000000 !important;
+    stroke-width: 2px !important;
+}
+
+.modal-diagram .node.oss text,
+.modal-diagram .node.oss tspan,
+.modal-diagram g.node.oss .nodeLabel,
+.modal-diagram g.node.oss .label {
+    fill: #000000 !important;
+    color: #000000 !important;
+}
+
+/* Enterprise Component: Green Background, White Text */
+.modal-diagram .node.ent rect,
+.modal-diagram .node.ent polygon,
+.modal-diagram .node.ent circle,
+.modal-diagram g.node.ent rect,
+.modal-diagram g.node.ent polygon,
+.modal-diagram g.node.ent circle {
+    fill: #1b5e20 !important;
+    stroke: #81c784 !important;
+    stroke-width: 2px !important;
+}
+
+.modal-diagram .node.ent text,
+.modal-diagram .node.ent tspan,
+.modal-diagram g.node.ent .nodeLabel,
+.modal-diagram g.node.ent .label,
+.modal-diagram g.node.ent foreignObject div,
+.modal-diagram g.node.ent foreignObject p {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Ext/SUT Component: Black Background, White Text */
+.modal-diagram .node.ext rect,
+.modal-diagram .node.ext polygon,
+.modal-diagram .node.ext circle,
+.modal-diagram g.node.ext rect,
+.modal-diagram g.node.ext polygon,
+.modal-diagram g.node.ext circle {
+    fill: #000000 !important;
+    stroke: #ffffff !important;
+    stroke-width: 2px !important;
+}
+
+.modal-diagram .node.ext text,
+.modal-diagram .node.ext tspan,
+.modal-diagram g.node.ext .nodeLabel,
+.modal-diagram g.node.ext .label,
+.modal-diagram g.node.ext foreignObject div,
+.modal-diagram g.node.ext foreignObject p {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* Text: Flux Black */
+.modal-diagram text,
+.modal-diagram tspan,
+.modal-diagram span,
+.modal-diagram div,
+.modal-diagram p {
+    fill: var(--flux-black-2) !important;
+    color: var(--flux-black-2) !important;
+    font-weight: bold !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Markers (Arrowheads): BLACK Fill */
+.modal-diagram .marker,
+.modal-diagram marker path,
+.modal-diagram #arrowhead path {
+    fill: #333333 !important;
+    /* Match edges */
+    stroke: none !important;
+}
+
+/* --- PROMO LOGO SCALING (Introduction) --- */
+.flux-logo-large img, .flux-logo-large svg {
+    max-width: 400px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
+.flux-logo-small img, .flux-logo-small svg {
+    max-width: 250px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
+/* Controls Toolbar */
+.mermaid-modal-controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(47, 98, 125, 0.95);
+    padding: 10px 25px;
+    border-radius: 30px;
+    display: flex;
+    gap: 15px;
+    z-index: 10000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    align-items: center;
+}
+
+.mermaid-modal-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    min-width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.mermaid-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* PDF Specific Adjustments */
+@media print {
+    :root {
+        --md-primary-fg-color: #ffffff !important;
+        /* White header for PDF */
+        --md-accent-fg-color: var(--flux-green-2) !important;
+    }
+
+    /* Ensure header text is dark in PDF */
+    .md-header {
+        color: var(--flux-blue-2) !important;
+        background-color: #ffffff !important;
+    }
+
+    /* Prevent oversized images */
+    img,
+    svg {
+        max-width: 100% !important;
+        max-height: 10cm !important;
+        height: auto !important;
+        object-fit: contain;
+    }
+
+    /* Hide Zoom UI in PDF */
+    .mermaid-zoom-btn,
+    .mermaid-modal,
+    .mermaid-modal-controls {
+        display: none !important;
+    }
+}

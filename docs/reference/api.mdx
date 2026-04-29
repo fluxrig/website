@@ -1,0 +1,45 @@
+---
+slug: /reference/operations/api
+title: Mixer API specification
+---
+
+# Mixer API specification
+
+import { RedocStandalone } from 'redoc';
+
+
+The **Mixer REST API** provides a programmatic interface for external orchestration systems (e.g., Kubernetes, CI/CD, Enterprise Dashboards) to manage the fluxrig fleet.
+
+## Purpose
+
+While the **Data Plane** (Hot Path) operates exclusively over **NATS JetStream** for extreme performance, the **Control Plane** exposes this REST API for:
+
+1.  **Observability**: Querying the status of connected racks.
+2.  **Fleet management**: Approving pending racks (zero config) and rotating keys.
+3.  **Deployment**: Pushing new configurations or Wasm gears to specific racks.
+
+> **Note**: The `fluxrig` CLI uses this API for management commands (e.g., `fluxrig admin racks list`, `fluxrig admin racks approve`).
+
+## Data model (fluxMsg)
+For details on the inter-gear communication format, see **[Data Model (fluxMsg)](/docs/reference/core/data-model)**.
+
+---
+
+<div className="api-explorer-wrapper">
+  <button 
+    className="api-enlarge-btn" 
+    onClick={() => document.querySelector('.api-explorer-wrapper').classList.toggle('is-fullscreen')}
+  >
+    <span>ENLARGE API EXPLORER</span>
+  </button>
+
+<RedocStandalone 
+  specUrl="/openapi.yaml"
+  options={{
+    theme: { colors: { primary: { main: '#326ce5' } } },
+    disableSearch: false,
+    hideDownloadButton: false
+  }}
+/>
+
+</div>
