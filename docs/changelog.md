@@ -14,7 +14,8 @@ All notable changes to the **fluxrig** project are documented here. This project
 
 | Version | Date | Status | Summary |
 | :--- | :--- | :--- | :--- |
-| [Unreleased](#unreleased) | | Active | Hardening & CI/CD Orchestration ({{VERS}}-dev) |
+| [Unreleased](#unreleased) | | Active | Feature expansion ({{VERS}}-dev) |
+| [v0.4.5](#v045) | 2026-04-29 | Delivered | Documentation Hardening & Zero-Config |
 | [v0.4.4](#v044) | 2026-04-23 | Delivered | Logic Extensibility & Secure Enrollment |
 | [v0.4.3](#v043) | 2026-02-19 | Delivered | Operational Resilience & NATS V2 |
 | [v0.4.2](#v042) | 2026-02-15 | Delivered | Spec Management & E2E Automation |
@@ -24,10 +25,22 @@ All notable changes to the **fluxrig** project are documented here. This project
 
 <a name="unreleased"></a>
 ### [Unreleased] ({{VERS}}-dev)
+
+<a name="v045"></a>
+### [v0.4.5] - 2026-04-29
 #### Added
-- **Showroom Hygiene**: Implemented automated branch/tag cleanup for public releases.
-- **Deployment History**: Transitioned to clean-commit deployment strategy for `fluxrig.org`.
-- **Documentation Overhaul**: Transitioned to utility-first messaging, isolating the 'Studio & Stage' metaphor to a dedicated philosophy page to improve technical accessibility.
+- **Zero-Config Cluster Authority**: Implemented automatic generation of persistent cluster keys upon first run, eliminating manual PKI bootstrapping for development environments.
+- **Global Gear Deployment**: Introduced automatic "all-rack" gear targeting for scenarios without explicit deployment tags.
+- **Open Documentation Model**: Officially transitioned documentation sources to a public repository ([fluxrig/website](https://github.com/fluxrig/website)), enabling community contributions and improved transparency.
+
+#### Improved
+- **Documentation Accessibility (Feedback-Driven)**: Strictly isolated the "Studio & Stage" professional audio metaphor to a dedicated philosophy page. This ensures that the primary technical documentation remains accessible and clear to users unfamiliar with audio engineering nomenclature.
+- **Enhanced Usage Examples**: Expanded the `examples/` directory with production-ready scenario templates and better-documented CLI workflows based on user feedback.
+- **Observability Precision**: Refined OTel tracing attributes to correctly reflect both infrastructure (`messaging.trace_id`) and business (`flux.id`) identities.
+
+#### Fixed
+- **Port Conflict Management**: Resolved an issue where dynamic port selection (port -1) would fail during pre-flight availability checks.
+- **DuckDB Path Safety**: Hardened database initialization logic to prevent accidental directory-as-file IO errors.
 
 <a name="v044"></a>
 ### [v0.4.4]
@@ -111,7 +124,8 @@ All notable changes to the **fluxrig** project are documented here. This project
 - **Snake protocol**: Secure tunneling implementation for **Rack-to-Mixer** connectivity.
 - **fluxMsg**: Canonical self-describing representation for internal communication.
 
-[Unreleased]: https://github.com/jaab-tech/fluxrig/compare/v0.4.4...HEAD
+[Unreleased]: https://github.com/jaab-tech/fluxrig/compare/v0.4.5...HEAD
+[v0.4.5]: https://github.com/jaab-tech/fluxrig/releases/tag/v0.4.5
 [v0.4.4]: https://github.com/jaab-tech/fluxrig/releases/tag/v0.4.4
 [v0.4.3]: https://github.com/jaab-tech/fluxrig/releases/tag/v0.4.3
 [v0.4.2]: https://github.com/jaab-tech/fluxrig/releases/tag/v0.4.2

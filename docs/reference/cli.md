@@ -36,7 +36,7 @@ The unified tool for operators and edge runtimes.
 | Command | Description |
 |---------|-------------|
 | `fluxrig admin racks list` | List all registered racks |
-| `fluxrig admin racks list --status pending` | List racks waiting for adoption approval |
+| `fluxrig admin racks list --status pending` | [DEPRECATED] Use API for status filtering. |
 | `fluxrig admin racks approve <id> --name <name>` | Approve a pending rack and assign identity |
 | `fluxrig admin racks suspend <id>` | Suspend a rack (blocks traffic, keeps identity) |
 | `fluxrig admin racks activate <id>` | Reactivate a suspended rack |
@@ -75,17 +75,21 @@ Scenarios define the operational topology used for testing and simulation. They 
 
 | Command | Description |
 |---------|-------------|
-| **`import -f <file>`** | Snapshot a scenario YAML into the CAS. |
+| **`import <file>`** | Snapshot a scenario YAML into the CAS. |
 | **`list`** | List all stored scenarios. |
 | **`export <urn> <file>`** | Export a CAS scenario for local editing. |
+| **`diff <file>`** | Compare local scenario file with the active one. |
 
 **Usage**:
 ```bash
 # Import into CAS
-fluxrig scenario import -f main.yaml --name dev --tag v1.0.0
+fluxrig scenario import main.yaml --name dev --tag v1.0.0
 
 # Hot-Reload via Mixer API
-fluxrig scenario import -f main.yaml --api
+fluxrig scenario import main.yaml --api
+
+# Diff local against active
+fluxrig scenario diff main.yaml
 ```
 
 **Flags for `import`**:
@@ -111,6 +115,7 @@ fluxrig scenario run visa-cert:v2.1.0 --target https://my-rack:8583
 |---------|-------------|
 | `fluxrig logs` | Query telemetry logs from Mixer (Remote) |
 | `fluxrig metrics` | Query telemetry metrics from Mixer (Remote) |
+| `fluxrig tail <node>` | Tail live logs from a specific node in real-time |
 | `fluxrig inspect-logs` | Inspect binary WAL files on a Rack (Local) |
 | `fluxrig inspect-config` | Validate and inspect local configurations |
 
@@ -141,10 +146,10 @@ Use these patterns to bridge the gap between business flows and system traces:
 fluxrig trace <flux_id>
 
 # View recent errors for a specific payment Gear
-fluxrig logs --gear payment-processor --level error --since 5m
+fluxrig logs --entity payment-processor --min-level error --since 5m
 
-# Inspect the "aux send" health (telemetry congestion)
-fluxrig metrics --filter governor
+# Query a specific metric
+fluxrig metrics --name flux.bus.messages_in
 ```
 
 ### Topology queries
@@ -169,9 +174,8 @@ fluxrig-mixer --config fluxrig-mixer.toml --scenario scenario_01.yaml
 **Flags**:
 
 - `-c, --config` - Path to TOML configuration file (default: `fluxrig-mixer.toml` or `FLUXRIG_CONFIG`)
-
-- `config check`: ...
 - `-s, --scenario` - Scenario reference to load on startup: file path (`./scenario.yaml`) or stored URN (`payment-flow:v1.0.0`). Empty to resume last active.
+- `--auto-adopt` - Automatically approve and adopt any new Rack that connects. **For development use only.**
 
 **Key Configuration Settings** (`[mixer]`):
 

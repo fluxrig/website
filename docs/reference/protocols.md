@@ -13,9 +13,9 @@ This document serves as the canonical reference for the internal communication p
 
 ---
 
-## Snake protocol (the tunnel)
+## Snake protocol (transport layer)
 
-The **Snake Protocol** is the secure transport layer connecting distributed Racks to the central Mixer.
+The **Snake Protocol** is the secure mTLS transport layer connecting distributed Racks to the central Mixer.
 
 *   **Transport**: NATS TCP + TLS.
 *   **Security**: Mutual TLS (mTLS).
@@ -29,19 +29,24 @@ The **Snake Protocol** is the secure transport layer connecting distributed Rack
 
 | Scope | Pattern | NATS Strategy | Role |
 | :--- | :--- | :--- | :--- |
-| **Control** | `flux.gear.>` | `WorkQueue` | Command & Control (RPC). Targeted commands from Mixer to Rack. |
-| **Events** | `flux.telemetry.>` | `Stream` | System events (Audit logs, Status changes, Telemetry). |
+| **Enrollment**| `fluxrig.agent.>` | `Core NATS` | Handshakes, Heartbeats, and Adoption flows. |
+| **Control** | `fluxrig.rack.>` | `WorkQueue` | Targeted scenario updates and remote commands (Shutdown, Log-Level). |
 | **Data** | `flux.msg.>` | `Stream` | High-volume `fluxMsg` traffic (The Hot Path). |
+| **Telemetry**| `flux.telemetry.>` | `Stream` | System events (Audit logs, Status changes, Metrics). |
 
 ### Detailed subject structure
 
+#### Enrollment & heartbeats
+*   `fluxrig.agent.hello`: Broadcast by new Racks for initial enrollment.
+*   `fluxrig.agent.heartbeat`: Periodic status reports from active Racks.
+*   `fluxrig.agent.notify.{machine_id}`: Targeted commands from Mixer (Adoption, Reconnect).
+
 #### Control plane
-*   `flux.gear.rpc.{rack_id}`: Targeted RPC calls to a specific Rack.
-*   `flux.gear.broadcast`: Global commands to all Racks.
+*   `fluxrig.rack.{rack_name}.scenario`: Pushed scenario updates for a specific Rack.
 
 #### Data plane (hot path)
-*   `flux.msg.{rack_id}.{gear_id}.in`: Input queue for a specific Gear.
-*   `flux.msg.{rack_id}.{gear_id}.out`: Output stream from a specific Gear.
+*   `flux.msg.{source_rack}.{gear_name}.{port}`: Stream pattern for inter-gear communication.
+*   Example: `flux.msg.rack-alpha.iso-server.out`
 
 ### Quality of service (QoS) & prioritization
 To ensure the resilience of the platform during high-load scenarios, **fluxrig** implements strict QoS separation:

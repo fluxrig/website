@@ -50,14 +50,51 @@ The `file://` prefix is optional for file paths (e.g., `file://./scenario.yaml`)
 ## YAML schema
 
 ```yaml
-name: Payment Processing       # Required. Human-readable name.
-spec: visa:v1.0.0              # Optional. Spec reference (name:tag).
+meta:
+  name: Payment Processing       # Required. Human-readable name.
+  version: 1.0.0                 # Required. Semantic version.
+
+racks:
+  - name: rack-prod-01           # Explicit target.
+    config:
+      location: "montevideo-dc1"
+
+  - group: edge-gateways         # Target group.
+    match:
+      labels:
+        role: "gateway"
+    defaults:
+      log_level: "info"
+
+gears:
+  - name: iso-inbound
+    type: iso8583-server
+    deploy: edge-gateways        # References a group or specific rack.
+    config:
+      port: 8080
 
 wires:
+  - from: iso-inbound.out
+    to:   router.in
+```
 
-  - from: source-gear.output
-    to:   dest-gear.input
-    transport: standard         # Optional (default: standard)
+## Gear deployment
+
+The `gears` section defines which logic units are active and where they are executed.
+
+```yaml
+gears:
+  - name: iso-inbound
+    type: iso8583
+    deploy: rack-alpha           # Optional. Target Rack name.
+```
+
+### Global gears
+
+If a gear does not specify a `deploy` target, it is treated as a **Global Gear**. 
+
+*   **Behavior**: The gear will be pushed to and executed by **every Rack** that connects to the Mixer and receives the scenario.
+*   **Use Case**: This is ideal for "Zero-Config" Getting Started scenarios or for deploying universal monitoring/diagnostic gears across a distributed cluster without knowing the dynamic Rack names in advance.
 ```
 
 ## Pipe configuration
@@ -74,7 +111,9 @@ The `wires` (or `pipes`) section defines how data flows between Gears.
 ### Example: hybrid wiring
 
 ```yaml
-name: High-Freq Vibration Monitoring
+meta:
+  name: High-Freq Vibration Monitoring
+  version: 1.0.0
 
 wires:
   #  TURBO MODE: 1000Hz Vibration Data

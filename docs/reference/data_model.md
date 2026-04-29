@@ -47,6 +47,9 @@ type FluxMsg struct {
     // Unified Field Map (ISO8583 tags, JSON keys).
     Data map[string]any `cbor:"data"`
 
+    // --- Signaling ---
+    Flags uint32 `cbor:"flags"` // System-level signaling (e.g., 0x01 = Sync Probe)
+
     // --- Fallback & Audit ---
     RawPayload []byte `cbor:"raw"`  // Original wire bytes
     Path       []*Hop `cbor:"path"` // Audit Trail

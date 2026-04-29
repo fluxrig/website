@@ -42,8 +42,7 @@ Shared logging content.
 | `level` | `string` | `"info"` | Verbosity: `debug`, `info`, `warn`, `error`. |
 | `filename` | `string` | `"logs/fluxrig.log"` | Path to log file. |
 | `max_size_mb` | `int` | `100` | Max size in MB before rotation. |
-| `max_backups` | `int` | `3` | Max number of old log files to keep. |
-| `max_age` | `int` | `28` | Max number of days to keep old log files. |
+| `max_backups` | `int` | `7` | Max number of old log files to keep. |
 | `compress` | `bool` | `true` | Compress rotated log files (gzip). |
 
 **Throttling settings**
@@ -51,8 +50,8 @@ Shared logging content.
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `throttling.enabled` | `bool` | `true` | Toggle log throttling protection. |
-| `throttling.rate` | `float`| `100.0` | Max lines per second per gear. |
-| `throttling.burst` | `int` | `10` | Temporary log burst capacity. |
+| `throttling.rate` | `float`| `500.0` | Max lines per second per gear. |
+| `throttling.burst` | `int` | `50` | Temporary log burst capacity. |
 
 #### `[Rack]`
 Rack-specific runtime settings.
@@ -79,7 +78,7 @@ NATS Bus settings.
 | :--- | :--- | :--- | :--- |
 | `url` | `string` | `"nats://localhost:4222"` | NATS Server URL. |
 | `domain` | `string` | `"flux"` | **JetStream Domain** (Sovereignty). Must match Mixer cluster name for stream visibility. |
-| `stream_name` | `string` | `"flux"` | NATS Stream (JetStream) name to publish to. |
+| `stream_name` | `string` | `"flux-msg"` | NATS Stream (JetStream) name to publish to. |
 | `connect_timeout` | `string` | `"10s"` | Initial connection timeout for both **Data** and **Telemetry** buses. |
 | `reconnect_wait` | `string` | `"1s"` | Wait time between reconnect attempts for all isolated bus connections. |
 | `convergence_delay` | `string` | `"100ms"` | Safety delay to allow ephemeral NATS consumers to converge before starting gears. |
@@ -122,6 +121,7 @@ Shared logging content.
 | :--- | :--- | :--- | :--- |
 | `level` | `string` | `"info"` | Verbosity: `debug`, `info`, `warn`, `error`. |
 | `filename` | `string` | `"logs/mixer.log"` | Path to log file. |
+| `max_backups` | `int` | `7` | Max number of old log files to keep. |
 
 #### `[Mixer]`
 General Mixer identity and bootstrapping settings.
@@ -171,9 +171,8 @@ Embedded NATS Server (JetStream) settings.
 | `port` | `int` | `4222` | **Server Port** to listen on for NATS connections. |
 | `url` | `string` | `"nats://localhost:4222"` | URL to advertise to Racks. |
 | `cluster_name` | `string` | `"flux"` | JetStream Domain Name (for Leaf Nodes). |
-| `store_dir` | `string` | `"data/js"` | Path for NATS JetStream persistence. |
-| `stream_name` | `string` | `"flux"` | Name of the primary JetStream stream. |
-| `stream_subjects` | `[]string` | `["flux.msg.>", "flux.gear.>", "flux.telemetry.>"]` | Wildcard subjects to capture. |
+| `stream_name` | `string` | `"flux-msg"` | Name of the primary JetStream stream. |
+| `stream_subjects` | `[]string` | `["flux.msg.>", "flux.gear.>", "fluxrig.>"]` | Wildcard subjects to capture. |
 | `business_stream_max_age` | `string` | `"720h"` | Data retention time for business logic streams. |
 | `telemetry_stream_max_age` | `string` | `"24h"` | Data retention time for telemetry streams. |
 | `durable` | `bool` | `false` | Enable disk-durable JetStream persistence. |
@@ -480,14 +479,14 @@ GET /api/v1/telemetry/logs
 
 **Example**:
 ```bash
-curl "http://mixer:8090/api/v1/logs?level=error&since=2025-12-21T00:00:00Z&limit=50"
+curl "http://mixer:8090/api/v1/telemetry/logs?level=error&since=2025-12-21T00:00:00Z&limit=50"
 ```
 
 ### Traces API
 
 ```
-GET /api/v1/traces
-GET /api/v1/traces/{trace_id}
+GET /api/v1/telemetry/traces
+GET /api/v1/telemetry/traces/{trace_id}
 ```
 
 **Query Parameters**:
@@ -502,8 +501,8 @@ GET /api/v1/traces/{trace_id}
 ### Metrics API
 
 ```
-GET /api/v1/metrics
-GET /api/v1/metrics/{metric_name}
+GET /api/v1/telemetry/metrics
+GET /api/v1/telemetry/metrics/{metric_name}
 ```
 
 **Query Parameters**:
