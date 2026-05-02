@@ -33,10 +33,10 @@ The payload is always a CBOR-encoded `fluxMsg` struct.
 // fluxMsg is the atomic unit of data in the system.
 type FluxMsg struct {
     // --- Identity & Tracing ---
-    fluxID    uint64 `cbor:"id"`      // Global Unique ID (Sonyflake)
-    RefFluxID uint64 `cbor:"ref_id"`  // Correlation / Parent ID
-    traceID   string `cbor:"trace"`   // OpenTelemetry traceID (Hex)
-    SrcGearID uint64 `cbor:"src_id"`  // Originator EntityID
+    fluxID    uuid.UUID `cbor:"id"`      // Global Unique ID (UUID v7)
+    RefFluxID uuid.UUID `cbor:"ref_id"`  // Correlation / Parent ID
+    traceID   string    `cbor:"trace"`   // OpenTelemetry traceID (Hex)
+    SrcGearID uuid.UUID `cbor:"src_id"`  // Originator EntityID
 
     // --- Context (Metadata) ---
     // Routing flags, source IP, protocol headers.
@@ -58,9 +58,9 @@ type FluxMsg struct {
 
 ```go
 type Hop struct {
-    GearID uint64 `cbor:"g"`
-    PortID uint64 `cbor:"p"`
-    TsNano int64  `cbor:"t"`
+    GearID uuid.UUID `cbor:"g"`
+    PortID uuid.UUID `cbor:"p"`
+    TsNano int64     `cbor:"t"`
 }
 ```
 
@@ -68,10 +68,10 @@ type Hop struct {
 
 | Field | Type | Tag | Description |
 | :--- | :--- | :--- | :--- |
-| **`fluxID`** | `uint64` | `id` | Globally unique transactional ID (Sonyflake). |
-| **`RefFluxID`** | `uint64` | `ref_id` | Correlation ID (references a Parent signal). |
+| **`fluxID`** | `uuid.UUID` | `id` | Globally unique transactional ID (UUID v7). |
+| **`RefFluxID`** | `uuid.UUID` | `ref_id` | Correlation ID (references a Parent signal). |
 | **`traceID`** | `string` | `trace` | W3C Otel Trace ID for distributed observability. |
-| **`SrcGearID`** | `uint64` | `src_id` | The `fluxEntityID` of the originating Gear. |
+| **`SrcGearID`** | `uuid.UUID` | `src_id` | The `fluxEntityID` of the originating Gear. |
 | **`Metadata`** | `map[string]string` | `meta` | Signal Metadata (Routing flags, protocol headers). |
 | **`Data`** | `map[string]any` | `data` | Business fields (ISO8583 tags, user-defined keys). |
 | **`Flags`** | `uint32` | `flags` | System-level signaling (e.g., `0x01` = Sync Probe). |
@@ -150,8 +150,8 @@ To ensure Coat Check and Correlator logic functions uniformly regardless of the 
 
 ## fluxEntityID structure
 
-The **fluxEntityID** identifies a persistent component (Rack, Gear, specific Spec Version). It uses a 64-bit Hierarchical ID structure:
-`[ Type (8) ] [ MachineID (16) ] [ Local Sequence (40) ]`
+The **fluxEntityID** identifies a persistent component (Rack, Gear, specific Spec Version). It uses a **128-bit UUID v7** structure that embeds technical hints:
+`[ Timestamp (48) ] [ Version (4) ] [ Variant (2) ] [ EntityType (8) ] [ MachineID-Hint (32) ] [ Random (34) ]`
 
 | Prefix (Hex) | Entity Type | Relation to MachineID |
 | :--- | :--- | :--- |
@@ -159,7 +159,7 @@ The **fluxEntityID** identifies a persistent component (Rack, Gear, specific Spe
 | `0x01` | **Cluster** | Physical infrastructure (HA cluster) |
 | `0x02` | **Mixer** | Logical tenant unit |
 | `0x03` | **fluxMsg** | Message Instance |
-| `0x04` | **Rack** | **Lower 16 bits = Sonyflake MachineID** |
+| `0x04` | **Rack** | **Includes MachineID** |
 | `0x05` | **Gear** | RackID + Local Index |
 | `0x06` | **PortInput** | Sink (Standard In) |
 | `0x07` | **PortOutput** | Source (Standard Out) |
@@ -173,25 +173,24 @@ The **fluxEntityID** identifies a persistent component (Rack, Gear, specific Spe
 
 ## Registry and identity mapping
 
-The Registry manages the `MachineID` allocations that make up the `fluxEntityID`. To support clustering and observability, **MachineIDs** (`uint16`) are allocated according to a strict policy.
+The Registry manages the `MachineID` allocations that make up the `fluxEntityID`. To support clustering and observability, **MachineIDs** are now **128-bit UUIDs**.
 
 ### Machine ID policy
 
-| Range | Role | Assignment | Description |
+| Identity | Persistence | Assignment | Description |
 | :--- | :--- | :--- | :--- |
-| **0** | **Pending / Offline** | Static | Represents a node without an assigned Identity (e.g., during initial handshake or offline mode). |
-| **1-99** | **Mixer Nodes** | Reserved | Reserved for internal infrastructure, specifically Mixer nodes (Core). |
-| **100-65535** | **Rack Nodes** | Sequential | Automatically assigned by the Registry to enrolled Racks. |
+| **uuid.Nil** | **Transient** | Default | Represents a node without an assigned Identity (e.g., during initial handshake or offline mode). |
+| **UUID v7** | **Permanent** | Registry | Unique identifier assigned to Mixers and Racks. Includes a 32-bit machine hint for log traceability. |
 
 ### Identity assignment strategy
 
 | Component | Strategy | Mechanism | Entity Type |
 | :--- | :--- | :--- | :--- |
-| **Mixer** | **Static** | Config (`fluxrig-mixer.toml`) | `0x02` |
+| **Mixer** | **Persistent** | Configuration or Autonomous | `0x02` |
 | **Rack** | **Dynamic** | Sequence (`seq_machine_id_server`) | `0x04` |
 | **Snake** | **Implicit** | Connection | `0x09` |
 
-**Mixers** use static assignment (`[mixer] machine_id = 1`) to ensure stable leadership.
+**Mixers** use static assignment via configuration to ensure stable leadership.
 **Racks** receive their ID dynamically during enrollment. This ID is then embedded into the **fluxEntityID** (Type `0x04`).
 **Snakes** (Type `0x09`) represent the **connection path** (NATS Link) from a Rack to a Mixer. They inherit identity from their host.
 
@@ -203,9 +202,9 @@ To provide a single pane of glass for all infrastructure, the Mixer maintains a 
 
 | Column | Type | Description |
 | :--- | :--- | :--- |
-| `entity_id` | `UBIGINT` | **PK**. Full 64-bit fluxEntityID. |
+| `entity_id` | **`UUID`** | **PK**. Full 128-bit fluxEntityID. |
 | `type_id` | `USMALLINT` | 2=Mixer, 3=Rack, 8=Snake. |
-| `machine_id` | `USMALLINT` | The assigned MachineID (1-65535). |
+| `machine_id` | **`UUID`** | The assigned MachineID (128-bit). |
 | `name` | `TEXT` | Unique Hostname (e.g., `rack-01`). |
 | `status` | `TEXT` | `active`, `pending`, `offline`. |
 | `version` | `TEXT` | Build Version (e.g., `v0.1.0`). |
@@ -218,5 +217,5 @@ To provide a single pane of glass for all infrastructure, the Mixer maintains a 
 
 Before diving into distributed tracing concepts elsewhere, it is important to delineate between our two primary identifiers:
 
-*   **`fluxID`**: The physical, unique pointer to the record in *our* internal data store (e.g., DuckDB, parquet). Generated by Sonyflake for high-speed local issuance.
+*   **`fluxID`**: The physical, unique pointer to the record in *our* internal data store (e.g., DuckDB, parquet). Generated using the **UUID v7** standard for high-speed local issuance with time-ordering.
 *   **`traceID`**: The logical, distributed trace (opentelemetry/w3c) that ties this `fluxID` to external systems traversing outside the fluxrig boundary.

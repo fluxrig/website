@@ -25,6 +25,14 @@ All notable changes to the **fluxrig** project are documented here. This project
 
 <a name="unreleased"></a>
 ### [Unreleased] ({{VERS}}-dev)
+#### Changed
+- **Sovereign Identity Plane (v0.4.6 Foundation)**: Migrated the entire platform identity system to **128-bit UUID v7 (RFC 9562)**. This enhances entropy, ensures global uniqueness without centralized coordination, and provides time-ordered sequence integrity for high-performance storage indexes.
+- **Deduplication Logic**: Updated NATS JetStream deduplication to utilize 128-bit identifiers, ensuring consistent exactly-once delivery across complex telemetry pipelines.
+
+> [!CAUTION]
+> **DESTRUCTIVE CHANGE**: This migration is a hard architectural break.
+> - **Storage**: Existing DuckDB databases (V3 and below) and cached `.flux` state files are incompatible with this version.
+> - **API**: REST handlers and NATS topics have transitioned from decimal integer IDs to standard UUID string representations.
 
 <a name="v045"></a>
 ### [v0.4.5] - 2026-04-29

@@ -75,14 +75,24 @@ Ports can be allocated at **Configuration Time** to support complex routing topo
 
 ---
 
-## Functional categories
-
-Gears are primarily classified by their role in the processing pipeline (I/O, Codec, or Logic).
-
-> [!NOTE]
-> For the complete library of available Gears, their configuration schemas, and sector-specific implementations (e.g., ISO8583, Modbus), see the **[Operations & Logic: Gear Catalog](../reference/gears/index.md)**.
-
----
+## Execution modes: Active vs. Passive
+ 
+ Gears operate in two primary execution modes depending on their role in the pipeline.
+ 
+ ### Passive mode (Reactive)
+ *   **Pattern**: **Consumer**.
+ *   **Hook**: **`Process`**.
+ *   **Behavior**: The gear remains idle until a message arrives via a **Wire**. It transforms or validates the data and returns a response.
+ *   **Example**: A Codec Gear converting JSON to ISO8583.
+ 
+ ### Active mode (Proactive)
+ *   **Pattern**: **Source / Background Worker**.
+ *   **Hook**: **`Start`**.
+ *   **Behavior**: The gear spawns its own internal goroutines to execute logic continuously. It can inject messages into the pipeline using the `emit` function.
+ *   **Example**: A TCP Listener accepting new connections, or a **Coat Check Daemon** monitoring TTL timeouts in the background.
+ 
+ ---
+ 
 
 ## Gear lifecycle
 

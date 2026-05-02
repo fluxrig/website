@@ -37,9 +37,9 @@ The primary engine of the Registry is the `registry` table inside the Mixer's Du
 
 | Column | Type | Description |
 | :--- | :--- | :--- |
-| `entity_id` | `UBIGINT` | **Primary Key**. The 64-bit `fluxEntityID` containing the node type and MachineID. |
+| `entity_id` | `UUID` | **Primary Key**. The 128-bit `fluxEntityID` containing the node type and MachineID hint. |
 | `type_id` | `USMALLINT` | Component Type: `2` (Mixer), `3` (Rack), `8` (Snake Tunnel). |
-| `machine_id` | `USMALLINT` | The physical sequence ID assigned to the device (1-65535). |
+| `machine_id` | `UUID` | The authoritative MachineID assigned to the device (UUID v7). |
 | `name` | `TEXT` | Human-readable Hostname (e.g., `rack-nyc-01`). Must be unique. |
 | `status` | `TEXT` | `active`, `pending` (awaiting enrollment), or `offline`. |
 | `version` | `TEXT` | Git SHA or SemVer of the running binary. |

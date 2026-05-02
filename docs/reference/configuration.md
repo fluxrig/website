@@ -61,7 +61,9 @@ Rack-specific runtime settings.
 | `name` | `string` | `"rack-default"` | **Unique Name** (Static Mode). If set, this Rack claims this specific identity. |
 | `name_prefix` | `string` | `"node-"` | **Ephemeral Prefix** (Zero Config). Used if `name` is empty. |
 | `state_file` | `string` | `"state.flux"` | **Signed State Bundle** (CBOR). Persists Identity, Config, and Secrets. |
-| `machine_id` | `uint16` | `0` | **Manual MachineID Override**. (Advanced) Forces a specific ID, bypassing Registry assignment. |
+| `max_hops` | `int` | `64` | **Max Routing Hops**. Prevents infinite loops in complex topologies. |
+| `max_payload_size`| `int` | `2097152` | **Max Payload Size (Bytes)**. Rejects messages exceeding this limit (Default: 2MB). |
+| `ip` | `string` | `""` | **Manual IP Override**. If empty, the Rack autodetects its local primary IP. |
 | `enrollment_timeout` | `string` | `"2s"` | Timeout for enrollment handshake. |
 
 #### `[Store]`
@@ -128,7 +130,9 @@ General Mixer identity and bootstrapping settings.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `machine_id` | `uint16` | `1` | **Unique MachineID** for this independent Control Plane node. |
+| `machine_id` | `UUID` | `uuid.Nil` | **Persistent MachineID**. If set, forces a static identity. If empty, an autonomous UUID v7 is generated and persisted in the data directory. |
+| `max_hops` | `int` | `64` | **Global Max Hops**. Default limit applied to all Racks if not overridden. |
+| `max_payload_size`| `int` | `2097152` | **Global Max Payload (Bytes)**. Default limit applied to all Racks (Default: 2MB). |
 | `mixer_name` | `string` | `"mixer-01"` | Human-readable identifier. |
 | `startup_scenario` | `string` | `""` | Scenario reference to load on startup. Accepts a file path (`./scenario.yaml`), a stored URN (`payment-flow:v1.0.0`), or empty to resume the last active scenario. |
 
