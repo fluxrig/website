@@ -125,7 +125,7 @@ In {{VERS}}, the hot-reload of a Scenario involves a **coordinated restart of th
 
 *   **Downtime**: There is a millisecond-scale gap in signal processing while the new topology is bridged and I/O gears re-bind to their ports.
 *   **Signaling**: The reload is triggered via a `ScenarioUpdate` signal on the `flux.ctrl.>` management hierarchy.
-*   **Roadmap (v0.5.0+)**: We are engineering a "Shadow Swap" mechanism to achieve **True Zero-Downtime Reload**, where the new pipeline is initialized in parallel and traffic is cut over atomically.
+*   **Roadmap (future)**: We are engineering a "Shadow Swap" mechanism to achieve **True Zero-Downtime Reload**, where the new pipeline is initialized in parallel and traffic is cut over atomically.
 
 ---
 
@@ -135,8 +135,8 @@ In {{VERS}}, the hot-reload of a Scenario involves a **coordinated restart of th
 | :--- | :--- | :--- |
 | **Rack Clustering** | Planned | Hardware redundancy for high-load sites. |
 | **Sovereign Continuity** | Available | Uninterrupted business logic during Mixer downtime. |
-| **Mixer Clustering (HA)** | Planned | Multi-node Mixer for large-scale rig management (v0.6.0+). |
-| **Containerization** | Planned | Distroless images for cloud-native orchestration (v0.5.0+). |
+| **Mixer Clustering (HA)** | Planned | Multi-node Mixer for large-scale rig management (future). |
+| **Containerization** | Planned | Distroless images for cloud-native orchestration (future). |
 
 ---
 

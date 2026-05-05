@@ -83,7 +83,7 @@ Every Rack functions as an independent, **Sovereign Data Vault**, ensuring that 
 3.  **Data Residency Sovereignty**: Detailed payloads (e.g., raw financial messages) can be configured to remain exclusively in the local edge vault while only high-level metadata reaches the central Mixer. 
 
 > [!NOTE]
-> **Privacy Roadmap**: Advanced features like **Edge Tokenization** and **Deterministic Field Masking** (where sensitive fields are scrubbed natively within the Gear runtime) are currently in the **v0.5.0 roadmap**. In the current release, masking should be managed via custom Gear logic or the **[Bento Gear](../reference/gears/bento.md)**.
+> **Privacy Roadmap**: Advanced features like **Edge Tokenization** and **Deterministic Field Masking** (where sensitive fields are scrubbed natively within the Gear runtime) are currently in the **future roadmap**. In the current release, masking should be managed via custom Gear logic or the **[Bento Gear](../reference/gears/bento.md)**.
 
 ---
 

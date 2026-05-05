@@ -130,11 +130,18 @@ General Mixer identity and bootstrapping settings.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `machine_id` | `UUID` | `uuid.Nil` | **Persistent MachineID**. If set, forces a static identity. If empty, an autonomous UUID v7 is generated and persisted in the data directory. |
 | `max_hops` | `int` | `64` | **Global Max Hops**. Default limit applied to all Racks if not overridden. |
 | `max_payload_size`| `int` | `2097152` | **Global Max Payload (Bytes)**. Default limit applied to all Racks (Default: 2MB). |
 | `mixer_name` | `string` | `"mixer-01"` | Human-readable identifier. |
 | `startup_scenario` | `string` | `""` | Scenario reference to load on startup. Accepts a file path (`./scenario.yaml`), a stored URN (`payment-flow:v1.0.0`), or empty to resume the last active scenario. |
+
+#### Registry-First Identity Model
+
+> [!NOTE]
+> **Important Change (v0.5.0+)**: The static `machine_id` configuration field has been completely removed from both Rack and Mixer configurations. **fluxrig** now enforces a **Registry-First Enrollment Model**. 
+> 
+> *   **Racks**: Dynamically receive a 128-bit `uuid.UUID` Identity during the Enrollment Handshake, which is cryptographically signed and stored in the local `state.flux` passport.
+> *   **Mixers**: Automatically generate a persistent cluster identity (UUID v7) on their first boot, which is maintained in the internal Unified Registry (`registry`).
 
 #### `[Enrollment]` (Mixer)
 Control how new Racks are admitted to the rig.

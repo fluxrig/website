@@ -49,22 +49,22 @@ To ensure operational continuity during network partitions, **fluxrig** utilizes
 
 ## Security roadmap: institutional hardening
 
-To maintain 100% technical honesty and audit readiness, we distinguish between standard primitives available in {{VERS}} and institutional features scheduled for v0.5.0+.
+To maintain 100% technical honesty and audit readiness, we distinguish between standard primitives available in {{VERS}} and institutional features scheduled for future releases.
 
-### Deterministic masking (Planned v0.5.0+)
+### Deterministic masking (Planned future)
 Unlike heuristic-based masking solutions, **fluxrig** intends to implement **Deterministic Masking** based on the absolute structure of the data:
 
 1.  **SDL Precision**: Fields are tagged as `sensitive` in the Spec Definition Language (SDL).
 2.  **Edge Tokenization**: The Rack identifies the sensitive value and swaps it for a transient session token.
 3.  **Stateless Processing Path**: Downstream modules and telemetry sinks only see the token, isolating clear-text data.
 
-### HSM and Cloud KMS integration (Planned v0.5.0+)
+### HSM and Cloud KMS integration (Planned future)
 While {{VERS}} uses secure file-based keys, the roadmap includes native integration with:
 
 - **Cloud KMS**: AWS KMS and Google Cloud KMS for cluster authority root-of-trust.
 - **Hardware Security Modules (HSM)**: Support for PKCS#11 and HashiCorp Vault transit engines.
 
-### Secure execution sandboxing (Planned v0.5.0+)
+### Secure execution sandboxing (Planned future)
 *   **Wasm Logic Gears**: Execution in a sandboxed runtime with no access to host syscalls or networks unless bridged via authorized I/O Gears.
 *   **Resource Budgeting**: Enforcement of CPU and memory limits per-Gear.
 
@@ -76,9 +76,9 @@ While {{VERS}} uses secure file-based keys, the roadmap includes native integrat
 | :--- | :--- | :--- |
 | **mTLS Tunnel** | **Available** | Outbound secure tunnel (TLS 1.2+ Baseline). |
 | **Sovereign ID** | **Available** | Signed State Envelopes (`state.flux`). |
-| **Field Masking** | **Planned**   | Deterministic PII scrubbers (v0.5.0+). |
+| **Field Masking** | **Planned**   | Deterministic PII scrubbers (future). |
 | **Cloud KMS** | **Planned**   | AWS/Google KMS integration for Authority keys. |
-| **Wasm Execution** | **Planned**   | Sandboxed execution runtime (v0.5.0+). |
+| **Wasm Execution** | **Planned**   | Sandboxed execution runtime (future). |
 | **Audit Logging** | **Available** | Local CBOR WAL + DuckDB Registry. |
 | **Binary Signing** | **Planned** | Supply chain trust via Sigstore/Cosign. |
 | **SBOM Generation** | **Planned** | Automated CycloneDX generation per release. |

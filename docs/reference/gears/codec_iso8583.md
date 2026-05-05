@@ -70,7 +70,7 @@ Unlike the **[IO TCP Gear](io_tcp.md)**, which handles transport framing, the **
 The Gear utilizes a **[YAML SDL](../specs/iso8583_sdl.md)** to define dialect rules, powered by **Moov ISO8583**:
 
 *   **Industry Standard Parsing**: Support for BCD, EBCDIC, ASCII, and raw Binary payloads.
-*   **Deep Bitmaps**: Automatic handling of Primary and Secondary bitmaps (Support for up to 128 fields). **Tertiary Bitmaps** (Field 129-192) are currently a roadmap item (v0.5.0+).
+*   **Deep Bitmaps**: Automatic handling of Primary and Secondary bitmaps (Support for up to 128 fields). **Tertiary Bitmaps** (Field 129-192) are currently a roadmap item (future).
 *   **EMV & Composites**: High-fidelity normalization for **BER-TLV** (Field 55) and complex subfields (Field 48, 62, 127).
 
 ---

@@ -11,7 +11,7 @@ hide_title: true
 It provides a unified control plane to route, transform, and monitor data streams across heterogeneous environments (from industrial IoT sensors to global payment networks). **fluxrig** transforms complex, siloed technical debt into a standardized, configuration-driven data flow.
 
 > [!TIP]
-> Looking for a quick start? Check out the **[Architecture Overview](./architecture/overview.md)** or explore our **[Industry Use Cases](./use_cases/index.md)**.
+> Looking for a quick start? Check out the **[5-Minute Quickstart](./tutorials/quickstart.md)**! You can also read the **[Architecture Overview](./architecture/overview.md)** or explore our **[Industry Use Cases](./use_cases/index.md)**.
 
 ---
 

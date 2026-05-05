@@ -175,6 +175,12 @@ definitions:
           If false (default), new Racks start as 'pending'.
         example: false
         type: boolean
+      bootstrapSecret:
+        description: |-
+          BootstrapSecret is the shared secret used for zero-config enrollment and identity adoption.
+          Defaults to 'fluxrig' if not specified.
+        example: fluxrig
+        type: string
       pushDelay:
         description: PushDelay is the time to wait before pushing state to a newly
           enrolled Rack.
@@ -291,6 +297,8 @@ definitions:
         type: string
       convergenceTimeout:
         type: string
+      enrollmentInterval:
+        type: string
       enrollmentTimeout:
         type: string
       handshakeInterval:
@@ -320,6 +328,9 @@ definitions:
         type: string
       domain:
         example: flux
+        type: string
+      inactiveThreshold:
+        example: 30s
         type: string
       insecureSkipVerify:
         type: boolean

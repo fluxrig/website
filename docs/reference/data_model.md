@@ -33,9 +33,9 @@ The payload is always a CBOR-encoded `fluxMsg` struct.
 // fluxMsg is the atomic unit of data in the system.
 type FluxMsg struct {
     // --- Identity & Tracing ---
-    fluxID    uuid.UUID `cbor:"id"`      // Global Unique ID (UUID v7)
+    FluxID    uuid.UUID `cbor:"id"`      // Global Unique ID (UUID v7)
     RefFluxID uuid.UUID `cbor:"ref_id"`  // Correlation / Parent ID
-    traceID   string    `cbor:"trace"`   // OpenTelemetry traceID (Hex)
+    TraceID   string    `cbor:"trace"`   // OpenTelemetry traceID (Hex)
     SrcGearID uuid.UUID `cbor:"src_id"`  // Originator EntityID
 
     // --- Context (Metadata) ---
@@ -68,9 +68,9 @@ type Hop struct {
 
 | Field | Type | Tag | Description |
 | :--- | :--- | :--- | :--- |
-| **`fluxID`** | `uuid.UUID` | `id` | Globally unique transactional ID (UUID v7). |
+| **`FluxID`** | `uuid.UUID` | `id` | Globally unique transactional ID (UUID v7). |
 | **`RefFluxID`** | `uuid.UUID` | `ref_id` | Correlation ID (references a Parent signal). |
-| **`traceID`** | `string` | `trace` | W3C Otel Trace ID for distributed observability. |
+| **`TraceID`** | `string` | `trace` | W3C Otel Trace ID for distributed observability. |
 | **`SrcGearID`** | `uuid.UUID` | `src_id` | The `fluxEntityID` of the originating Gear. |
 | **`Metadata`** | `map[string]string` | `meta` | Signal Metadata (Routing flags, protocol headers). |
 | **`Data`** | `map[string]any` | `data` | Business fields (ISO8583 tags, user-defined keys). |
