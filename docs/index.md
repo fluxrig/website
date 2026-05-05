@@ -17,7 +17,7 @@ It provides a unified control plane to route, transform, and monitor data stream
 
 ## Why fluxrig?
 
-FluxRig is designed for environments where data integrity and edge autonomy are non-negotiable.
+fluxrig is designed for environments where data integrity and edge autonomy are non-negotiable.
 
 1. **Edge-to-Cloud Orchestration**: Manage thousands of distributed nodes as a single cohesive system.
 2. **Protocol Agnostic**: Native support for ISO8583, JSON, Protobuf, and legacy binary protocols.
@@ -29,7 +29,7 @@ FluxRig is designed for environments where data integrity and edge autonomy are 
 We borrow our architectural nomenclature from professional audio engineering to describe complex data flows with both precision and scale:
 
 *   **The Gear**: A modular unit of logic (e.g., an ISO8583 codec or a Modbus adapter).
-*   **The Rack**: An edge node agent that hosts and executes multiple Gears (like a stage rack).
+*   **The Rack**: An edge node that hosts and executes multiple Gears (like a stage rack).
 *   **The Mixer**: The central Front of House (FOH) control plane that manages the fleet and aggregates telemetry.
 
 > **[Read more about the professional audio logic →](./overview/philosophy.md)**
@@ -43,7 +43,7 @@ flowchart LR
     subgraph Southbound ["The Edge (Southbound)"]
         Pinpad[Legacy Device]
         PLC[Industrial PLC]
-        subgraph Rack_A [fluxrig Rack Agent]
+        subgraph Rack_A [fluxrig Rack]
             GearSerial[Protocol Gear]
             GearIO[I/O Gear]
         end

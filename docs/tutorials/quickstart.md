@@ -30,7 +30,7 @@ make build
 
 This will produce the two core binaries in the `./bin` directory:
 *   `fluxrig-mixer`: The centralized Control Plane (Registry, Telemetry, NATS Bus).
-*   `fluxrig`: The unified CLI and Edge Node Agent (The Rack).
+*   `fluxrig`: The unified CLI and Edge Node (The Rack).
 
 ---
 
@@ -54,7 +54,7 @@ For this quickstart, we will use the built-in `getting_started.yaml` scenario an
 
 ## 3. Start a Rack (Edge Node)
 
-The Rack is the edge execution agent. It connects to the Mixer, receives its unique Identity (`MachineID`), downloads the active scenario, and starts processing data.
+The Rack is the edge execution node. It connects to the Mixer, receives its unique Identity (`fluxEntityID`), downloads the active scenario, and starts processing data.
 
 ```bash
 # In a new terminal window:
@@ -69,7 +69,7 @@ The Rack is the edge execution agent. It connects to the Mixer, receives its uni
 
 ### Under the Hood: The Scenario Configuration
 
-When the Rack connects to the Mixer, it receives the following declarative YAML logic. This scenario tells the Rack to deploy a single **Bento Gear**, which uses the popular open-source stream processor (Benthos) under the hood to generate and manipulate data dynamically.
+When the Rack connects to the Mixer, it receives the following declarative YAML logic. This scenario tells the Rack to deploy a single **Bento Gear**, which uses the popular open-source stream processor (Bento fork) under the hood to generate and manipulate data dynamically.
 
 ```yaml
 meta:
@@ -92,7 +92,7 @@ gears:
               root.status = "UP"
               root.metrics.cpu_pct = random_int(min:10, max:85)
               root.metrics.mem_mb = random_int(min:512, max:4096)
-              root.message = "Hello from FluxRig Getting Started!"
+              root.message = "Hello from fluxrig Getting Started!"
             interval: 2s
         output:
           stdout: {}
@@ -106,7 +106,7 @@ gears:
 
 You should now see periodic logs in the Rack terminal reflecting this mapped data:
 ```text
-[INFO] BENTO: {"flux_id":"...","metrics":{"cpu_pct":42,"mem_mb":1024},"message":"Hello from FluxRig Getting Started!"}
+[INFO] BENTO: {"flux_id":"...","metrics":{"cpu_pct":42,"mem_mb":1024},"message":"Hello from fluxrig Getting Started!"}
 ```
 
 ---
@@ -121,7 +121,7 @@ Open a third terminal and query the real-time metrics:
 
 ```bash
 # View the latest heartbeats sent by the Rack
-./bin/fluxrig metrics --name heartbeats_sent
+./bin/fluxrig metrics --name fluxrig.rack.heartbeats_sent
 
 # View all metrics for your node (replace with your auto-generated node name if different)
 ./bin/fluxrig metrics --entity node-xxxxx

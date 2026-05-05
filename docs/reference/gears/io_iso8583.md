@@ -22,7 +22,7 @@ By leveraging the **[Moov ISO8583](https://github.com/moov-io/iso8583)** protoco
 | **Pairs With** | **[Signal Leveler](codec_iso8583.md)** (Normalization) |
 | **Port IN** | `in`: consumes egress payload for network transmission |
 | **Port IN Cardinality** | Single |
-| **Port OUT** | `out`: emits ingress signal as **[FluxMsg](../data_model.md#fluxmsg-structure-payload)** (CBOR) |
+| **Port OUT** | `out`: emits ingress signal as **[fluxMsg](../data_model.md#fluxmsg-structure-payload)** (CBOR) |
 | **Port OUT Cardinality** | Single |
 | **Always Emitted Metadata**| `peer.ip`, `peer.port`, `conn.id`, `fluxrig.source`, `heuristic fields` |
 | **Conditionally Emitted** | `iso8583.*_id` (routing), `raw_header` |
@@ -54,8 +54,8 @@ graph LR
     NET == "Raw Signal" ==> F_In
     F_Out == "Response Signal" ==> NET
     
-    Out_P -.->|"FluxMsg (CBOR)"| Codec
-    Codec -.->|"FluxMsg (CBOR)"| In_P
+    Out_P -.->|"fluxMsg (CBOR)"| Codec
+    Codec -.->|"fluxMsg (CBOR)"| In_P
 
     classDef gear fill:#f9f9f9,stroke:#333,stroke-width:2px;
     class io_iso8583 gear;

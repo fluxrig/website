@@ -58,7 +58,7 @@ The Snake tunnel provides the secure mTLS backbone for Rack-to-Mixer communicati
 | **Signatures** | Ed25519 | Component identity & state |
 | **Encryption** | AES-256-GCM | Data-at-rest (NATS KV and Parquet Logs) |
 | **Hashing** | BLAKE3 / SHA-256| Integrity checks |
-| **IDs** | Sonyflake | Time-sortable unique IDs |
+| **IDs** | UUID v7 | Time-sortable unique IDs |
 
 ### Data-at-rest encryption
 For persistence, **fluxrig** relies on external or embedded storage engines:

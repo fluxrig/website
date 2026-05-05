@@ -147,10 +147,12 @@ To ensure robust error handling, this gear subscribes to the **Universal Control
 
 The `io_tcp` gear exports native OpenTelemetry metrics regarding the health of its connection pools.
 
-*   `fluxrig_io_tcp_connections_active` (Gauge): Tracks currently established sockets per gear.
-*   `fluxrig_io_tcp_bytes_read_total` (Counter): Total bytes ingested from the wire.
-*   `fluxrig_io_tcp_bytes_written_total` (Counter): Total bytes pushed to the wire.
-*   `fluxrig_io_tcp_frame_errors_total` (Counter): Logs the number of malformed frames or buffer overflows detected.
+*   `fluxrig.port.connections_active` (Gauge): Tracks currently established sockets per gear.
+*   `fluxrig.port.bytes_in` (Counter): Total bytes ingested from the wire.
+*   `fluxrig.port.bytes_out` (Counter): Total bytes pushed to the wire.
+*   `fluxrig.gear.messages_in` (Counter): Total messages ingested from the wire.
+*   `fluxrig.gear.messages_out` (Counter): Total messages pushed to the wire.
+*   `fluxrig.gear.errors` (Counter): Logs the number of malformed frames or buffer overflows detected.
 
 ### Resource limits
 

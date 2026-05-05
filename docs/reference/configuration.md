@@ -304,8 +304,8 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 | `trace_id` | `VARCHAR` | W3C TraceContext ID |
 | `span_id` | `VARCHAR` | Span ID |
 | `parent_span_id` | `VARCHAR` | Parent Span ID |
-| `flux_id` | `UINT64` | Sonyflake business ID |
-| `entity_id` | `UINT64` | Unified EntityID (`[Type:8][MachineID:16][Seq:40]`) |
+| `flux_id` | `UUID` | UUID v7 business ID |
+| `entity_id` | `UUID` | Unified EntityID (128-bit UUID v7) |
 | `entity_name` | `TEXT` | Human-readable Hostname (e.g., `rack-sfo-01`) |
 | `span_name` | `VARCHAR` | Operation name |
 | `duration_ms` | `FLOAT` | Duration in milliseconds |
@@ -317,9 +317,9 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 | Column | Type | Description |
 |--------|------|-------------|
 | `ts` | `TIMESTAMP` | Log timestamp |
-| `entity_id` | `UINT64` | Unified EntityID |
+| `entity_id` | `UUID` | Unified EntityID |
 | `entity_name` | `TEXT` | Human-readable Hostname |
-| `flux_id` | `UINT64` | Business flow ID |
+| `flux_id` | `UUID` | Business flow ID |
 | `level` | `ENUM` | `debug`, `info`, `warn`, `error` |
 | `message` | `VARCHAR` | Log message |
 | `attributes` | `JSON` | Structured fields |
@@ -330,7 +330,7 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 |--------|------|-------------|
 | `ts` | `TIMESTAMP` | Metric timestamp |
 | `name` | `VARCHAR` | Metric name (e.g., `gear_latency_ms`) |
-| `entity_id` | `UINT64` | Unified EntityID |
+| `entity_id` | `UUID` | Unified EntityID |
 | `entity_name` | `TEXT` | Human-readable Hostname |
 | `type` | `ENUM` | `counter`, `gauge`, `histogram` |
 | `value` | `DOUBLE` | Metric value |
@@ -342,9 +342,9 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 |--------|------|-------------|
 | `ts` | `TIMESTAMP` | Message timestamp |
 | `trace_id` | `VARCHAR` | Associated trace |
-| `flux_id` | `UINT64` | Primary business ID |
-| `machine_id` | `INTEGER` | Node ID |
-| `machine_name` | `TEXT` | Hostname |
+| `flux_id` | `UUID` | Primary business ID |
+| `entity_id` | `UUID` | Node EntityID |
+| `entity_name` | `TEXT` | Hostname |
 | `src_gear_id` | `VARCHAR` | Source Gear |
 | `dst_gear_id` | `VARCHAR` | Destination Gear |
 | `msg_type` | `VARCHAR` | Message type identifier |
@@ -376,10 +376,6 @@ max_age_days = 30
 max_size_gb = 10
 check_interval = "1h"
 ```
-
----
-
-### OTLP tier configuration (vendor-neutral)
 
 ---
 
@@ -447,7 +443,7 @@ Query metrics data.
 
 ```bash
 # Filter by metric name
-fluxrig metrics --name heartbeats_sent
+fluxrig metrics --name fluxrig.rack.heartbeats_sent
 
 # Filter by entity
 fluxrig metrics --entity mixer-01
@@ -504,7 +500,7 @@ GET /api/v1/telemetry/traces/{trace_id}
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `flux_id` | `uint64` | Filter by fluxID. |
+| `flux_id` | `UUID` | Filter by fluxID. |
 | `since` | `RFC3339` | Start time. |
 | `min_duration_ms` | `int` | Minimum duration filter. |
 | `status` | `string` | `ok` or `error`. |

@@ -11,7 +11,7 @@ The high-fidelity signal leveler for financial protocol normalization.
 <!-- See https://jaab.tech -->
 
 
-The `codec_iso8583` gear functions as the **Signal Leveler** (Normalization Engine) of the payment mixer. It is a **Native Gear** (Go) responsible for transforming raw, "noisy" protocol dialects (ISO8583 binary/BCD) into a clean, structured **[FluxMsg](../data_model.md#fluxmsg-structure-payload)** (CBOR) format.
+The `codec_iso8583` gear functions as the **Signal Leveler** (Normalization Engine) of the payment mixer. It is a **Native Gear** (Go) responsible for transforming raw, "noisy" protocol dialects (ISO8583 binary/BCD) into a clean, structured **[fluxMsg](../data_model.md#fluxmsg-structure-payload)** (CBOR) format.
 
 By leveraging the **[Moov ISO8583](https://github.com/moov-io/iso8583)** engine, this gear ensures that technical variances between card schemes are leveled into a uniform semantic layer for the internal **[Master Bus Architecture](../../architecture/overview.md#transaction-flow-strategy-two-speed)**.
 
@@ -118,10 +118,10 @@ While the gear parses 0800 messages, it is the role of the downstream **[Logic G
 
 The `codec_iso8583` gear exports high-fidelity metrics for dashboarding and alerting:
 
-*   `fluxrig_codec_messages_total` (Counter): Total messages processed.
-*   `fluxrig_codec_duration_seconds` (Histogram): Processing latency distribution.
-*   `fluxrig_codec_fields_count` (Histogram): Average field density per message.
-*   `fluxrig_codec_errors_total` (Counter): Cumulative count of packing/unpacking failures.
+*   `fluxrig.gear.messages_in` (Counter): Total messages processed by the gear.
+*   `fluxrig.gear.processing_time_ms` (Histogram): Processing latency distribution in milliseconds.
+*   `fluxrig.codec.iso8583.fields_count` (Histogram): Average field density per message.
+*   `fluxrig.gear.errors` (Counter): Cumulative count of packing/unpacking failures.
 
 > [!TIP]
 > **See the [Signal Leveler Implementation Guide](../specs/iso8583_sdl.md)** for a deep dive into YAML Dialect definitions.

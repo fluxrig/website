@@ -16,7 +16,7 @@ slug: /architecture/message-flow
 While **fluxrig** maintains a logical sequence for each message path, the execution engine is built for high-density, parallel processing.
 
 ### The Goroutine-per-Wire model
-Unlike legacy brokers that rely on single-threaded event loops or forked processes, the **Rack** leverages Go's native concurrency (Goroutines) to achieve massive vertical scale on a single node.
+Unlike legacy brokers that rely on single-threaded event loops or forked processes, the **Rack** leverages Go's native concurrency (Goroutines) to achieve high vertical scale on a single node.
 
 *   **Isolated Execution**: Every defined **Wire** (subscription) in a Scenario is assigned its own goroutine.
 *   **Automatic Parallelism**: If a Rack is deployed on a multi-core system, Gears across different wires execute in parallel automatically. This ensures that a high-latency I/O operation on one Gear (e.g., a slow database write) does not block the "Fast Lane" traffic on another.
@@ -75,7 +75,7 @@ The following sequence illustrates the **Coat Check** pattern during a typical a
 ```mermaid
 sequenceDiagram
     participant POS as External Device
-    participant Rx as Rack Agent
+    participant Rx as Rack
     participant KV as NATS KV (Coat Check)
     participant Bank as External Processor
     

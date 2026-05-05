@@ -18,7 +18,7 @@ slug: /architecture/security
 To protect infrastructure from external threats, we implement a strict **"Inbound Zero"** policy for the management plane.
 
 ### Invisible infrastructure
-By moving all orchestration and management logic to an outbound-only tunnel, **fluxrig** removes standard vectors (SSH, HTTP, SNMP) as public entry points. This dramatically reduces the network attack surface, making the Rack agent effectively invisible to external scans.
+By moving all orchestration and management logic to an outbound-only tunnel, **fluxrig** removes standard vectors (SSH, HTTP, SNMP) as public entry points. This dramatically reduces the network attack surface, making the Rack effectively invisible to external scans.
 
 *   **Secure Tunnel**: All control messages (registry updates, orchestration) and telemetry travel via a persistent, outbound-only **mTLS** connection to the central Mixer.
 *   **Data Plane Isolation**: The Rack only opens listening ports explicitly defined by its I/O Gears (e.g., a specific TCP socket for protocol ingestion). These ports are strictly isolated from the Rack's internal administration and telemetry bus.

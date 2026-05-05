@@ -55,6 +55,7 @@ type FluxMsg struct {
     Path       []*Hop `cbor:"path"` // Audit Trail
     TsInit     int64  `cbor:"ts"`   // Timestamp of creation (Unix Nanos)
 }
+```
 
 ```go
 type Hop struct {
@@ -88,9 +89,8 @@ type Hop struct {
  | `0` | `0x01` | **`FlagSyncProbe`** | **Data-Plane Sync**: Used by the Relentless Handshake (ADR 0036) to verify data-plane availability. |
  | `1..31` | - | *Reserved* | Reserved for future system orchestration signals. |
  
- ---
-
 ---
+
 
 ## Signal metadata dictionary
 
@@ -187,7 +187,7 @@ The Registry manages the `MachineID` allocations that make up the `fluxEntityID`
 | Component | Strategy | Mechanism | Entity Type |
 | :--- | :--- | :--- | :--- |
 | **Mixer** | **Persistent** | Configuration or Autonomous | `0x02` |
-| **Rack** | **Dynamic** | Sequence (`seq_machine_id_server`) | `0x04` |
+| **Rack** | **Dynamic** | Registry Assignment | `0x04` |
 | **Snake** | **Implicit** | Connection | `0x09` |
 
 **Mixers** use static assignment via configuration to ensure stable leadership.
@@ -204,7 +204,7 @@ To provide a single pane of glass for all infrastructure, the Mixer maintains a 
 | :--- | :--- | :--- |
 | `entity_id` | **`UUID`** | **PK**. Full 128-bit fluxEntityID. |
 | `type_id` | `USMALLINT` | 2=Mixer, 3=Rack, 8=Snake. |
-| `machine_id` | **`UUID`** | The assigned MachineID (128-bit). |
+| `machine_id` | **`UUID`** | The assigned Identity (128-bit). |
 | `name` | `TEXT` | Unique Hostname (e.g., `rack-01`). |
 | `status` | `TEXT` | `active`, `pending`, `offline`. |
 | `version` | `TEXT` | Build Version (e.g., `v0.1.0`). |
