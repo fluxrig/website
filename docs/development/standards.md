@@ -41,7 +41,7 @@ We prioritize **Interface-Driven Development** to ensure high-fidelity testing.
 Logging is an architectural component for signal auditing, not a debugging output.
 
 *   **Slog**: All logging must use the standard `log/slog` package. Never use `fmt.Printf` or `log.Print` for operational events.
-*   **Structured Context**: Mandatory attribution of the `fluxID`, `gearID`, and `traceID` as structured fields.
+*   **Structured Context**: Mandatory attribution of the `flux_id`, `gear_id`, and `trace_id` as structured fields.
 *   **Institutional Tracing**: We maintain a dedicated `logger.LevelTrace` for high-resolution diagnostic mapping of signal paths.
 
 ---

@@ -54,7 +54,7 @@ For this quickstart, we will use the built-in `getting_started.yaml` scenario an
 
 ## 3. Start a Rack (Edge Node)
 
-The Rack is the edge execution node. It connects to the Mixer, receives its unique Identity (`fluxEntityID`), downloads the active scenario, and starts processing data.
+The Rack is the edge execution node. It connects to the Mixer, receives its unique Identity (`entity_id`), downloads the active scenario, and starts processing data.
 
 ```bash
 # In a new terminal window:

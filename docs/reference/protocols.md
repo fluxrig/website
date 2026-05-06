@@ -38,7 +38,7 @@ The **Snake Protocol** is the secure mTLS transport layer connecting distributed
 #### Enrollment & heartbeats
 *   `fluxrig.agent.hello`: Broadcast by new Racks for initial enrollment.
 *   `fluxrig.agent.heartbeat`: Periodic status reports from active Racks.
-*   `fluxrig.agent.notify.{fluxEntityID}`: Targeted commands from Mixer (Adoption, Reconnect).
+*   `fluxrig.agent.notify.{entity_id}`: Targeted commands from Mixer (Adoption, Reconnect).
 
 #### Control plane
 *   `fluxrig.rack.{rack_name}.scenario`: Pushed scenario updates for a specific Rack.

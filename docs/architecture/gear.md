@@ -114,4 +114,4 @@ Gears are observable by default, with telemetry collected from the execution pat
 
 *   **Non-Intrusive Tracing**: Every logic execution is automatically wrapped in an **OpenTelemetry span** without manual instrumentation.
 *   **Performance Metrics**: Throughput (`mps`) and processing latency (`μs`) are exposed via the Rack's embedded exporter.
-*   **Error Correlation**: Gear-level failures are captured and linked to the active `traceID` for rapid root-cause analysis.
+*   **Error Correlation**: Gear-level failures are captured and linked to the active `trace_id` for rapid root-cause analysis.

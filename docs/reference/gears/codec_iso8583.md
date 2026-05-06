@@ -19,7 +19,7 @@ By leveraging the **[Moov ISO8583](https://github.com/moov-io/iso8583)** engine,
 | :--- | :--- |
 | **Type** | `codec_iso8583` |
 | **Analogy** | **Signal Leveler** (Normalization) |
-| **Status** | Stable (v0.4.4) |
+| **Status** | Stable |
 | **Source Code** | [pkg/gears/native/iso8583/codec](https://github.com/jaab-tech/fluxrig/tree/main/pkg/gears/native/iso8583/codec) |
 | **Pairs With** | **[Signal Pre-amp](io_iso8583.md)** (Capture) |
 | **Port IN** | Raw Payload (Decode) / Structured fluxMsg (Encode) |

@@ -8,9 +8,6 @@ slug: /architecture/security
 <!-- Copyright (c) 2026 JAAB Tech SAS, Uruguay All Rights Reserved -->
 <!-- See https://jaab.tech -->
 
-
-# Security architecture
-
 **fluxrig** is engineered for the most hostile network environments (Zero Trust) and the most sensitive data workloads (e.g., PCI-DSS, HIPAA). Our security model relies on **Network Isolation** and **Sovereign Identity**, ensuring that the integrity of the transactional processing path is never compromised.
 
 ## Network isolation (Inbound Zero)
@@ -41,7 +38,7 @@ The management tunnel uses a **Cryptographic Handshake** that enforces 100% mutu
 To ensure operational continuity during network partitions, **fluxrig** utilizes a **Sovereign Identity** model.
 
 *   **The Passport (`state.flux`)**: The Rack does not require a real-time connection to the Mixer to verify its own integrity. It holds a signed state bundle (The Passport) on-site.
-*   **Cluster Authority**: The root of trust is the **Cluster Authority Key**. In {{VERS}}, this is a **file-based Ed25519 keypair**.
+*   **Cluster Authority**: The root of trust is the **Cluster Authority Key**. In the current release, this is a **file-based Ed25519 keypair**.
 *   **Immutable Integrity**: On boot, the Rack loads its Passport and verifies the internal configuration signature against the cluster public key.
 *   **Safe Rollback**: If a new configuration from the Mixer fails a signature check or causes a bootstrap error, the Rack automatically rolls back to the previous known-good state in its local storage.
 
@@ -49,7 +46,7 @@ To ensure operational continuity during network partitions, **fluxrig** utilizes
 
 ## Security roadmap: institutional hardening
 
-To maintain 100% technical honesty and audit readiness, we distinguish between standard primitives available in {{VERS}} and institutional features scheduled for future releases.
+To maintain 100% technical honesty and audit readiness, we distinguish between standard primitives available in the current release and institutional features scheduled for future releases.
 
 ### Deterministic masking (Planned future)
 Unlike heuristic-based masking solutions, **fluxrig** intends to implement **Deterministic Masking** based on the absolute structure of the data:
@@ -59,7 +56,7 @@ Unlike heuristic-based masking solutions, **fluxrig** intends to implement **Det
 3.  **Stateless Processing Path**: Downstream modules and telemetry sinks only see the token, isolating clear-text data.
 
 ### HSM and Cloud KMS integration (Planned future)
-While {{VERS}} uses secure file-based keys, the roadmap includes native integration with:
+While the current release uses secure file-based keys, the roadmap includes native integration with:
 
 - **Cloud KMS**: AWS KMS and Google Cloud KMS for cluster authority root-of-trust.
 - **Hardware Security Modules (HSM)**: Support for PKCS#11 and HashiCorp Vault transit engines.
@@ -72,7 +69,7 @@ While {{VERS}} uses secure file-based keys, the roadmap includes native integrat
 
 ## Security roadmap and compliance
 
-| Feature Area | {{VERS}} Status | Implementation Strategy |
+| Feature Area | Status | Implementation Strategy |
 | :--- | :--- | :--- |
 | **mTLS Tunnel** | **Available** | Outbound secure tunnel (TLS 1.2+ Baseline). |
 | **Sovereign ID** | **Available** | Signed State Envelopes (`state.flux`). |

@@ -44,7 +44,7 @@ To bridge the gap between business operations and technical troubleshooting, eve
 
 *   **`flux_id`**: The **Business Context** (The Transaction ID).
 *   **`trace_id`**: The **Operational Context** (The OTel Trace ID).
-*   **`fluxEntityID`**: The **Source Context** (The specific Rack/Gear origin, utilizing UUID v7).
+*   **`entity_id`**: The **Source Context** (The specific Rack/Gear origin, utilizing UUID v7).
 
 ---
 

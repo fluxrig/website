@@ -26,7 +26,7 @@ type StateEnvelope struct {
 // RackState (The Content)
 type RackState struct {
     ClusterID      string // e.g. "flux-prod"
-    MachineID      uint64 // 64-bit physical ID
+    machine_id      uint64 // 64-bit physical ID
     Name           string // Human-readable name
     Status         string // active, pending
     Secret         string // Bearer token

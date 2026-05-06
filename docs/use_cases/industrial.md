@@ -64,7 +64,7 @@ graph LR
 
 ### Step-by-step processing
 1.  **Data Aggregation (1-2)**: Disparate data from PLCs and mesh sensors are merged into a unified internal bus.
-2.  **Data Normalization (3)**: Data is normalized into the standard `fluxMsg` format, attaching sovereign metadata (traceID, MachineID).
+2.  **Data Normalization (3)**: Data is normalized into the standard `fluxMsg` format, attaching sovereign metadata (trace_id, machine_id).
 3.  **Audit Integrity (4)**: The **Correlator Gear** ensures every industrial event is logged to the local immutable archive before external transmission.
 4.  **Anomaly Detection (5)**: Real-time deviations are diverted to the SRE alerting tier for immediate operational response.
 

@@ -17,7 +17,7 @@ It provides a unified control plane to route, transform, and monitor data stream
 
 ## Why fluxrig?
 
-fluxrig is designed for environments where data integrity and edge autonomy are non-negotiable.
+**fluxrig** is designed for environments where data integrity and edge autonomy are non-negotiable.
 
 1. **Edge-to-Cloud Orchestration**: Manage thousands of distributed nodes as a single cohesive system.
 2. **Protocol Agnostic**: Native support for ISO8583, JSON, Protobuf, and legacy binary protocols.
@@ -43,7 +43,7 @@ flowchart LR
     subgraph Southbound ["The Edge (Southbound)"]
         Pinpad[Legacy Device]
         PLC[Industrial PLC]
-        subgraph Rack_A [fluxrig Rack]
+        subgraph Rack_A [**fluxrig** Rack]
             GearSerial[Protocol Gear]
             GearIO[I/O Gear]
         end
@@ -80,7 +80,7 @@ flowchart LR
 ## Choose your journey
 
 ### For Operators & SREs
-**Maintain maximum uptime** and operational visibility. fluxrig provides the tools to orchestrate distributed racks, manage immutable snapshots, and analyze high-fidelity telemetry in real-time.
+**Maintain maximum uptime** and operational visibility. **fluxrig** provides the tools to orchestrate distributed racks, manage immutable snapshots, and analyze high-fidelity telemetry in real-time.
 
 *   **[Deployment architecture & binaries →](./architecture/deployment.md)**
 *   **[Operations & CLI reference →](./reference/cli.md)**
@@ -96,7 +96,7 @@ flowchart LR
 *   **[Gears ecosystem reference →](./reference/gears/index.md)**
 
 ### For Architects & Security Teams
-**Design resilient, sovereign data planes.** fluxrig allows for the design of complex, multi-actor topologies that enforce strict data isolation, zero-trust connectivity, and deterministic execution.
+**Design resilient, sovereign data planes.** **fluxrig** allows for the design of complex, multi-actor topologies that enforce strict data isolation, zero-trust connectivity, and deterministic execution.
 
 *   **[System foundation & core principles →](./overview/foundation.md)**
 *   **[Security & identity architecture →](./architecture/security.md)**

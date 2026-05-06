@@ -138,7 +138,7 @@ General Mixer identity and bootstrapping settings.
 #### Registry-First Identity Model
 
 > [!NOTE]
-> **Important Change (v0.5.0+)**: The static `machine_id` configuration field has been completely removed from both Rack and Mixer configurations. **fluxrig** now enforces a **Registry-First Enrollment Model**. 
+> **Important Change (future releases)**: The static `machine_id` configuration field has been completely removed from both Rack and Mixer configurations. **fluxrig** now enforces a **Registry-First Enrollment Model**. 
 > 
 > *   **Racks**: Dynamically receive a 128-bit `uuid.UUID` Identity during the Enrollment Handshake, which is cryptographically signed and stored in the local `state.flux` passport.
 > *   **Mixers**: Automatically generate a persistent cluster identity (UUID v7) on their first boot, which is maintained in the internal Unified Registry (`registry`).
@@ -217,7 +217,7 @@ store_dir = "data/js"
 
 ### [Roadmap] Observability tiers
 
-The platform is designed to support multiple observability tiers for various scales. In **{{VERS}}**, only the **Embedded Tier** is fully implemented.
+The platform is designed to support multiple observability tiers for various scales. In **the current release**, only the **Embedded Tier** is fully implemented.
 
 | Tier | Backend(s) | Use Case | Status |
 |------|------------|----------|--------|
@@ -273,7 +273,7 @@ Rotation and retention policies.
 - `wal_max_size_mb`: Max size for Write-Ahead Log.
 - `database_file`: Filename for DuckDB file.
 
-The `fluxID` (or `fluxID` in JSON) is the unique identifier...
+The **flux_id** (serialized as `flux_id` in JSON and database schemas) is the unique 128-bit identifier used to trace a specific business signal across its entire lifecycle, from edge ingestion to cloud archival.
 
 #### Embedded storage schema
 
@@ -500,7 +500,7 @@ GET /api/v1/telemetry/traces/{trace_id}
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `flux_id` | `UUID` | Filter by fluxID. |
+| `flux_id` | `UUID` | Filter by flux_id. |
 | `since` | `RFC3339` | Start time. |
 | `min_duration_ms` | `int` | Minimum duration filter. |
 | `status` | `string` | `ok` or `error`. |

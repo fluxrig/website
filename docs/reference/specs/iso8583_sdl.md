@@ -28,7 +28,7 @@ fields:
   2: { label: "PAN", type: "llvar_n", length: 19, alias: "card.pan", enc: "bcd" }
 
 # --- PLANNED ROADMAP FEATURES ---
-# The following blocks are architecturally defined but NOT yet active in {{VERS}}
+# The following blocks are architecturally defined but NOT yet active in the current release
 
 # validations:
 #   - rule: "mandatory"
@@ -111,7 +111,7 @@ For complex fields (like `DE 48` or `DE 127`), you can define nested subfields.
 ## Roadmap: validation & simulation logic
 
 > [!WARNING]
-> **Planned Features**: The `validations` and `simulation` blocks are currently in the **Technical Design** phase. The `codec_iso8583` gear in {{VERS}} focuses exclusively on High-Fidelity Parsing and Alias Mapping. Logic-driven validation and macro-based simulation are targeted for the v0.5.0 milestone.
+> **Planned Features**: The `validations` and `simulation` blocks are currently in the **Technical Design** phase. The `codec_iso8583` gear in the current release focuses exclusively on High-Fidelity Parsing and Alias Mapping. Logic-driven validation and macro-based simulation are targeted for the future milestone.
 
 ### Planned Simulation Macros:
 

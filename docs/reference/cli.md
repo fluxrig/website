@@ -179,6 +179,6 @@ fluxrig-mixer --config fluxrig-mixer.toml --scenario scenario_01.yaml
 
 **Key Configuration Settings** (`[mixer]`):
 
-- `mixer.api_port` - REST API port (default: `8090`)
+- `api.port` - REST API port (default: `8090`)
 - `mixer.data_dir` - Data directory (default: `./data`)
 - `mixer.startup_scenario` - Alternative to `--scenario` flag (file path or `name:tag` URN)

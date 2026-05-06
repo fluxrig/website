@@ -11,7 +11,7 @@ excerpt: The parallel mastering side-chain for differential signal analysis.
 # Correlator gear
 
 > [!WARNING]
-> **Planned Feature (v0.4.3)**: The Correlator Gear is currently in the **Architectural Proposal** phase. This documentation serves as a technical reference for the intended design of "Parallel Mastering" within the **[Testing & Simulation Architecture](../../architecture/testing_simulation.md)**.
+> **Planned Feature**: The Correlator Gear is currently in the **Architectural Proposal** phase. This documentation serves as a technical reference for the intended design of "Parallel Mastering" within the **[Testing & Simulation Architecture](../../architecture/testing_simulation.md)**.
 
 The `correlator` gear functions as the **Side-Chain Monitor** of the payment mixer. It performs real-time **Differential Analysis** by comparing response signals from two independent signal pathstypically a **Legacy System** and a modernized **Shadow System**.
 

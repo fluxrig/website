@@ -19,13 +19,13 @@ In professional audio, whether capturing a delicate acoustic performance or mana
 1.  **Isolate** processing logic into modular, swappable units.
 2.  **Route** signals deterministically through persistent, failure-resistant paths.
 3.  **Monitor** every point in the signal chain without interfering with the primary flow.
-4.  **Orchestrate** at any scale—from the granular "patching" of microphones on a single stage to the global coordination of an entire world tour.
+4.  **Orchestrate** at any scale (from the granular "patching" of microphones on a single stage to the global coordination of an entire world tour).
 
 fluxrig applies these same uncompromising requirements to mission-critical business infrastructure.
 
 ### The Studio vs. The Stage
 
-*   **The Studio Logic**: Focuses on **precision and fidelity**. Like a high-end signal chain, every transformation in fluxrig is deterministic and bit-perfect. This is the logic of the "Hot Path"—the microsecond-latency processing of individual transactions.
+*   **The Studio Logic**: Focuses on **precision and fidelity**. Like a high-end signal chain, every transformation in fluxrig is deterministic and bit-perfect. This is the logic of the "Hot Path" (the microsecond-latency processing of individual transactions).
 *   **The Stage Logic**: Focuses on **scale and orchestration**. Just as a large-scale festival involves orchestrating all the instruments on a single stage (a **Rack**) and then connecting multiple stages to a central console (The **Mixer**), fluxrig manages thousands of edge nodes as a single, cohesive event.
 
 ## Core nomenclature

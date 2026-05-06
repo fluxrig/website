@@ -17,7 +17,7 @@ By leveraging the **[Moov ISO8583](https://github.com/moov-io/iso8583)** protoco
 | :--- | :--- |
 | **Type** | `io_iso8583` |
 | **Analogy** | **Signal Pre-amp** (Input Stage) |
-| **Status** | Stable (v0.4.4) |
+| **Status** | Stable |
 | **Source Code** | [pkg/gears/native/iso8583/io](https://github.com/jaab-tech/fluxrig/tree/main/pkg/gears/native/iso8583/io) |
 | **Pairs With** | **[Signal Leveler](codec_iso8583.md)** (Normalization) |
 | **Port IN** | `in`: consumes egress payload for network transmission |

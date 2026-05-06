@@ -41,7 +41,7 @@ Not all data requires the same durability profile. **fluxrig** allows you to opt
 | **Turbo** | **Go Channels**    | **Volatile** | **< 10µs**       | (Planned) Intranode High-Speed Logic. |
 
 > [!WARNING]
-> **Turbo Wires (Planned)**: Turbo Wires offer sub-millisecond performance by bypassing the NATS bus for local intra-rack flows. This strategy is currently in technical design and targeted for the **v0.5.0 milestone**.
+> **Turbo Wires (Planned)**: Turbo Wires offer sub-millisecond performance by bypassing the NATS bus for local intra-rack flows. This strategy is currently in technical design and targeted for the **future milestone**.
 
 ---
 

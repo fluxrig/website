@@ -44,17 +44,17 @@ For the full technical specification of the `fluxMsg` fields, system flags, and 
 
 To ensure data sovereignty and end-to-end auditability across thousands of distributed nodes, we implement a dual-track identity model.
 
-### fluxID (Transactional tracer)
-Every signal entering the rig is assigned a **`fluxID`**, a **128-bit, time-ordered unique identifier (UUID v7)**.
+### flux_id (Transactional tracer)
+Every signal entering the rig is assigned a **`flux_id`**, a **128-bit, time-ordered unique identifier (UUID v7)**.
 
 *   **Standard**: **RFC 9562 (UUID v7)**.
 *   **Property**: Chronologically sortable (millisecond precision), globally unique, and optimized for native indexing in high-performance storage engines.
 *   **Role**: The primary key for telemetry joins, distributed traces, and audit archives.
 
-### fluxEntityID (Persistent component identity)
-Components that require persistent identity (Racks, Gears, Scenarios) are assigned a **`fluxEntityID`**.
+### entity_id (Persistent component identity)
+Components that require persistent identity (Racks, Gears, Scenarios) are assigned a **`entity_id`**.
 
-*   **Structure**: A 128-bit UUID v7 that embeds the **EntityType** and a **MachineID Hint** for stateless traceability.
+*   **Structure**: A 128-bit UUID v7 that embeds the **EntityType** and a **machine_id Hint** for stateless traceability.
 *   **Role**: Provides immutable, human-interpretable identities for infrastructure components across their entire lifecycle.
 
 ---

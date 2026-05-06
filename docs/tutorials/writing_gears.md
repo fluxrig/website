@@ -9,7 +9,7 @@ title: Developing specialized gears
 
 Before dropping into Go code, remember the **Orchestration Spectrum**:
 
-*   **Declarative Logic**: The majority of business logic patternsincluding normalization, mapping, and alertingare most efficiently implemented using the **[Bento Gear](../reference/gears/bento.md)**. This declarative approach significantly reduces development overhead and long-term maintenance complexity.
+*   **Declarative Logic**: The majority of business logic patterns (including normalization, mapping, and alerting) are most efficiently implemented using the **[Bento Gear](../reference/gears/bento.md)**. This declarative approach significantly reduces development overhead and long-term maintenance complexity.
 *   **Specialized Protocols**: For high-performance protocol drivers (ISO 8583, Modbus), binary packers, or customized network stacks, you develop **Native Go Gears**.
 
 ## Prerequisites: The gear contract
@@ -174,7 +174,7 @@ func (s *Server) handleConn(conn net.Conn) {
 		copy(payload, data) 
 
 		msg := fluxMsg.New()
-		msg.fluxID, _ = s.idGen.NextFluxID()
+		msg.flux_id, _ = s.idGen.NextFluxID()
 		msg.RawPayload = payload
 
 		//  Contextual Signal Metadata
@@ -244,7 +244,7 @@ func TestMyGear_Process(t *testing.T) {
 ```
 
 > [!IMPORTANT]
-> **Zero-Loss Shutdown**: Always implement the `Drain` and `Stop` hooks. `Drain` signalizes the logic to stop accepting new signals while finishing work-in-progress, ensuring a graceful institutional handover.
+> **Zero-Loss Shutdown**: Always implement the `Drain` and `Stop` hooks. The `Drain` phase signals the logic to stop accepting new signals while finishing work-in-progress, ensuring a graceful institutional handover.
 
 ---
 

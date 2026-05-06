@@ -372,7 +372,7 @@ definitions:
         example: cluster.key
         type: string
       databaseFile:
-        example: fluxrig.duckdb
+        example: flux.duckdb
         type: string
       dir:
         example: ./data
