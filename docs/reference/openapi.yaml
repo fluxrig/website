@@ -207,6 +207,9 @@ definitions:
       compress:
         example: true
         type: boolean
+      debug:
+        description: Hard-override for debug level
+        type: boolean
       filename:
         example: logs/fluxrig.log
         type: string
@@ -221,6 +224,9 @@ definitions:
         type: integer
       throttling:
         $ref: '#/definitions/config.ThrottlingConfig'
+      trace:
+        description: Hard-override for trace level
+        type: boolean
     type: object
   config.MetricsConfig:
     properties:
@@ -396,6 +402,9 @@ definitions:
         type: string
       batchInterval:
         type: string
+      disabled:
+        description: Master switch to disable all telemetry
+        type: boolean
       maxBatchSize:
         type: integer
       metrics:

@@ -16,7 +16,12 @@ To support modern containerized deployments (Docker/Kubernetes), **fluxrig** mer
 3.  **Config File** (`fluxrig.toml`)
 4.  **Static Defaults**
 
-The environment variable mapping replaces dots (`.`) with underscores (`_`) and uppercases the key. For example, `rack.bus.url` becomes `FLUXRIG_RACK_BUS_URL`.
+The environment variable mapping replaces dots (`.`) with underscores (`_`) and uppercases the key. For example, `base.name` becomes `FLUXRIG_BASE_NAME`.
+
+Top-level overrides for troubleshooting:
+* `FLUXRIG_TRACE=true`: Forces all logging to TRACE level (high volume).
+* `FLUXRIG_DEBUG=true`: Forces all logging to DEBUG level.
+* `FLUXRIG_DISABLE_TELEMETRY=true`: Master switch to stop all self-monitoring reporting.
 
 ## Secret management
 **fluxrig** does not store secrets in plaintext TOML. For sensitive values (e.g., database passwords, API keys):
@@ -44,6 +49,8 @@ Shared logging content.
 | `max_size_mb` | `int` | `100` | Max size in MB before rotation. |
 | `max_backups` | `int` | `7` | Max number of old log files to keep. |
 | `compress` | `bool` | `true` | Compress rotated log files (gzip). |
+| `trace` | `bool` | `false` | Hard-override to enable trace level. |
+| `debug` | `bool` | `false` | Hard-override to enable debug level. |
 
 **Throttling settings**
 
@@ -53,18 +60,26 @@ Shared logging content.
 | `throttling.rate` | `float`| `500.0` | Max lines per second per gear. |
 | `throttling.burst` | `int` | `50` | Temporary log burst capacity. |
 
-#### `[Rack]`
-Rack-specific runtime settings.
+#### `[Base]` (Common)
+Foundational identity and path settings.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `name` | `string` | `"rack-default"` | **Unique Name** (Static Mode). If set, this Rack claims this specific identity. |
-| `name_prefix` | `string` | `"node-"` | **Ephemeral Prefix** (Zero Config). Used if `name` is empty. |
-| `state_file` | `string` | `"state.flux"` | **Signed State Bundle** (CBOR). Persists Identity, Config, and Secrets. |
-| `max_hops` | `int` | `64` | **Max Routing Hops**. Prevents infinite loops in complex topologies. |
-| `max_payload_size`| `int` | `2097152` | **Max Payload Size (Bytes)**. Rejects messages exceeding this limit (Default: 2MB). |
-| `ip` | `string` | `""` | **Manual IP Override**. If empty, the Rack autodetects its local primary IP. |
-| `enrollment_timeout` | `string` | `"2s"` | Timeout for enrollment handshake. |
+| `name` | `string` | `"node-01"` | **Unique Name**. Claims this specific identity. |
+| `state_dir` | `string` | `"./data"` | Root directory for state and WAL. |
+| `state_file` | `string` | `"rack.flux"` | **Signed State Bundle** (CBOR). Persists Identity, Config, and Secrets. |
+
+#### `[Rack]`
+Rack-specific agent settings.
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `name_prefix` | `string` | `"node-"` | **Ephemeral Prefix**. Used if `base.name` is empty. |
+| `ip` | `string` | `""` | **Manual IP Override**. If empty, the Rack autodetects its local primary IP via `netutil`. |
+| `max_hops` | `int` | `64` | **Max Routing Hops**. Prevents infinite loops. |
+| `max_payload_size`| `int` | `2097152` | **Max Payload Size (Bytes)**. Default: 2MB. |
+| `enrollment_timeout` | `string` | `"15s"` | Timeout for enrollment handshake. |
+| `heartbeat_interval` | `string` | `"30s"` | Frequency of Registry heartbeats. |
 
 #### `[Store]`
 Data storage settings.
@@ -73,32 +88,29 @@ Data storage settings.
 | :--- | :--- | :--- | :--- |
 | `dir` | `string` | `"./data"` | Root directory for data storage. |
 
-#### `[Rack.bus]`
-NATS Bus settings.
+#### `[Snake]` (NATS/JetStream)
+Configuration for the underlying transport bus.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `url` | `string` | `"nats://localhost:4222"` | NATS Server URL. |
-| `domain` | `string` | `"flux"` | **JetStream Domain** (Sovereignty). Must match Mixer cluster name for stream visibility. |
-| `stream_name` | `string` | `"flux-msg"` | NATS Stream (JetStream) name to publish to. |
-| `connect_timeout` | `string` | `"10s"` | Initial connection timeout for both **Data** and **Telemetry** buses. |
-| `reconnect_wait` | `string` | `"1s"` | Wait time between reconnect attempts for all isolated bus connections. |
-| `convergence_delay` | `string` | `"100ms"` | Safety delay to allow ephemeral NATS consumers to converge before starting gears. |
+| `domain` | `string` | `"flux"` | **JetStream Domain**. Must match Mixer cluster name. |
+| `stream_name` | `string` | `"flux-msg"` | Primary JetStream stream name. |
+| `connect_timeout` | `string` | `"10s"` | Initial connection timeout. |
+| `reconnect_wait` | `string` | `"1s"` | Wait time between reconnect attempts. |
+| `convergence_delay` | `string` | `"100ms"` | Safety delay for consumer convergence. |
 
 #### Example
 
 ```toml
+[base]
+name = "rack-nyc-01"
+state_dir = "/var/lib/fluxrig/data"
+
 [logging]
 level = "debug"
-dir = "./logs"
 
-[rack]
-name = "rack-nyc-01"
-
-[store]
-dir = "/var/lib/fluxrig/data"
-
-[rack.bus]
+[snake]
 url = "nats://nats.fluxrig.internal:4222"
 ```
 
@@ -126,14 +138,14 @@ Shared logging content.
 | `max_backups` | `int` | `7` | Max number of old log files to keep. |
 
 #### `[Mixer]`
-General Mixer identity and bootstrapping settings.
+General Mixer settings.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `max_hops` | `int` | `64` | **Global Max Hops**. Default limit applied to all Racks if not overridden. |
-| `max_payload_size`| `int` | `2097152` | **Global Max Payload (Bytes)**. Default limit applied to all Racks (Default: 2MB). |
-| `mixer_name` | `string` | `"mixer-01"` | Human-readable identifier. |
-| `startup_scenario` | `string` | `""` | Scenario reference to load on startup. Accepts a file path (`./scenario.yaml`), a stored URN (`payment-flow:v1.0.0`), or empty to resume the last active scenario. |
+| `max_hops` | `int` | `64` | **Global Max Hops**. |
+| `max_payload_size`| `int` | `2097152` | **Global Max Payload (Bytes)**. |
+| `startup_scenario` | `string` | `""` | Scenario reference to load on startup. |
+| `scenario_wait_timeout` | `string` | `"15s"` | Time to wait for Racks to converge when activating a scenario. |
 
 #### Registry-First Identity Model
 
@@ -181,7 +193,7 @@ Embedded NATS Server (JetStream) settings.
 | :--- | :--- | :--- | :--- |
 | `port` | `int` | `4222` | **Server Port** to listen on for NATS connections. |
 | `url` | `string` | `"nats://localhost:4222"` | URL to advertise to Racks. |
-| `cluster_name` | `string` | `"flux"` | JetStream Domain Name (for Leaf Nodes). |
+| `domain` | `string` | `"flux"` | JetStream Domain Name. |
 | `stream_name` | `string` | `"flux-msg"` | Name of the primary JetStream stream. |
 | `stream_subjects` | `[]string` | `["flux.msg.>", "flux.gear.>", "fluxrig.>"]` | Wildcard subjects to capture. |
 | `business_stream_max_age` | `string` | `"720h"` | Data retention time for business logic streams. |
@@ -191,11 +203,13 @@ Embedded NATS Server (JetStream) settings.
 #### Example (Mixer)
 
 ```toml
+[base]
+name = "mixer-prod-01"
+
 [logging]
-level = "debug"
+level = "info"
 
 [mixer]
-mixer_name = "mixer-prod-01"
 startup_scenario = "scenario_prod.yaml"
 
 [api]
@@ -203,14 +217,11 @@ port = 8090
 
 [store]
 dir = "./data"
-database_file = "fluxrig.duckdb"
-cluster_key_file = "cluster.key"
 
 [snake]
 port = 4222
 url = "nats://localhost:4222"
-cluster_name = "flux"
-store_dir = "data/js"
+domain = "flux"
 ```
 
 ---
@@ -463,7 +474,10 @@ fluxrig metrics --entity mixer-01
 
 ## REST API endpoints
 
-The Mixer exposes telemetry query endpoints via REST API.
+The Mixer exposes telemetry query endpoints via a REST API.
+
+> [!WARNING]
+> **API Security Limitation (Current Release)**: The current release of the Control Plane API does NOT implement authentication or authorization. It is strictly intended for use within trusted, isolated management networks. Exposing this port to the public internet will allow unauthorized scenario activation and data exfiltration.
 
 ### Logs API
 
