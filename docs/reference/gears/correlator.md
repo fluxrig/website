@@ -40,7 +40,7 @@ By "Monitoring the Mix" in parallel, enterprises can achieve risk-free migration
 In **fluxrig**, the Correlator operates "Out-of-Band," receiving non-blocking signal taps from the production wire to ensure **[Mission-Critical Resilience](../../architecture/testing_simulation.md#the-verification-rig-philosophy)**.
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Live Signal Path (The Real Mix)"
         Legacy["Legacy Switch (Production)"]
     end
