@@ -64,25 +64,27 @@ The Rack is the edge execution node. It connects to the Mixer, receives its uniq
 **What just happened?**
 1. The Rack initiated the **Deferred Adoption Lifecycle**.
 2. Because the Mixer was running with `--auto-adopt`, the Rack was instantly approved.
-3. The Rack downloaded its passport (`state.flux`) and the `getting_started` scenario.
+3. The Rack downloaded its passport (`rack.flux`) and the `getting_started` scenario.
 4. It started the local "Gears" (modules) defined in the scenario.
 
 ### Under the Hood: The Scenario Configuration
 
-When the Rack connects to the Mixer, it receives the following declarative YAML logic. This scenario tells the Rack to deploy a single **Bento Gear**, which uses the popular open-source stream processor (Bento fork) under the hood to generate and manipulate data dynamically.
+When the Rack connects to the Mixer, it receives the following declarative YAML logic. This scenario tells the Rack to deploy two **Bento Gears** connected by a **Wire**, demonstrating a complete message flow through the fluxrig topology.
 
 ```yaml
 meta:
   name: Getting Started
   version: v1.0.0
 
-# This scenario demonstrates a basic telemetry generator using the Bento gear.
-# It simulates a node generating periodic data and logging it to the console.
+# A generator gear produces synthetic telemetry data every 2 seconds,
+# sends it through a wire to a sink gear, which logs to the console.
 
 gears:
   - name: generator
     type: bento
     config:
+      ports:
+        outputs: ["out"]
       bento:
         input:
           generate:
@@ -94,24 +96,55 @@ gears:
               root.metrics.mem_mb = random_int(min:512, max:4096)
               root.message = "Hello from fluxrig Getting Started!"
             interval: 2s
+        # Output auto-wired via port "out"
+
+  - name: sink
+    type: bento
+    config:
+      ports:
+        inputs: ["in"]
+      bento:
+        # Input auto-wired via port "in"
         output:
           stdout: {}
+
+wires:
+  - from: generator.out
+    to: sink.in
 ```
 
 **How it works:**
-*   **`type: bento`**: We are defining a declarative data-processing Gear without writing compiled Go code.
-*   **`input.generate`**: Instead of listening on a network port, this block artificially generates synthetic JSON payloads every 2 seconds (`interval: 2s`).
-*   **`mapping`**: This uses Bloblang (Bento's mapping language) to inject mock metrics like a simulated CPU percentage (`cpu_pct`) and memory usage (`mem_mb`), alongside a `uuid_v4` and timestamp.
-*   **`output.stdout`**: This prints the generated JSON payload directly to your Rack's terminal. 
+*   **`type: bento`**: We are defining declarative data-processing Gears without writing compiled Go code.
+*   **`generator` gear**: Uses `input.generate` to produce synthetic JSON payloads every 2 seconds. Its output is auto-wired through the `out` port.
+*   **`sink` gear**: Receives messages through the `in` port and prints them to the console via `output.stdout`.
+*   **`wires`**: The `generator.out → sink.in` wire routes messages through the fluxrig bus (NATS JetStream), giving you full telemetry visibility — gear-level metrics like `flux.gear.messages_in` and `flux.gear.messages_out` are automatically tracked.
+*   **`mapping`**: Uses Bloblang (Bento's mapping language) to inject mock metrics like a simulated CPU percentage (`cpu_pct`) and memory usage (`mem_mb`), alongside a `uuid_v4` and timestamp.
 
-You should now see periodic logs in the Rack terminal reflecting this mapped data:
+You should now see periodic logs in the Rack terminal reflecting the received data:
 ```text
-[INFO] BENTO: {"flux_id":"...","metrics":{"cpu_pct":42,"mem_mb":1024},"message":"Hello from fluxrig Getting Started!"}
+{"flux_id":"...","metrics":{"cpu_pct":42,"mem_mb":1024},"message":"Hello from fluxrig Getting Started!"}
 ```
 
 ---
 
-## 4. Observe the flow
+## 4. Verify Node Identity
+
+Every Rack receives a **Sovereign Passport** upon enrollment. This binary file (`rack.flux`) contains the node's cryptographically signed identity and configuration. You can inspect this passport using the built-in security tools:
+
+```bash
+# Decode and verify the signed identity
+./bin/fluxrig keys inspect data/rack.flux
+```
+
+**What you'll see:**
+*   **MachineID**: The unique hardware identifier assigned to this node.
+*   **Status**: The current lifecycle state (e.g., `active`).
+*   **Revision**: How many times this identity has been re-issued.
+*   **Signature Status**: The CLI automatically verifies that the identity hasn't been tampered with since issuance.
+
+---
+
+## 5. Observe the flow
 
 The `getting_started` scenario automatically generates synthetic telemetry data (CPU/Memory metrics) on the Rack and streams it securely to the Mixer.
 
@@ -121,7 +154,7 @@ Open a third terminal and query the real-time metrics:
 
 ```bash
 # View the latest heartbeats sent by the Rack
-./bin/fluxrig metrics --name fluxrig.rack.heartbeats_sent
+./bin/fluxrig metrics --name flux.rack.heartbeats_sent
 
 # View all metrics for your node (replace with your auto-generated node name if different)
 ./bin/fluxrig metrics --entity node-xxxxx
@@ -132,7 +165,7 @@ Open a third terminal and query the real-time metrics:
 
 ---
 
-## 5. Next steps
+## 6. Next steps
 
 Congratulations! You have successfully established a secure, bidirectional edge-to-cloud topology.
 

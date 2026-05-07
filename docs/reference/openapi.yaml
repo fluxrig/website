@@ -112,6 +112,10 @@ definitions:
     type: object
   api.TopologyStatusResponse:
     properties:
+      active_scenario:
+        description: ActiveScenario is the name of the currently active scenario.
+        example: Getting Started
+        type: string
       active_ver:
         description: ActiveVer is the currently active scenario version.
         example: v1.2.3
@@ -257,6 +261,11 @@ definitions:
         type: integer
       maxPayloadSize:
         type: integer
+      scenarioWaitTimeout:
+        description: ScenarioWaitTimeout is the time to wait for a rack to register
+          when activating a scenario.
+        example: 15s
+        type: string
       startupScenario:
         description: StartupScenario reference to the scenario to load on startup.
         type: string
