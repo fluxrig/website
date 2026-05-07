@@ -18,10 +18,10 @@ type NativeGear interface {
 
     // Start begins the active lifecycle of the Gear.
     // 'emit' is used by Source Gears to inject signals into the Bus.
-    Start(ctx context.Context, emit func(*fluxmsg.FluxMsg)) error
+    Start(ctx context.Context, emit func(*fluxmsg.fluxMsg)) error
 
     // Process handles an incoming signal and returns a response signal (optional).
-    Process(ctx context.Context, msg *fluxmsg.FluxMsg) (*fluxmsg.FluxMsg, error)
+    Process(ctx context.Context, msg *fluxmsg.fluxMsg) (*fluxmsg.fluxMsg, error)
 
     // Drain signals the gear to stop accepting new input.
     Drain(ctx context.Context) error
@@ -36,12 +36,12 @@ type NativeGear interface {
 | Primitive | Purpose |
 | :--- | :--- |
 | **`GearContext`** | Provides access to the system Bus, Registry, and Telemetry Tap. |
-| **`FluxMsg`** | The canonical, CBOR-ready data structure for all internal signals. |
-| **`FluxID`** | Deterministic 64-bit Sonyflake identifiers for signal tracing. |
+| **`fluxMsg`** | The canonical, CBOR-ready data structure for all internal signals. |
+| **`FluxID`** | Deterministic 128-bit UUID v7 identifiers for signal tracing. |
 
 ## Signal flow lifecycle
 
-1.  **Ingestion**: A southbound Gear (e.g., `io_tcp`) consumes raw wire bytes and wraps them in a `FluxMsg` envelope.
+1.  **Ingestion**: A southbound Gear (e.g., `io_tcp`) consumes raw wire bytes and wraps them in a `fluxMsg` envelope.
 2.  **Processing**: The signal is passed through a chain of Logic Gears (Native or Wasm) which modify the metadata or payload.
 3.  **Outgestion**: A northbound Gear (e.g., `registry-sink`) persists the final signal or routes it to an external endpoint.
 

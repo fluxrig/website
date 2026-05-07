@@ -12,7 +12,7 @@ title: Deployment Architecture
 
 ## Architecture tiers
 
-1.  **The Control Plane (Mixer)**: A central orchestration node that manages policy, identity (Registry), and telemetry aggregation. In {{VERS}}, the Mixer is a **Sovereign Single Node**, with a multi-node **HA Cluster** implementation on the engineering roadmap.
+1.  **The Control Plane (Mixer)**: A central orchestration node that manages policy, identity (Registry), and telemetry aggregation. In the current release, the Mixer is a **Sovereign Single Node**, with a multi-node **HA Cluster** implementation on the engineering roadmap.
 2.  **The Data Plane (Racks)**: A fleet of decentralized execution nodes. While Racks are currently horizontally scalable as independent nodes, **Native Rack Clustering** is planned to enable seamless multi-node coordination at the edge.
 
 ---
@@ -121,11 +121,11 @@ A core strength of the **fluxrig** architecture is **Sovereign Continuity**. Thi
 **fluxrig** supports the dynamic update of execution topologies (Scenarios) without requiring a full binary restart. However, for audit transparency, users should understand the current state-transition model.
 
 ### The Hot-Reload Gap (Current Limitation)
-In {{VERS}}, the hot-reload of a Scenario involves a **coordinated restart of the internal Gear pipeline**.
+In the current release, the hot-reload of a Scenario involves a **coordinated restart of the internal Gear pipeline**.
 
 *   **Downtime**: There is a millisecond-scale gap in signal processing while the new topology is bridged and I/O gears re-bind to their ports.
 *   **Signaling**: The reload is triggered via a `ScenarioUpdate` signal on the `flux.ctrl.>` management hierarchy.
-*   **Roadmap (v0.5.0+)**: We are engineering a "Shadow Swap" mechanism to achieve **True Zero-Downtime Reload**, where the new pipeline is initialized in parallel and traffic is cut over atomically.
+*   **Roadmap (future)**: We are engineering a "Shadow Swap" mechanism to achieve **True Zero-Downtime Reload**, where the new pipeline is initialized in parallel and traffic is cut over atomically.
 
 ---
 
@@ -135,8 +135,8 @@ In {{VERS}}, the hot-reload of a Scenario involves a **coordinated restart of th
 | :--- | :--- | :--- |
 | **Rack Clustering** | Planned | Hardware redundancy for high-load sites. |
 | **Sovereign Continuity** | Available | Uninterrupted business logic during Mixer downtime. |
-| **Mixer Clustering (HA)** | Planned | Multi-node Mixer for large-scale rig management (v0.6.0+). |
-| **Containerization** | Planned | Distroless images for cloud-native orchestration (v0.5.0+). |
+| **Mixer Clustering (HA)** | Planned | Multi-node Mixer for large-scale rig management (future). |
+| **Containerization** | Planned | Distroless images for cloud-native orchestration (future). |
 
 ---
 

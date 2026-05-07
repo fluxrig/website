@@ -5,8 +5,6 @@ title: Payment use cases
 
 # Payment use cases
 
-# Payment use cases
-
 **fluxrig** is a high-performance transaction runtime designed for extreme architectural flexibility in modern financial environments. It functions as a **Payment Orchestration Runtime**, providing a unified data flow for normalizing, routing, and processing ISO 8583, ISO 20022, and other financial protocols.
 
 Unlike rigid fixed-logic switches, **fluxrig** is a modular foundation. By composing specialized technical **Gears**, adopters can build anything from a passive transaction monitor to a high-throughput enterprise payment gateway.
@@ -45,7 +43,7 @@ This common scenario illustrates a modern transition: receiving standard Webhook
 graph LR
     POS["POS Terminal (REST/JSON)"]
     
-    subgraph Rack ["fluxrig Rack Agent"]
+    subgraph Rack ["fluxrig Rack"]
         Bento["Bento Gear (HTTP/REST Interface)"]
         Logic["Logic Gear (Validation)"]
         Codec["Codec Gear (ISO 8583 Encoder)"]

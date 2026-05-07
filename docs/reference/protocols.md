@@ -6,7 +6,6 @@ title: Wire protocol (snake)
 <!-- Copyright (c) 2026 JAAB Tech SAS, Uruguay All Rights Reserved -->
 <!-- See https://jaab.tech -->
 
-The `fluxrig` wire protocol...
 # Wire protocol (snake)
 
 This document serves as the canonical reference for the internal communication protocols, NATS subject topology, and message specifications used within the **fluxrig** ecosystem.
@@ -39,7 +38,7 @@ The **Snake Protocol** is the secure mTLS transport layer connecting distributed
 #### Enrollment & heartbeats
 *   `fluxrig.agent.hello`: Broadcast by new Racks for initial enrollment.
 *   `fluxrig.agent.heartbeat`: Periodic status reports from active Racks.
-*   `fluxrig.agent.notify.{machine_id}`: Targeted commands from Mixer (Adoption, Reconnect).
+*   `fluxrig.agent.notify.{entity_id}`: Targeted commands from Mixer (Adoption, Reconnect).
 
 #### Control plane
 *   `fluxrig.rack.{rack_name}.scenario`: Pushed scenario updates for a specific Rack.

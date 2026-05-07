@@ -34,20 +34,20 @@ This roadmap outlines the strategic direction for **fluxrig**. It defines the jo
 | :--- | :--- | :--- | :--- |
 | v0.3.x | Delivered | Universal I/O | Integration with the Bento ecosystem for 100+ connectors. |
 | v0.4.x | Active | Public Release | Initial open-source launch and logic extensibility (Native Gears). |
-| v0.5.x | Planned | High-Assurance | Distributed state (NATS KV) and HSM/KMS security integration. |
+| Future | Planned | High-Assurance | Distributed state (NATS KV) and Wasm Runtime integration. |
 
 ## Phase 4: scale & hardening
 
 | Version | Status | Goal | Description |
 | :--- | :--- | :--- | :--- |
-| v1.0.x | Planned | Hardened Integrity | Forensic analytics (DuckLake) and production-ready resilience. |
+| Future | Planned | Hardened Integrity | Forensic analytics (DuckLake) and production-ready resilience. |
 
 ## Phase 5: enterprise control
 
 | Version | Status | Goal | Description |
 | :--- | :--- | :--- | :--- |
-| v2.0.x | Planned | Global Management | fluxrig Studio (Visual Builder) and Remote Fleet Management (OTA). |
-| v2.1.x | Planned | Durable Workflows | Integration with Temporal for long-running business processes. |
+| Future | Planned | Global Management | fluxrig Studio (Visual Builder), Remote Fleet Management (OTA), and HSM/KMS security integration. |
+| Future | Planned | Durable Workflows | Integration with Temporal for long-running business processes. |
 
 ## Phase 6: autonomous engineering
 

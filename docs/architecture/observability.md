@@ -44,7 +44,7 @@ To bridge the gap between business operations and technical troubleshooting, eve
 
 *   **`flux_id`**: The **Business Context** (The Transaction ID).
 *   **`trace_id`**: The **Operational Context** (The OTel Trace ID).
-*   **`machine_id`**: The **Source Context** (The specific Rack/Gear origin).
+*   **`entity_id`**: The **Source Context** (The specific Rack/Gear origin, utilizing UUID v7).
 
 ---
 
@@ -54,7 +54,7 @@ The system is designed to maintain 100% auditability even during network isolati
 
 ```mermaid
 graph LR
-    subgraph Rack ["The Rack Agent"]
+    subgraph Rack ["The Rack"]
         direction TB
         subgraph Pipeline ["Logic Execution Path"]
             direction LR
@@ -123,16 +123,6 @@ To protect the system during backend saturation or network isolation:
 
 ### Deterministic sanitization
 Organizations can utilize deterministic masking to scrub sensitive information at the infrastructure boundary before data enters the persistent observability bus. This ensures that sensitive fields (like PANs) never reach the centralized telemetry backend, significantly reducing the audit scope of the central infrastructure.
-
-> [!CAUTION]
-> **Production Logging**: Enabling `DEBUG` or `TRACE` log levels may output raw hex payloads to the log stream. In production environments, ensure these levels are restricted to verify compliance with institutional "No Storage" security requirements.
-
----
-
-## Compliance and governance
-
-### Deterministic sanitization
-Organizations can utilize deterministic masking to scrub sensitive information at the edge before data enters the persistent observability bus. This ensures that sensitive fields (like PANs) never reach the centralized telemetry backend, significantly reducing the audit scope of the central infrastructure.
 
 > [!CAUTION]
 > **Production Logging**: Enabling `DEBUG` or `TRACE` log levels may output raw hex payloads to the log stream. In production environments, ensure these levels are restricted to verify compliance with institutional "No Storage" security requirements.

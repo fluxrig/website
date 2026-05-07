@@ -58,11 +58,13 @@ GET /metrics
 *Port is dependent on the configured API port (default 8090 for Mixer).*
 
 ### Key metrics to monitor
-* `fluxrig_gear_messages_in`: Throughput capacity (entering gears).
-* `fluxrig_gear_messages_out`: Throughput capacity (leaving gears).
-* `fluxrig_gear_processing_time_ms`: Gear execution latency.
-* `fluxrig_nats_publish_latency_ms`: Message bus propagation health.
-* `fluxrig_bus_publish_errors`: System-level emission failures.
+* `fluxrig.gear.messages_in`: Throughput capacity (entering gears).
+* `fluxrig.gear.messages_out`: Throughput capacity (leaving gears).
+* `fluxrig.gear.processing_time_ms`: Gear execution latency histogram.
+* `fluxrig.port.bytes_in`: Ingress data volume at the port level.
+* `fluxrig.port.bytes_out`: Egress data volume at the port level.
+* `fluxrig.nats.publish_latency_ms`: Message bus propagation health.
+* `fluxrig.bus.publish_errors`: System-level emission failures.
 
 ---
 
@@ -110,7 +112,7 @@ Using the OpenSearch DSL to find specific events.
 | :--- | :--- | :--- |
 | `ts` | Timestamp | Event generation time |
 | `trace_id` | String | W3C Correlation ID |
-| `flux_id` | Uint64 | Sonyflake Business ID |
+| `flux_id` | UUID | UUID v7 Business ID |
 | `entity_name` | String | Name of the Rack or Mixer |
 | `gear_id` | String | ID of the Gear that generated the signal |
 | `level` | String | Log level (info, warn, error, debug) |

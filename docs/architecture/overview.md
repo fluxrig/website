@@ -41,7 +41,7 @@ The platform is built on a modular architectural model that strictly separates c
 
 A **Gear** is the primary logic unit. It functions as a pluggable, high-resolution signal processor that can be chained together via **Wires** to form complex, low-latency pipelines.
 
-*   **Execution Strategy**: Supports high-performance **Native Gears** (compiled Go) and agile, sandboxed **Wasm Gears** (pluggable logic).
+*   **Execution Strategy**: Supports high-performance **Native Gears** (compiled Go) and agile, sandboxed **Wasm Gears** [Roadmap] (pluggable logic).
 *   **The Port Model**: Communication is strictly governed by standardized entry and exit points (**Ports**) that enforce signal integrity.
 *   **Observability**: Every Gear is observable by default, with throughput and latency telemetry tapped directly from the execution path.
 
@@ -65,7 +65,7 @@ graph LR
 
 The Rack is the "execution case" running locally or at the edge. It is designed to be **Static, Self-Contained, and High-Performance**, acting as the runtime environment for local signal processing.
 
-*   **Core**: A compiled **Go binary** (`fluxrig-rack`).
+*   **Core**: A compiled **Go binary** (`fluxrig`).
 *   **Deterministic Engine**: Embeds NATS JetStream and the Wasm runtime.
 *   **Zero-Agent Footprint**: Observability (OTel) and configuration management are embedded directly in the binary.
 *   **Hosted Gears**: Executes gateways, codecs, and logic units as a unified pipeline.
@@ -100,7 +100,7 @@ The **Mixer** is the central nervous system and **Project Authority** for the ri
 *   **Orchestrator**: Manages the deployment and hot-reloading of **Scenarios** across the fleet.
 
 ### The ledger architecture
-The Registry functions as a **Unified Operational Ledger**. In {{VERS}}, it provides a single gateway to query both the **Active State** (currently connected nodes) and **Cold Storage** (historical logs and metrics partitioned by time).
+The Registry functions as a **Unified Operational Ledger**. In the current release, it provides a single gateway to query both the **Active State** (currently connected nodes) and **Cold Storage** (historical logs and metrics partitioned by time).
 
 - **SQL Access**: Direct querying of the active registry schema.
 - **Unified Query**: Transparently joins active data with Parquet-backed historical trails using DuckDB's `read_parquet` extensions.

@@ -11,13 +11,13 @@ hide_title: true
 It provides a unified control plane to route, transform, and monitor data streams across heterogeneous environments (from industrial IoT sensors to global payment networks). **fluxrig** transforms complex, siloed technical debt into a standardized, configuration-driven data flow.
 
 > [!TIP]
-> Looking for a quick start? Check out the **[Architecture Overview](./architecture/overview.md)** or explore our **[Industry Use Cases](./use_cases/index.md)**.
+> Looking for a quick start? Check out the **[5-Minute Quickstart](./tutorials/quickstart.md)**! You can also read the **[Architecture Overview](./architecture/overview.md)** or explore our **[Industry Use Cases](./use_cases/index.md)**.
 
 ---
 
 ## Why fluxrig?
 
-FluxRig is designed for environments where data integrity and edge autonomy are non-negotiable.
+**fluxrig** is designed for environments where data integrity and edge autonomy are non-negotiable.
 
 1. **Edge-to-Cloud Orchestration**: Manage thousands of distributed nodes as a single cohesive system.
 2. **Protocol Agnostic**: Native support for ISO8583, JSON, Protobuf, and legacy binary protocols.
@@ -29,7 +29,7 @@ FluxRig is designed for environments where data integrity and edge autonomy are 
 We borrow our architectural nomenclature from professional audio engineering to describe complex data flows with both precision and scale:
 
 *   **The Gear**: A modular unit of logic (e.g., an ISO8583 codec or a Modbus adapter).
-*   **The Rack**: An edge node agent that hosts and executes multiple Gears (like a stage rack).
+*   **The Rack**: An edge node that hosts and executes multiple Gears (like a stage rack).
 *   **The Mixer**: The central Front of House (FOH) control plane that manages the fleet and aggregates telemetry.
 
 > **[Read more about the professional audio logic →](./overview/philosophy.md)**
@@ -43,7 +43,7 @@ flowchart LR
     subgraph Southbound ["The Edge (Southbound)"]
         Pinpad[Legacy Device]
         PLC[Industrial PLC]
-        subgraph Rack_A [fluxrig Rack Agent]
+        subgraph Rack_A [**fluxrig** Rack]
             GearSerial[Protocol Gear]
             GearIO[I/O Gear]
         end
@@ -80,7 +80,7 @@ flowchart LR
 ## Choose your journey
 
 ### For Operators & SREs
-**Maintain maximum uptime** and operational visibility. fluxrig provides the tools to orchestrate distributed racks, manage immutable snapshots, and analyze high-fidelity telemetry in real-time.
+**Maintain maximum uptime** and operational visibility. **fluxrig** provides the tools to orchestrate distributed racks, manage immutable snapshots, and analyze high-fidelity telemetry in real-time.
 
 *   **[Deployment architecture & binaries →](./architecture/deployment.md)**
 *   **[Operations & CLI reference →](./reference/cli.md)**
@@ -96,7 +96,7 @@ flowchart LR
 *   **[Gears ecosystem reference →](./reference/gears/index.md)**
 
 ### For Architects & Security Teams
-**Design resilient, sovereign data planes.** fluxrig allows for the design of complex, multi-actor topologies that enforce strict data isolation, zero-trust connectivity, and deterministic execution.
+**Design resilient, sovereign data planes.** **fluxrig** allows for the design of complex, multi-actor topologies that enforce strict data isolation, zero-trust connectivity, and deterministic execution.
 
 *   **[System foundation & core principles →](./overview/foundation.md)**
 *   **[Security & identity architecture →](./architecture/security.md)**
