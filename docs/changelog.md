@@ -42,7 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enrollment Architecture**: Implemented configuration-driven rack adoption with secure nonce-based passports.
 - **CBOR Migration**: Transitioned internal wire-format to deterministic CBOR for 100% binary stability.
 - **Data-Plane Integrity**: Enforced technical UTF-8 validation and hex-encoded binary metadata handling.
-- **IO stabilization**: Implemented robust connection polling and rate-limited background WAL replay.
+- **IO Stabilization**: Implemented robust connection polling and rate-limited background WAL replay.
+- **Security Hardening (CodeQL Certification)**:
+    - Fixed high-severity path traversal in scenario management by implementing robust name sanitization.
+    - Hardened TLS configuration in the `snake` server with CA-based client verification support.
+    - Resolved integer overflow/truncation risks in telemetry ingestion and ISO8583 codecs.
+    - Upgraded core dependencies (NATS Server v2.14, NATS Go v1.52) to address multiple upstream vulnerabilities.
 
 > [!CAUTION]
 > **DESTRUCTIVE CHANGE**: This migration is a hard architectural break.
