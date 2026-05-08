@@ -16,7 +16,12 @@ To support modern containerized deployments (Docker/Kubernetes), **fluxrig** mer
 3.  **Config File** (`fluxrig.toml`)
 4.  **Static Defaults**
 
-The environment variable mapping replaces dots (`.`) with underscores (`_`) and uppercases the key. For example, `rack.bus.url` becomes `FLUXRIG_RACK_BUS_URL`.
+The environment variable mapping replaces dots (`.`) with underscores (`_`) and uppercases the key. For example, `base.name` becomes `FLUXRIG_BASE_NAME`.
+
+Top-level overrides for troubleshooting:
+* `FLUXRIG_TRACE=true`: Forces all logging to TRACE level (high volume).
+* `FLUXRIG_DEBUG=true`: Forces all logging to DEBUG level.
+* `FLUXRIG_DISABLE_TELEMETRY=true`: Master switch to stop all self-monitoring reporting.
 
 ## Secret management
 **fluxrig** does not store secrets in plaintext TOML. For sensitive values (e.g., database passwords, API keys):
@@ -44,6 +49,8 @@ Shared logging content.
 | `max_size_mb` | `int` | `100` | Max size in MB before rotation. |
 | `max_backups` | `int` | `7` | Max number of old log files to keep. |
 | `compress` | `bool` | `true` | Compress rotated log files (gzip). |
+| `trace` | `bool` | `false` | Hard-override to enable trace level. |
+| `debug` | `bool` | `false` | Hard-override to enable debug level. |
 
 **Throttling settings**
 
@@ -53,16 +60,26 @@ Shared logging content.
 | `throttling.rate` | `float`| `500.0` | Max lines per second per gear. |
 | `throttling.burst` | `int` | `50` | Temporary log burst capacity. |
 
-#### `[Rack]`
-Rack-specific runtime settings.
+#### `[Base]` (Common)
+Foundational identity and path settings.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `name` | `string` | `"rack-default"` | **Unique Name** (Static Mode). If set, this Rack claims this specific identity. |
-| `name_prefix` | `string` | `"node-"` | **Ephemeral Prefix** (Zero Config). Used if `name` is empty. |
-| `state_file` | `string` | `"state.flux"` | **Signed State Bundle** (CBOR). Persists Identity, Config, and Secrets. |
-| `machine_id` | `uint16` | `0` | **Manual MachineID Override**. (Advanced) Forces a specific ID, bypassing Registry assignment. |
-| `enrollment_timeout` | `string` | `"2s"` | Timeout for enrollment handshake. |
+| `name` | `string` | `"node-01"` | **Unique Name**. Claims this specific identity. |
+| `state_dir` | `string` | `"./data"` | Root directory for state and WAL. |
+| `state_file` | `string` | `"rack.flux"` | **Signed State Bundle** (CBOR). Persists Identity, Config, and Secrets. |
+
+#### `[Rack]`
+Rack-specific agent settings.
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `name_prefix` | `string` | `"node-"` | **Ephemeral Prefix**. Used if `base.name` is empty. |
+| `ip` | `string` | `""` | **Manual IP Override**. If empty, the Rack autodetects its local primary IP via `netutil`. |
+| `max_hops` | `int` | `64` | **Max Routing Hops**. Prevents infinite loops. |
+| `max_payload_size`| `int` | `2097152` | **Max Payload Size (Bytes)**. Default: 2MB. |
+| `enrollment_timeout` | `string` | `"15s"` | Timeout for enrollment handshake. |
+| `heartbeat_interval` | `string` | `"30s"` | Frequency of Registry heartbeats. |
 
 #### `[Store]`
 Data storage settings.
@@ -71,32 +88,29 @@ Data storage settings.
 | :--- | :--- | :--- | :--- |
 | `dir` | `string` | `"./data"` | Root directory for data storage. |
 
-#### `[Rack.bus]`
-NATS Bus settings.
+#### `[Snake]` (NATS/JetStream)
+Configuration for the underlying transport bus.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `url` | `string` | `"nats://localhost:4222"` | NATS Server URL. |
-| `domain` | `string` | `"flux"` | **JetStream Domain** (Sovereignty). Must match Mixer cluster name for stream visibility. |
-| `stream_name` | `string` | `"flux-msg"` | NATS Stream (JetStream) name to publish to. |
-| `connect_timeout` | `string` | `"10s"` | Initial connection timeout for both **Data** and **Telemetry** buses. |
-| `reconnect_wait` | `string` | `"1s"` | Wait time between reconnect attempts for all isolated bus connections. |
-| `convergence_delay` | `string` | `"100ms"` | Safety delay to allow ephemeral NATS consumers to converge before starting gears. |
+| `domain` | `string` | `"flux"` | **JetStream Domain**. Must match Mixer cluster name. |
+| `stream_name` | `string` | `"flux-msg"` | Primary JetStream stream name. |
+| `connect_timeout` | `string` | `"10s"` | Initial connection timeout. |
+| `reconnect_wait` | `string` | `"1s"` | Wait time between reconnect attempts. |
+| `convergence_delay` | `string` | `"100ms"` | Safety delay for consumer convergence. |
 
 #### Example
 
 ```toml
+[base]
+name = "rack-nyc-01"
+state_dir = "/var/lib/fluxrig/data"
+
 [logging]
 level = "debug"
-dir = "./logs"
 
-[rack]
-name = "rack-nyc-01"
-
-[store]
-dir = "/var/lib/fluxrig/data"
-
-[rack.bus]
+[snake]
 url = "nats://nats.fluxrig.internal:4222"
 ```
 
@@ -124,13 +138,22 @@ Shared logging content.
 | `max_backups` | `int` | `7` | Max number of old log files to keep. |
 
 #### `[Mixer]`
-General Mixer identity and bootstrapping settings.
+General Mixer settings.
 
 | Field | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `machine_id` | `uint16` | `1` | **Unique MachineID** for this independent Control Plane node. |
-| `mixer_name` | `string` | `"mixer-01"` | Human-readable identifier. |
-| `startup_scenario` | `string` | `""` | Scenario reference to load on startup. Accepts a file path (`./scenario.yaml`), a stored URN (`payment-flow:v1.0.0`), or empty to resume the last active scenario. |
+| `max_hops` | `int` | `64` | **Global Max Hops**. |
+| `max_payload_size`| `int` | `2097152` | **Global Max Payload (Bytes)**. |
+| `startup_scenario` | `string` | `""` | Scenario reference to load on startup. |
+| `scenario_wait_timeout` | `string` | `"15s"` | Time to wait for Racks to converge when activating a scenario. |
+
+#### Registry-First Identity Model
+
+> [!NOTE]
+> **Important Change (future releases)**: The static `machine_id` configuration field has been completely removed from both Rack and Mixer configurations. **fluxrig** now enforces a **Registry-First Enrollment Model**. 
+> 
+> *   **Racks**: Dynamically receive a 128-bit `uuid.UUID` Identity during the Enrollment Handshake, which is cryptographically signed and stored in the local `state.flux` passport.
+> *   **Mixers**: Automatically generate a persistent cluster identity (UUID v7) on their first boot, which is maintained in the internal Unified Registry (`registry`).
 
 #### `[Enrollment]` (Mixer)
 Control how new Racks are admitted to the rig.
@@ -170,7 +193,7 @@ Embedded NATS Server (JetStream) settings.
 | :--- | :--- | :--- | :--- |
 | `port` | `int` | `4222` | **Server Port** to listen on for NATS connections. |
 | `url` | `string` | `"nats://localhost:4222"` | URL to advertise to Racks. |
-| `cluster_name` | `string` | `"flux"` | JetStream Domain Name (for Leaf Nodes). |
+| `domain` | `string` | `"flux"` | JetStream Domain Name. |
 | `stream_name` | `string` | `"flux-msg"` | Name of the primary JetStream stream. |
 | `stream_subjects` | `[]string` | `["flux.msg.>", "flux.gear.>", "fluxrig.>"]` | Wildcard subjects to capture. |
 | `business_stream_max_age` | `string` | `"720h"` | Data retention time for business logic streams. |
@@ -180,11 +203,13 @@ Embedded NATS Server (JetStream) settings.
 #### Example (Mixer)
 
 ```toml
+[base]
+name = "mixer-prod-01"
+
 [logging]
-level = "debug"
+level = "info"
 
 [mixer]
-mixer_name = "mixer-prod-01"
 startup_scenario = "scenario_prod.yaml"
 
 [api]
@@ -192,21 +217,18 @@ port = 8090
 
 [store]
 dir = "./data"
-database_file = "fluxrig.duckdb"
-cluster_key_file = "cluster.key"
 
 [snake]
 port = 4222
 url = "nats://localhost:4222"
-cluster_name = "flux"
-store_dir = "data/js"
+domain = "flux"
 ```
 
 ---
 
 ### [Roadmap] Observability tiers
 
-The platform is designed to support multiple observability tiers for various scales. In **{{VERS}}**, only the **Embedded Tier** is fully implemented.
+The platform is designed to support multiple observability tiers for various scales. In **the current release**, only the **Embedded Tier** is fully implemented.
 
 | Tier | Backend(s) | Use Case | Status |
 |------|------------|----------|--------|
@@ -262,7 +284,7 @@ Rotation and retention policies.
 - `wal_max_size_mb`: Max size for Write-Ahead Log.
 - `database_file`: Filename for DuckDB file.
 
-The `fluxID` (or `fluxID` in JSON) is the unique identifier...
+The **flux_id** (serialized as `flux_id` in JSON and database schemas) is the unique 128-bit identifier used to trace a specific business signal across its entire lifecycle, from edge ingestion to cloud archival.
 
 #### Embedded storage schema
 
@@ -293,8 +315,8 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 | `trace_id` | `VARCHAR` | W3C TraceContext ID |
 | `span_id` | `VARCHAR` | Span ID |
 | `parent_span_id` | `VARCHAR` | Parent Span ID |
-| `flux_id` | `UINT64` | Sonyflake business ID |
-| `entity_id` | `UINT64` | Unified EntityID (`[Type:8][MachineID:16][Seq:40]`) |
+| `flux_id` | `UUID` | UUID v7 business ID |
+| `entity_id` | `UUID` | Unified EntityID (128-bit UUID v7) |
 | `entity_name` | `TEXT` | Human-readable Hostname (e.g., `rack-sfo-01`) |
 | `span_name` | `VARCHAR` | Operation name |
 | `duration_ms` | `FLOAT` | Duration in milliseconds |
@@ -306,9 +328,9 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 | Column | Type | Description |
 |--------|------|-------------|
 | `ts` | `TIMESTAMP` | Log timestamp |
-| `entity_id` | `UINT64` | Unified EntityID |
+| `entity_id` | `UUID` | Unified EntityID |
 | `entity_name` | `TEXT` | Human-readable Hostname |
-| `flux_id` | `UINT64` | Business flow ID |
+| `flux_id` | `UUID` | Business flow ID |
 | `level` | `ENUM` | `debug`, `info`, `warn`, `error` |
 | `message` | `VARCHAR` | Log message |
 | `attributes` | `JSON` | Structured fields |
@@ -319,7 +341,7 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 |--------|------|-------------|
 | `ts` | `TIMESTAMP` | Metric timestamp |
 | `name` | `VARCHAR` | Metric name (e.g., `gear_latency_ms`) |
-| `entity_id` | `UINT64` | Unified EntityID |
+| `entity_id` | `UUID` | Unified EntityID |
 | `entity_name` | `TEXT` | Human-readable Hostname |
 | `type` | `ENUM` | `counter`, `gauge`, `histogram` |
 | `value` | `DOUBLE` | Metric value |
@@ -331,9 +353,9 @@ Data is organized into **telemetry** (system signals) and **messages** (business
 |--------|------|-------------|
 | `ts` | `TIMESTAMP` | Message timestamp |
 | `trace_id` | `VARCHAR` | Associated trace |
-| `flux_id` | `UINT64` | Primary business ID |
-| `machine_id` | `INTEGER` | Node ID |
-| `machine_name` | `TEXT` | Hostname |
+| `flux_id` | `UUID` | Primary business ID |
+| `entity_id` | `UUID` | Node EntityID |
+| `entity_name` | `TEXT` | Hostname |
 | `src_gear_id` | `VARCHAR` | Source Gear |
 | `dst_gear_id` | `VARCHAR` | Destination Gear |
 | `msg_type` | `VARCHAR` | Message type identifier |
@@ -365,10 +387,6 @@ max_age_days = 30
 max_size_gb = 10
 check_interval = "1h"
 ```
-
----
-
-### OTLP tier configuration (vendor-neutral)
 
 ---
 
@@ -436,7 +454,7 @@ Query metrics data.
 
 ```bash
 # Filter by metric name
-fluxrig metrics --name heartbeats_sent
+fluxrig metrics --name fluxrig.rack.heartbeats_sent
 
 # Filter by entity
 fluxrig metrics --entity mixer-01
@@ -456,7 +474,10 @@ fluxrig metrics --entity mixer-01
 
 ## REST API endpoints
 
-The Mixer exposes telemetry query endpoints via REST API.
+The Mixer exposes telemetry query endpoints via a REST API.
+
+> [!WARNING]
+> **API Security Limitation (Current Release)**: The current release of the Control Plane API does NOT implement authentication or authorization. It is strictly intended for use within trusted, isolated management networks. Exposing this port to the public internet will allow unauthorized scenario activation and data exfiltration.
 
 ### Logs API
 
@@ -493,7 +514,7 @@ GET /api/v1/telemetry/traces/{trace_id}
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `flux_id` | `uint64` | Filter by fluxID. |
+| `flux_id` | `UUID` | Filter by flux_id. |
 | `since` | `RFC3339` | Start time. |
 | `min_duration_ms` | `int` | Minimum duration filter. |
 | `status` | `string` | `ok` or `error`. |

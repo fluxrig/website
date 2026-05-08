@@ -18,7 +18,7 @@ By "Checking in" session state to a distributed cache, **fluxrig** resolves the 
 | :--- | :--- |
 | **Type** | `coatcheck` |
 | **Analogy** | **State Cache / Patch Memory** |
-| **Status** | Stable (v0.4.3) |
+| **Status** | Stable |
 | **Source Code** | [pkg/gears/native/coatcheck](https://github.com/jaab-tech/fluxrig/tree/main/pkg/gears/native/coatcheck) |
 | **Tech Stack** | **[NATS JetStream (KV)](../../architecture/overview.md#transaction-flow-strategy-two-speed)** |
 | **Pattern** | **[Claim Check](https://www.enterpriseintegrationpatterns.com/patterns/messaging/StoreInLibrary.html)** EIP |

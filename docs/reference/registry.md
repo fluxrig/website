@@ -11,7 +11,7 @@ The **Identity & State Registry** is the central nervous system for node identit
 
 In distributed computing environments, autonomous entities (Racks) cannot be trusted to self-assign their own identity because they might be cloned, stolen, or spoofed. The Registry solves this by acting as the single source of truth for:
 
-1. **Who** is in the cluster (MachineID allocation).
+1. **Who** is in the cluster (Identity allocation).
 2. **What** each node is allowed to do (State execution logic).
 3. **How** nodes prove their identity (Cryptographic Passports).
 
@@ -26,7 +26,7 @@ graph TD
         RegSVC <--> DB[(DuckDB<br>registry table)]
     end
     subgraph Data Plane
-        Mixer -.->|Subject Push| RackAgent[Rack Agent]
+        Mixer -.->|Subject Push| RackAgent[Rack]
         RackAgent --> StateFile[state.flux]
     end
 ```
@@ -37,9 +37,9 @@ The primary engine of the Registry is the `registry` table inside the Mixer's Du
 
 | Column | Type | Description |
 | :--- | :--- | :--- |
-| `entity_id` | `UBIGINT` | **Primary Key**. The 64-bit `fluxEntityID` containing the node type and MachineID. |
+| `entity_id` | `UUID` | **Primary Key**. The 128-bit `entity_id` containing the node type and identity hint. |
 | `type_id` | `USMALLINT` | Component Type: `2` (Mixer), `3` (Rack), `8` (Snake Tunnel). |
-| `machine_id` | `USMALLINT` | The physical sequence ID assigned to the device (1-65535). |
+| `machine_id` | `UUID` | The authoritative identity assigned to the device (UUID v7). |
 | `name` | `TEXT` | Human-readable Hostname (e.g., `rack-nyc-01`). Must be unique. |
 | `status` | `TEXT` | `active`, `pending` (awaiting enrollment), or `offline`. |
 | `version` | `TEXT` | Git SHA or SemVer of the running binary. |
@@ -64,7 +64,7 @@ This architecture ensures that telemetry and processing only begin once the Rack
 
 ```mermaid
 sequenceDiagram
-    participant R as Rack Agent
+    participant R as Rack
     participant M as Mixer
     participant D as DuckDB Registry
 
@@ -105,7 +105,7 @@ When a Rack becomes `active`, the Registry issues a **State Envelope (Passport)*
 > [!NOTE]
 > **Implementation Detail**: In the current version, scenario updates are delivered via a high-priority **NATS Subject Push** (`fluxrig.rack.{name}.scenario`). 
 
-**Future Roadmap (v0.5.0+)**: We are currently re-implementing the Registry to leverage **[NATS KV](https://docs.nats.io/nats-concepts/jetstream/key-value-store) [Roadmap]** for all state governance. This will move the architecture from a "Push" model to a "Distributed State Watcher" model, increasing resilience and simplifying the handling of concurrent updates.
+**Future Roadmap (future releases)**: We are currently re-implementing the Registry to leverage **[NATS KV](https://docs.nats.io/nats-concepts/jetstream/key-value-store) [Roadmap]** for all state governance. This will move the architecture from a "Push" model to a "Distributed State Watcher" model, increasing resilience and simplifying the handling of concurrent updates.
 
 ## Heartbeats and presence
 The Registry tracks cluster health by listening to heartbeats on the `fluxrig.event.heartbeat.>` subject. Each Rack periodically emits a heartbeat containing its real-time `stats` (CPU, Memory). If a Rack misses consecutive heartbeats, the Registry marks it as `offline` in the DuckDB table.

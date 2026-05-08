@@ -11,17 +11,23 @@ slug: /architecture/message-flow
 
 # Message flow and integrity
 
-**fluxrig** is designed to ensure absolute data integrity and context persistence across asynchronous, stateless execution paths. This document defines how the platform maintains a continuous record of a message's lifecycle, even when it leaves the system to traverse external, untrusted networks.
+## Parallel processing and concurrency
 
-## The challenge: asynchronous excursions
+While **fluxrig** maintains a logical sequence for each message path, the execution engine is built for high-density, parallel processing.
 
-In a distributed processing pipeline, a **Request** and its **Response** are decoupled, asynchronous events.
+### The Goroutine-per-Wire model
+Unlike legacy brokers that rely on single-threaded event loops or forked processes, the **Rack** leverages Go's native concurrency (Goroutines) to achieve high vertical scale on a single node.
 
-*   **Request (`fluxMsg A`)**: Carries rich operational metadata (e.g., source context, session invariants, risk indicators).
-*   **The Excursion**: The Rack emits the request to an external system (e.g., a banking network or industrial PLC) and immediately releases the thread to process subsequent messages. It does **not** block.
-*   **Response (`fluxMsg B`)**: Arrives as a fresh message instance. By default, this returning message possesses no knowledge of the original request's context.
+*   **Isolated Execution**: Every defined **Wire** (subscription) in a Scenario is assigned its own goroutine.
+*   **Automatic Parallelism**: If a Rack is deployed on a multi-core system, Gears across different wires execute in parallel automatically. This ensures that a high-latency I/O operation on one Gear (e.g., a slow database write) does not block the "Fast Lane" traffic on another.
+*   **Zero-Sharding Overhead**: You do not need to manually shard processes or manage thread pools. The Rack runtime handles the M:N scheduling of thousands of concurrent signal paths with minimal memory overhead (~2KB per goroutine).
 
-**The Goal**: To deterministically correlate the returning Response with its original Context, ensuring absolute auditability, compliance, and deterministic routing.
+### Concurrency safety
+Because Gears run in parallel, **fluxrig** enforces a strict separation of concerns:
+*   **Stateless Gears**: Can process millions of messages concurrently without locks.
+*   **Stateful Gears**: (e.g., ISO8583 Client or Coat Check) utilize internal synchronization primitives (Mutexes/Channels) to manage shared state safely while the platform continues to route other traffic.
+
+---
 
 ---
 
@@ -35,7 +41,7 @@ Not all data requires the same durability profile. **fluxrig** allows you to opt
 | **Turbo** | **Go Channels**    | **Volatile** | **< 10µs**       | (Planned) Intranode High-Speed Logic. |
 
 > [!WARNING]
-> **Turbo Wires (Planned)**: Turbo Wires offer sub-millisecond performance by bypassing the NATS bus for local intra-rack flows. This strategy is currently in technical design and targeted for the **v0.5.0 milestone**.
+> **Turbo Wires (Planned)**: Turbo Wires offer sub-millisecond performance by bypassing the NATS bus for local intra-rack flows. This strategy is currently in technical design and targeted for the **future milestone**.
 
 ---
 
@@ -69,7 +75,7 @@ The following sequence illustrates the **Coat Check** pattern during a typical a
 ```mermaid
 sequenceDiagram
     participant POS as External Device
-    participant Rx as Rack Agent
+    participant Rx as Rack
     participant KV as NATS KV (Coat Check)
     participant Bank as External Processor
     

@@ -8,9 +8,6 @@ slug: /architecture/security
 <!-- Copyright (c) 2026 JAAB Tech SAS, Uruguay All Rights Reserved -->
 <!-- See https://jaab.tech -->
 
-
-# Security architecture
-
 **fluxrig** is engineered for the most hostile network environments (Zero Trust) and the most sensitive data workloads (e.g., PCI-DSS, HIPAA). Our security model relies on **Network Isolation** and **Sovereign Identity**, ensuring that the integrity of the transactional processing path is never compromised.
 
 ## Network isolation (Inbound Zero)
@@ -18,7 +15,7 @@ slug: /architecture/security
 To protect infrastructure from external threats, we implement a strict **"Inbound Zero"** policy for the management plane.
 
 ### Invisible infrastructure
-By moving all orchestration and management logic to an outbound-only tunnel, **fluxrig** removes standard vectors (SSH, HTTP, SNMP) as public entry points. This dramatically reduces the network attack surface, making the Rack agent effectively invisible to external scans.
+By moving all orchestration and management logic to an outbound-only tunnel, **fluxrig** removes standard vectors (SSH, HTTP, SNMP) as public entry points. This dramatically reduces the network attack surface, making the Rack effectively invisible to external scans.
 
 *   **Secure Tunnel**: All control messages (registry updates, orchestration) and telemetry travel via a persistent, outbound-only **mTLS** connection to the central Mixer.
 *   **Data Plane Isolation**: The Rack only opens listening ports explicitly defined by its I/O Gears (e.g., a specific TCP socket for protocol ingestion). These ports are strictly isolated from the Rack's internal administration and telemetry bus.
@@ -41,7 +38,7 @@ The management tunnel uses a **Cryptographic Handshake** that enforces 100% mutu
 To ensure operational continuity during network partitions, **fluxrig** utilizes a **Sovereign Identity** model.
 
 *   **The Passport (`state.flux`)**: The Rack does not require a real-time connection to the Mixer to verify its own integrity. It holds a signed state bundle (The Passport) on-site.
-*   **Cluster Authority**: The root of trust is the **Cluster Authority Key**. In {{VERS}}, this is a **file-based Ed25519 keypair**.
+*   **Cluster Authority**: The root of trust is the **Cluster Authority Key**. In the current release, this is a **file-based Ed25519 keypair**.
 *   **Immutable Integrity**: On boot, the Rack loads its Passport and verifies the internal configuration signature against the cluster public key.
 *   **Safe Rollback**: If a new configuration from the Mixer fails a signature check or causes a bootstrap error, the Rack automatically rolls back to the previous known-good state in its local storage.
 
@@ -49,22 +46,22 @@ To ensure operational continuity during network partitions, **fluxrig** utilizes
 
 ## Security roadmap: institutional hardening
 
-To maintain 100% technical honesty and audit readiness, we distinguish between standard primitives available in {{VERS}} and institutional features scheduled for v0.5.0+.
+To maintain 100% technical honesty and audit readiness, we distinguish between standard primitives available in the current release and institutional features scheduled for future releases.
 
-### Deterministic masking (Planned v0.5.0+)
+### Deterministic masking (Planned future)
 Unlike heuristic-based masking solutions, **fluxrig** intends to implement **Deterministic Masking** based on the absolute structure of the data:
 
 1.  **SDL Precision**: Fields are tagged as `sensitive` in the Spec Definition Language (SDL).
 2.  **Edge Tokenization**: The Rack identifies the sensitive value and swaps it for a transient session token.
 3.  **Stateless Processing Path**: Downstream modules and telemetry sinks only see the token, isolating clear-text data.
 
-### HSM and Cloud KMS integration (Planned v0.5.0+)
-While {{VERS}} uses secure file-based keys, the roadmap includes native integration with:
+### HSM and Cloud KMS integration (Planned future)
+While the current release uses secure file-based keys, the roadmap includes native integration with:
 
 - **Cloud KMS**: AWS KMS and Google Cloud KMS for cluster authority root-of-trust.
 - **Hardware Security Modules (HSM)**: Support for PKCS#11 and HashiCorp Vault transit engines.
 
-### Secure execution sandboxing (Planned v0.5.0+)
+### Secure execution sandboxing (Planned future)
 *   **Wasm Logic Gears**: Execution in a sandboxed runtime with no access to host syscalls or networks unless bridged via authorized I/O Gears.
 *   **Resource Budgeting**: Enforcement of CPU and memory limits per-Gear.
 
@@ -72,13 +69,13 @@ While {{VERS}} uses secure file-based keys, the roadmap includes native integrat
 
 ## Security roadmap and compliance
 
-| Feature Area | {{VERS}} Status | Implementation Strategy |
+| Feature Area | Status | Implementation Strategy |
 | :--- | :--- | :--- |
 | **mTLS Tunnel** | **Available** | Outbound secure tunnel (TLS 1.2+ Baseline). |
 | **Sovereign ID** | **Available** | Signed State Envelopes (`state.flux`). |
-| **Field Masking** | **Planned**   | Deterministic PII scrubbers (v0.5.0+). |
+| **Field Masking** | **Planned**   | Deterministic PII scrubbers (future). |
 | **Cloud KMS** | **Planned**   | AWS/Google KMS integration for Authority keys. |
-| **Wasm Execution** | **Planned**   | Sandboxed execution runtime (v0.5.0+). |
+| **Wasm Execution** | **Planned**   | Sandboxed execution runtime (future). |
 | **Audit Logging** | **Available** | Local CBOR WAL + DuckDB Registry. |
 | **Binary Signing** | **Planned** | Supply chain trust via Sigstore/Cosign. |
 | **SBOM Generation** | **Planned** | Automated CycloneDX generation per release. |

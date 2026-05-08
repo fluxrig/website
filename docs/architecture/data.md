@@ -44,17 +44,17 @@ For the full technical specification of the `fluxMsg` fields, system flags, and 
 
 To ensure data sovereignty and end-to-end auditability across thousands of distributed nodes, we implement a dual-track identity model.
 
-### fluxID (Transactional tracer)
-Every signal entering the rig is assigned a **`fluxID`**, a 64-bit, k-sortable unique identifier.
+### flux_id (Transactional tracer)
+Every signal entering the rig is assigned a **`flux_id`**, a **128-bit, time-ordered unique identifier (UUID v7)**.
 
-*   **Structure**: `[Timestamp (39 bits)] | [Sequence (8 bits)] | [MachineID (16 bits)]`.
-*   **Property**: Chronologically sortable and guaranteed collision-free across up to 65,535 concurrent nodes.
+*   **Standard**: **RFC 9562 (UUID v7)**.
+*   **Property**: Chronologically sortable (millisecond precision), globally unique, and optimized for native indexing in high-performance storage engines.
 *   **Role**: The primary key for telemetry joins, distributed traces, and audit archives.
 
-### fluxEntityID (Persistent component identity)
-Components that require persistent identity (Racks, Gears, Scenarios) are assigned a **`fluxEntityID`**.
+### entity_id (Persistent component identity)
+Components that require persistent identity (Racks, Gears, Scenarios) are assigned a **`entity_id`**.
 
-*   **Structure**: `[Type (8 bits)] | [MachineID (16 bits)] | [Sequence (40 bits)]`.
+*   **Structure**: A 128-bit UUID v7 that embeds the **EntityType** and a **machine_id Hint** for stateless traceability.
 *   **Role**: Provides immutable, human-interpretable identities for infrastructure components across their entire lifecycle.
 
 ---
@@ -83,7 +83,7 @@ Every Rack functions as an independent, **Sovereign Data Vault**, ensuring that 
 3.  **Data Residency Sovereignty**: Detailed payloads (e.g., raw financial messages) can be configured to remain exclusively in the local edge vault while only high-level metadata reaches the central Mixer. 
 
 > [!NOTE]
-> **Privacy Roadmap**: Advanced features like **Edge Tokenization** and **Deterministic Field Masking** (where sensitive fields are scrubbed natively within the Gear runtime) are currently in the **v0.5.0 roadmap**. In the current release, masking should be managed via custom Gear logic or the **[Bento Gear](../reference/gears/bento.md)**.
+> **Privacy Roadmap**: Advanced features like **Edge Tokenization** and **Deterministic Field Masking** (where sensitive fields are scrubbed natively within the Gear runtime) are currently in the **future roadmap**. In the current release, masking should be managed via custom Gear logic or the **[Bento Gear](../reference/gears/bento.md)**.
 
 ---
 

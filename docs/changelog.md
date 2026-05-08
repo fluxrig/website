@@ -1,4 +1,5 @@
 ---
+id: changelog
 slug: /changelog
 title: Changelog
 ---
@@ -8,13 +9,16 @@ title: Changelog
 [![Keep a Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog%201.0.0-orange.svg)](https://keepachangelog.com/en/1.0.0/)
 [![Semantic Versioning](https://img.shields.io/badge/semver-2.0.0-blue.svg)](https://semver.org/)
 
-All notable changes to the **fluxrig** project are documented here. This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) principles, with entries organized by **Phase** to align technical progress with strategic goals.
+All notable changes to the **fluxrig** project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Phase 3: open & flexible logic
 
 | Version | Date | Status | Summary |
 | :--- | :--- | :--- | :--- |
-| [Unreleased](#unreleased) | | Active | Feature expansion ({{VERS}}-dev) |
+| [Unreleased](#unreleased) | | Active | Sovereign Identity & Telemetry Hardening |
 | [v0.4.5](#v045) | 2026-04-29 | Delivered | Documentation Hardening & Zero-Config |
 | [v0.4.4](#v044) | 2026-04-23 | Delivered | Logic Extensibility & Secure Enrollment |
 | [v0.4.3](#v043) | 2026-02-19 | Delivered | Operational Resilience & NATS V2 |
@@ -24,77 +28,75 @@ All notable changes to the **fluxrig** project are documented here. This project
 | [v0.3.0](#v030) | 2026-01-21 | Delivered | Bento Integration & Load Testing |
 
 <a name="unreleased"></a>
+
+<a name="unreleased"></a>
 ### [Unreleased] ({{VERS}}-dev)
-
-<a name="v045"></a>
-### [v0.4.5] - 2026-04-29
 #### Added
-- **Zero-Config Cluster Authority**: Implemented automatic generation of persistent cluster keys upon first run, eliminating manual PKI bootstrapping for development environments.
-- **Global Gear Deployment**: Introduced automatic "all-rack" gear targeting for scenarios without explicit deployment tags.
-- **Open Documentation Model**: Officially transitioned documentation sources to a public repository ([fluxrig/website](https://github.com/fluxrig/website)), enabling community contributions and improved transparency.
+- 
 
-#### Improved
-- **Documentation Accessibility (Feedback-Driven)**: Strictly isolated the "Studio & Stage" professional audio metaphor to a dedicated philosophy page. This ensures that the primary technical documentation remains accessible and clear to users unfamiliar with audio engineering nomenclature.
-- **Enhanced Usage Examples**: Expanded the `examples/` directory with production-ready scenario templates and better-documented CLI workflows based on user feedback.
-- **Observability Precision**: Refined OTel tracing attributes to correctly reflect both infrastructure (`messaging.trace_id`) and business (`flux.id`) identities.
-
-#### Fixed
-- **Port Conflict Management**: Resolved an issue where dynamic port selection (port -1) would fail during pre-flight availability checks.
-- **DuckDB Path Safety**: Hardened database initialization logic to prevent accidental directory-as-file IO errors.
-
-<a name="v044"></a>
-### [v0.4.4]
-#### Added
-- **Orchestration logic**: Implemented **Event-Based Data-Plane Synchronization** via mandatory probe handshakes.
-- **Integrity guardrails**: Enforced bit-perfect UTF-8 validation and transparent hex-encoding for binary metadata.
-
+## [v0.5.0] - 2026-05-07
 #### Changed
-- **Deterministic serialization**: Migrated internal wire-formats from **Msgpack** to **Deterministic CBOR (RFC 8949)** for bit-perfect integrity and institutional data-plane trust.
+- **Sovereign Identity Plane (v0.5.0 Foundation)**: Migrated the entire platform identity system to **128-bit UUID v7 (RFC 9562)**. This enhances entropy, ensures global uniqueness without centralized coordination, and provides time-ordered sequence integrity for high-performance storage indexes.
+- **Deduplication Logic**: Updated NATS JetStream deduplication to utilize 128-bit identifiers, ensuring consistent exactly-once delivery across complex telemetry pipelines.
+- **Telemetry Hardening**: Standardized dotted naming schema (e.g., `fluxrig.gear.messages_in`) across OTel, Prometheus, and DuckDB.
+<a name="v050"></a>
+- **Directional Monitoring**: Split unified I/O counters into distinct Inbound and Outbound channels for precise protocol translation metrics.
+- **Resource Guardrails**: Implemented mandatory `MaxHops` (64) and `MaxPayloadSize` (2MB) validation in `fluxmsg` to prevent bus exhaustion and "poison pill" scenarios.
+- **Concurrency Resilience**: Integrated global `PanicMiddleware` to ensure Rack stability during individual Gear failures and hardened mutex locking for atomic hot-reloads.
+- **Mixer Reliability**: Replaced fragile telemetry discovery with a robust recursive traversal engine, ensuring 100% visibility of historical Parquet data via the API.
+- **Certification & Core Test Hardening**: Achieved 100% pass rate in critical certification shards (Mixer, PKI, ISO8583 IO).
+- **Certified Coverage**: Consolidated core code coverage reached 60.1%.
+- **Enrollment Architecture**: Implemented configuration-driven rack adoption with secure nonce-based passports.
+- **CBOR Migration**: Transitioned internal wire-format to deterministic CBOR for 100% binary stability.
+- **Data-Plane Integrity**: Enforced technical UTF-8 validation and hex-encoded binary metadata handling.
+- **IO Stabilization**: Implemented robust connection polling and rate-limited background WAL replay.
+- **Security Hardening (CodeQL Certification)**:
+    - Fixed high-severity path traversal in scenario management by implementing robust name sanitization.
+    - Hardened TLS configuration in the `snake` server with CA-based client verification support.
+    - Resolved integer overflow/truncation risks in telemetry ingestion and ISO8583 codecs.
+    - Upgraded core dependencies (NATS Server v2.14, NATS Go v1.52) to address multiple upstream vulnerabilities.
 
-#### Security
-- **Enrollment security**: Hardened edge adoption protocols with **nonce-based session isolation**.
+> [!CAUTION]
+> **DESTRUCTIVE CHANGE**: This migration is a hard architectural break.
+> - **Storage**: Existing DuckDB databases (V3 and below) and cached `.flux` state files are incompatible with this version.
+> - **API**: REST handlers and NATS topics have transitioned from decimal integer IDs to standard UUID string representations.
 
 <a name="v043"></a>
-### [v0.4.3]
-#### Added
-- **Operational resilience**: Implemented automated blind-retry logic and high-fidelity I/O buffering.
-- **Contextual observability**: Enhanced distributed tracing with deep context-awareness.
-
-#### Changed
-- **NATS V2 stabilization**: Migrated to the JetStream V2 SDK with high-performance ephemeral consumers.
-- **License compliance**: Standardized all source files with authoritative SPDX headers.
+## [v0.4.3] - 2026-02-19
+### Changed
+- **License Headers**: Standardized all source files to SPDX format.
 
 <a name="v042"></a>
-### [v0.4.2]
-#### Added
-- **Spec & scenario manager**: Introduced a **CAS-backed** registry for managing protocol specifications.
-- **E2E automation**: Launched a comprehensive test runner for validating spec lifecycles.
+## [v0.4.2] - 2026-02-12
+### Added
+- **Spec & Scenario Manager**: CAS-backed spec/scenario management with CLI (`fluxrig spec`, `fluxrig scenario`) and API integration.
+- **E2E Test Suite**: Comprehensive test runner for spec lifecycle, API scenarios, and concurrent access.
 
-#### Changed
-- **Gear standardization**: Unified networking gears under the `simple_tcp` naming convention.
+### Changed
+- **E2E Tests**: Renamed from flat naming to numbered convention (`01_simple/`, `09_io_tcp/`, etc.).
+- **Gear Rename**: `io_tcp` → `simple_tcp`.
 
-#### Removed
-- **Architectural hardening**: Decommissioned redundant bus KV implementations.
+### Removed
+- **Coat Check Gear**: Removed in favor of Spec Manager pattern.
+- **Bus KV**: Removed (~3,084 lines deleted across 63 files).
 
 <a name="v041"></a>
-### [v0.4.1]
-#### Added
-- **Stateless context (Coat Check)**: Implemented the architectural pattern for managing detached state.
-
-#### Changed
-- **I/O decoupling**: Refactored the networking layer to cleanly separate TCP management from logic.
+## [v0.4.1] - 2026-02-09
+### Added
+- **Coat Check Pattern**: Implemented architectural pattern to handle "Detached State" during connection handovers.
+- **IO Refactor**: Decoupled TCP connection management from protocol logic.
 
 <a name="v040"></a>
-### [v0.4.0]
-#### Added
-- **ISO8583 native gear**: Initial release of the high-performance payment switch Gear baseline.
-- **Telemetry governor**: Introduced **QoS** traffic shaping for telemetry ingress.
+## [v0.4.0] - 2026-02-01
+### Added
+- **ISO8583 Native Gear (Alpha)**: First release of the high-performance payment switch gear.
+- **Telemetry Governor**: Introduced QoS constraints for telemetry ingress to protect business traffic.
 
 <a name="v030"></a>
-### [v0.3.0]
-#### Added
-- **Bento integration**: Native support for the Bento ecosystem (100+ connectors).
-- **Load testing suite**: Integrated high-performance capabilities for stress testing pipelines.
+## [v0.3.0] - 2026-01-05
+### Added
+- **Bento Integration**: Native support for the `warpstreamlabs/bento` ecosystem, enabling 100+ I/O connectors (AWS, SQL, Kafka, File).
+- **Load Testing Suite**: Integrated `e2e_load` capabilities for stress testing.
 
 ## Phase 2: core runtime
 
@@ -103,13 +105,11 @@ All notable changes to the **fluxrig** project are documented here. This project
 | [v0.2.0](#v020) | 2025-12-28 | Delivered | Observability Stack & TLS Foundations |
 
 <a name="v020"></a>
-### [v0.2.0]
-#### Added
-- **Observability stack**: Full OpenTelemetry integration (metrics, traces) with DuckDB backend.
-- **TLS support**: Enabled mutual TLS for internal bus and HTTPS for management API.
-
-#### Changed
-- **Configuration v2**: Unified TOML-based configuration schema.
+## [v0.2.0] - 2026-01-08
+### Added
+- **Observability Stack**: Full OTel integration (Metrics, Traces) with DuckDB backend.
+- **Configuration V2**: Unified TOML-based configuration schema.
+- **TLS Support**: Enabled mutual TLS for internal bus and HTTPS for management API.
 
 ## Phase 1: architecture & foundation
 
@@ -118,11 +118,11 @@ All notable changes to the **fluxrig** project are documented here. This project
 | [v0.1.0](#v010) | 2025-12-12 | Delivered | Initial engine architecture and Snake Protocol |
 
 <a name="v010"></a>
-### [v0.1.0]
-#### Added
-- **Foundation**: Initial release of the core engine architecture.
-- **Snake protocol**: Secure tunneling implementation for **Rack-to-Mixer** connectivity.
-- **fluxMsg**: Canonical self-describing representation for internal communication.
+## [v0.1.0] - 2025-12-28
+### Added
+- **Foundation**: Initial release of the 4-Repo Architecture.
+- **Snake Protocol**: Secure tunneling implementation for Rack-to-Mixer connectivity.
+- **FluxMsg**: Canonical JSON schema for inter-gear communication.
 
 [Unreleased]: https://github.com/jaab-tech/fluxrig/compare/v0.4.5...HEAD
 [v0.4.5]: https://github.com/jaab-tech/fluxrig/releases/tag/v0.4.5
