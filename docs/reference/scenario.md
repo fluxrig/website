@@ -29,9 +29,9 @@ A **Scenario** is a declarative YAML file that defines the operational topology 
 ### Hot-reloading & rollbacks
 
 > [!IMPORTANT]
-> **Implementation Note ({{VERS}})**: Currently, applying a scenario update triggers a **full Gear Restart cycle**. All active gears are stopped and re-initialized with the new configuration. This introduces a sub-second processing gap and closes established I/O connections (e.g., TCP sessions). 
+> **Implementation Note**: Currently, applying a scenario update triggers a **full Gear Restart cycle**. All active gears are stopped and re-initialized with the new configuration. This introduces a sub-second processing gap and closes established I/O connections (e.g., TCP sessions). 
 
-**Future Roadmap**: Achieving true **Zero-Downtime Reload** (where unaffected gears continue processing while new configurations are swapped in) is a primary engineering objective for the **v0.5.0 milestone**.
+**Future Roadmap**: Achieving true **Zero-Downtime Reload** (where unaffected gears continue processing while new configurations are swapped in) is a primary engineering objective for the **future milestone**.
 
 If you import a broken scenario containing invalid wires or missing specs, the Mixer performs **pre-flight validation** and rejects the transition, ensuring the cluster remains on the last known good state.
 

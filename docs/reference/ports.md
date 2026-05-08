@@ -14,7 +14,7 @@ This document serves as the authoritative reference for network port assignments
 
 To prevent conflicts and ensure consistent test automation, the following port namespaces are reserved:
 
-By default, FluxRig components communicate using the following standard ports:
+By default, fluxrig components communicate using the following standard ports:
 
 - **4222**: NATS (Client port)
 - **8222**: NATS (Monitoring port)
@@ -35,7 +35,7 @@ By default, FluxRig components communicate using the following standard ports:
 
 ### Project Branding
 *   **Formal Name**: `fluxrig` (Always lowercase in text, headings, and filenames).
-*   **Avoid**: `Flux`, `FluxRig` (PascalCase), `FLUXRIG` (unless in ENV vars).
+*   **Avoid**: `Flux`, `fluxrig` (PascalCase), `fluxrig` (unless in ENV vars).
 
 ### Technical Identifiers
 We use the abbreviated `flux.` prefix for internal system primitives to maintain brevity in high-volume streams:
@@ -43,7 +43,7 @@ We use the abbreviated `flux.` prefix for internal system primitives to maintain
 *   **NATS Subjects**: `flux.msg.>`, `flux.telemetry.>`, `flux.ctrl.>`
 *   **Log Attributes**: `flux.type`, `flux.name`, `flux.id`
 *   **File Extensions**: `.flux` (e.g., `state.flux` for Rack Passports)
-*   **Data Structures**: `FluxMsg`, `FluxID` (PascalCase in Go code, camelCase in serialized JSON/CBOR).
+*   **Data Structures**: `fluxMsg`, `FluxID` (PascalCase in Go code, camelCase in serialized JSON/CBOR).
 
 ---
 

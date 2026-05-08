@@ -57,7 +57,7 @@ title: Technical stack
 
 ## Integration & ecosystem
 *   **Universal I/O engine**: [Bento](https://github.com/warpstreamlabs/bento) (mit)
-    - **Fork**: We explicitly use the **WarpStream Labs** fork (mit) to ensure permissive licensing, avoiding the Benthos/Redpanda (BSL) restrictions.
+    - **Fork**: We explicitly use the **WarpStream Labs** fork (mit) to ensure permissive licensing, avoiding the Bento/Redpanda (BSL) restrictions.
     - **Role**: Provides 100+ native connectors (Kafka, s3, amqp, etc.) and the [bloblang](https://warpstreamlabs.github.io/bento/docs/guides/bloblang/about) mapping language.
     - **Integration**: Wrapped as a **native Gear** (`pkg/gears/native/bento`).
 
@@ -106,7 +106,7 @@ title: Technical stack
 | **Query Lang** | **[PRQL](https://prql-lang.org/)** (Apache 2.0) | Language | Time-series optimized query language (compiles to SQL). |
 | **Logs** | **[OpenSearch](https://opensearch.org/)** (Apache 2.0) | Search | Evaluation Candidate for Log Search. |
 | **Analytics** | **[ClickHouse](https://clickhouse.com/)** (Apache 2.0) | Database | Evaluation Candidate for Petabyte-scale OLAP (Enterprise). |
-| **ID Generation** | **[Sonyflake](https://github.com/sony/sonyflake)** (Apache 2.0) | Library | Distributed k-sortable 64-bit IDs (`pkg/idgen`) |
+| **ID Generation** | **[Google/uuid](https://github.com/google/uuid)** (BSD) | Library | Distributed 128-bit UUID v7 (RFC 9562) |
 | **OTLP Export** | **[OTLP](https://opentelemetry.io/docs/specs/otlp/)** | Standard | Vendor-neutral export to any OTel-compatible backend. |
 
 > **Ref**: See [Observability Architecture](../architecture/observability.md) for detailed tier documentation.

@@ -7,10 +7,10 @@ excerpt: High-performance data mapping using the Bento (mit) engine and Bloblang
 
 # Bento gear
 
-The `bento` gear integrates the **Bento** engine (MIT Fork) into `fluxrig`. In the current {{VERS}} release, it provides high-performance data mapping and logic via **[Bloblang](https://warpstreamlabs.github.io/bento/docs/guides/bloblang/about)** and **Standard I/O** (Files, Stdout). 
+The `bento` gear integrates the **Bento** engine (MIT Fork) into `fluxrig`. In the current release, it provides high-performance data mapping and logic via **[Bloblang](https://warpstreamlabs.github.io/bento/docs/guides/bloblang/about)** and **Standard I/O** (Files, Stdout). 
 
 > [!NOTE]
-> **Connector Status**: While the Bento ecosystem supports 100+ connectors, the standard `fluxrig` binary currently includes the **Pure Logic** and **Local I/O** sets to maintain a lightweight footprint. **Institutional Connectors** (Kafka, SQL, AWS, etc.) are currently in the **v0.5.0 Roadmap** or can be enabled via a custom binary build.
+> **Connector Status**: While the Bento ecosystem supports 100+ connectors, the standard `fluxrig` binary currently includes the **Pure Logic** and **Local I/O** sets to maintain a lightweight footprint. **Institutional Connectors** (Kafka, SQL, AWS, etc.) are currently in the **future roadmap** or can be enabled via a custom binary build.
 
 | Attribute | Details |
 | :--- | :--- |

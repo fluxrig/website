@@ -5,8 +5,6 @@ title: Internet of Things (IoT)
 
 # Internet of Things (IoT)
 
-# Internet of Things (IoT)
-
 **fluxrig** is a high-performance distributed runtime designed to solve the critical challenges of asynchronous data acquisition across unreliable networks. It functions as an **IoT Edge Runtime**, enabling engineers to multiplex data from LoRaWAN, Zigbee, BLE, and CAN bus into a unified, cloud-native stream.
 
 By shifting complexity to the **Distributed Node**, **fluxrig** allows organizations to reduce recurring carrier costs, maintain data integrity during backhaul outages, and retain full ownership of their telematic logic.
@@ -45,7 +43,7 @@ graph LR
         BLE["BLE Tracker"]
     end
 
-    subgraph Rack ["fluxrig Rack Agent"]
+    subgraph Rack ["fluxrig Rack"]
         Ingress["Multiplex Ingress"]
         WAL[("CBOR WAL (Persistence)")]
         Logic["Filtering Logic (Planned)"]
@@ -65,7 +63,7 @@ graph LR
 ```
 
 ### Step-by-step processing
-1.  **Data Multiplexing (1-2)**: Heterogeneous data from mesh and trackers are ingested into the Rack agent.
+1.  **Data Multiplexing (1-2)**: Heterogeneous data from mesh and trackers are ingested into the Rack.
 2.  **Deterministic WAL (3)**: Every bit is anchored to the local immutable archive before any network processing occurs.
 3.  **Autonomous Filtering (4-5)**: Redundant data is discarded locally; only high-value events enter the encrypted tunnel.
 4.  **Sovereign Command (6)**: The central Mixer receives a clean, normalized, and secured stream for orchestration.
@@ -83,16 +81,6 @@ Most IoT platforms enforce a "per-device" billing model that creates a "Success 
 
 > [!TIP]
 > **Verification Strategy**: For large-scale fleet deployments, use **Scenario-Driven Simulation** to verify that your Filtering Logic maintains data integrity across simulated network partitions.
-
----
-
-## Implementation reference
-
-| Gear | Function | Status |
-| :--- | :--- | :--- |
-| **[Bento](../reference/gears/bento.md)** | Universal Protocol Bridge (MQTT, CAN, etc.) | **Stable** |
-| **[io_lorawan](../reference/gears/io_lorawan.md)** | Native LoRaWAN LNS Integration | **Planned** |
-| **[Wasm Logic](../reference/gears/wasm_logic.md)** | Custom Parsing & Edge Filtering | **Planned** |
 
 ---
 

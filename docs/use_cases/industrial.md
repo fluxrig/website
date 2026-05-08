@@ -5,8 +5,6 @@ title: Industrial use cases
 
 # Industrial use cases
 
-# Industrial use cases
-
 **fluxrig** is a high-performance distributed runtime engineered for the convergence of Operational Technology (OT) and institutional IT infrastructure. It functions as an **Industrial DataOps Runtime**, providing a memory-safe execution layer for protocol normalization, heterogeneous data aggregation, and deterministic logic at the factory edge.
 
 By composing specialized **Gears**, industrial engineers can transform raw PLC registers and mesh-network data into semantic, cloud-ready events without modifying mission-critical control hardware.
@@ -46,7 +44,7 @@ graph LR
         Sensors["Mesh Sensors (LoRa/Zigbee)"]
     end
 
-    subgraph Rack ["fluxrig Rack Agent"]
+    subgraph Rack ["fluxrig Rack"]
         Bento["Bento Gear (Aggregation)"]
         Match["Correlator Gear (Audit)"]
         Logic["Logic Gear (Planned)"]
@@ -66,7 +64,7 @@ graph LR
 
 ### Step-by-step processing
 1.  **Data Aggregation (1-2)**: Disparate data from PLCs and mesh sensors are merged into a unified internal bus.
-2.  **Data Normalization (3)**: Data is normalized into the standard `fluxMsg` format, attaching sovereign metadata (traceID, MachineID).
+2.  **Data Normalization (3)**: Data is normalized into the standard `fluxMsg` format, attaching sovereign metadata (trace_id, machine_id).
 3.  **Audit Integrity (4)**: The **Correlator Gear** ensures every industrial event is logged to the local immutable archive before external transmission.
 4.  **Anomaly Detection (5)**: Real-time deviations are diverted to the SRE alerting tier for immediate operational response.
 
@@ -86,17 +84,6 @@ Industrial environments require absolute isolation. **fluxrig** enforces a stric
 >
 > *   **Impact**: High CPU contention may delay high-frequency poller signals (e.g., sub-10ms RTU acquisition).
 > *   **Recommendation**: Prioritize the **Stable [Bento Gear](../reference/gears/bento.md)** for data acquisition and maintain lean logic profiles to ensure deterministic data acquisition.
-
----
-
-## Implementation reference
-
-| Gear | Function | Status |
-| :--- | :--- | :--- |
-| **[Bento](../reference/gears/bento.md)** | Universal Protocol Bridge (Modbus, MQTT, SMTP) | **Stable** |
-| **[io_modbus](../reference/gears/io_modbus.md)** | Native TCP/RTU High-Speed Poller | **Planned** |
-| **[network_sniffer](../reference/gears/network_sniffer.md)** | Passive OT Traffic Capture | **Planned** |
-| **[Wasm Logic](../reference/gears/wasm_logic.md)** | Custom Edge Filtering & Autonomy | **Planned** |
 
 ---
 

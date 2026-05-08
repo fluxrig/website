@@ -11,7 +11,7 @@ The **Wasm Logic Gear** is the primary extensibility point for the **fluxrig** d
 > **Technical Foundation**: This gear leverages the **[Wazero](https://wazero.io/)** runtime, the only zero-dependency, 100% Go WebAssembly implementation, to ensure architectural purity and extreme performance without requiring CGO.
 
 > [!NOTE]
-> **[Roadmap]**: The Wasm Logic Gear is currently in the **Technical Preview** phase and is not included in the {{VERS}} stable release.
+> **[Roadmap]**: The Wasm Logic Gear is currently in the **Technical Preview** phase and is not included in the current release.
 
 The **Wasm Logic Gear** is a secure, sandboxed execution environment that allows developers to run complex, stateful, or computationally heavy business logic written in any language (Rust, C++, Go, AssemblyScript) directly within the fluxrig pipeline.
 

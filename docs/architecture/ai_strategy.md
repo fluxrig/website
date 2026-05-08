@@ -87,4 +87,4 @@ Detection is only half the battle. Operators must understand the rationale behin
 | **Scenario Assistant** | Small Language Model (SLM) | Documentation & Scenario Drafting |
 
 > [!CAUTION]
-> **Architectural Status**: While the architecture is AI-optimized, runtime features like Side-Chain Inference and local tensor runtimes are currently in the architectural research phase. The {{VERS}} release focuses on the deterministic foundation required to support these advanced capabilities.
+> **Architectural Status**: While the architecture is AI-optimized, runtime features like Side-Chain Inference and local tensor runtimes are currently in the architectural research phase. The current release focuses on the deterministic foundation required to support these advanced capabilities.

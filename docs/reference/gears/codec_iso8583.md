@@ -11,7 +11,7 @@ The high-fidelity signal leveler for financial protocol normalization.
 <!-- See https://jaab.tech -->
 
 
-The `codec_iso8583` gear functions as the **Signal Leveler** (Normalization Engine) of the payment mixer. It is a **Native Gear** (Go) responsible for transforming raw, "noisy" protocol dialects (ISO8583 binary/BCD) into a clean, structured **[FluxMsg](../data_model.md#fluxmsg-structure-payload)** (CBOR) format.
+The `codec_iso8583` gear functions as the **Signal Leveler** (Normalization Engine) of the payment mixer. It is a **Native Gear** (Go) responsible for transforming raw, "noisy" protocol dialects (ISO8583 binary/BCD) into a clean, structured **[fluxMsg](../data_model.md#fluxmsg-structure-payload)** (CBOR) format.
 
 By leveraging the **[Moov ISO8583](https://github.com/moov-io/iso8583)** engine, this gear ensures that technical variances between card schemes are leveled into a uniform semantic layer for the internal **[Master Bus Architecture](../../architecture/overview.md#transaction-flow-strategy-two-speed)**.
 
@@ -19,7 +19,7 @@ By leveraging the **[Moov ISO8583](https://github.com/moov-io/iso8583)** engine,
 | :--- | :--- |
 | **Type** | `codec_iso8583` |
 | **Analogy** | **Signal Leveler** (Normalization) |
-| **Status** | Stable (v0.4.4) |
+| **Status** | Stable |
 | **Source Code** | [pkg/gears/native/iso8583/codec](https://github.com/jaab-tech/fluxrig/tree/main/pkg/gears/native/iso8583/codec) |
 | **Pairs With** | **[Signal Pre-amp](io_iso8583.md)** (Capture) |
 | **Port IN** | Raw Payload (Decode) / Structured fluxMsg (Encode) |
@@ -70,7 +70,7 @@ Unlike the **[IO TCP Gear](io_tcp.md)**, which handles transport framing, the **
 The Gear utilizes a **[YAML SDL](../specs/iso8583_sdl.md)** to define dialect rules, powered by **Moov ISO8583**:
 
 *   **Industry Standard Parsing**: Support for BCD, EBCDIC, ASCII, and raw Binary payloads.
-*   **Deep Bitmaps**: Automatic handling of Primary and Secondary bitmaps (Support for up to 128 fields). **Tertiary Bitmaps** (Field 129-192) are currently a roadmap item (v0.5.0+).
+*   **Deep Bitmaps**: Automatic handling of Primary and Secondary bitmaps (Support for up to 128 fields). **Tertiary Bitmaps** (Field 129-192) are currently a roadmap item (future).
 *   **EMV & Composites**: High-fidelity normalization for **BER-TLV** (Field 55) and complex subfields (Field 48, 62, 127).
 
 ---
@@ -118,10 +118,10 @@ While the gear parses 0800 messages, it is the role of the downstream **[Logic G
 
 The `codec_iso8583` gear exports high-fidelity metrics for dashboarding and alerting:
 
-*   `fluxrig_codec_messages_total` (Counter): Total messages processed.
-*   `fluxrig_codec_duration_seconds` (Histogram): Processing latency distribution.
-*   `fluxrig_codec_fields_count` (Histogram): Average field density per message.
-*   `fluxrig_codec_errors_total` (Counter): Cumulative count of packing/unpacking failures.
+*   `fluxrig.gear.messages_in` (Counter): Total messages processed by the gear.
+*   `fluxrig.gear.processing_time_ms` (Histogram): Processing latency distribution in milliseconds.
+*   `fluxrig.codec.iso8583.fields_count` (Histogram): Average field density per message.
+*   `fluxrig.gear.errors` (Counter): Cumulative count of packing/unpacking failures.
 
 > [!TIP]
 > **See the [Signal Leveler Implementation Guide](../specs/iso8583_sdl.md)** for a deep dive into YAML Dialect definitions.
