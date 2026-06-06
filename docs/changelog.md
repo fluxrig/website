@@ -1,10 +1,6 @@
----
-id: changelog
-slug: /changelog
-title: Changelog
----
-
 # Changelog
+
+## [Unreleased]
 
 [![Keep a Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog%201.0.0-orange.svg)](https://keepachangelog.com/en/1.0.0/)
 [![Semantic Versioning](https://img.shields.io/badge/semver-2.0.0-blue.svg)](https://semver.org/)
@@ -18,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Status | Summary |
 | :--- | :--- | :--- | :--- |
-| [Unreleased](#unreleased) | | Active | Sovereign Identity & Telemetry Hardening |
+| [Unreleased](#unreleased) | | Active | Wasm Ecosystem & Core Hardening |
+| [v0.5.0](#v050) | 2026-05-07 | Delivered | Sovereign Identity Plane Foundation |
 | [v0.4.5](#v045) | 2026-04-29 | Delivered | Documentation Hardening & Zero-Config |
 | [v0.4.4](#v044) | 2026-04-23 | Delivered | Logic Extensibility & Secure Enrollment |
 | [v0.4.3](#v043) | 2026-02-19 | Delivered | Operational Resilience & NATS V2 |
@@ -28,11 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | [v0.3.0](#v030) | 2026-01-21 | Delivered | Bento Integration & Load Testing |
 
 <a name="unreleased"></a>
-## [Unreleased] ({{VERS}}-dev)
+
+<a name="unreleased"></a>
+### [Unreleased] ({{VERS}}-dev)
+#### Added
+- **Wazero Integration**: Implemented a secure, native Wasm execution environment using `wazero`.
+- **Wasm Supply Chain Security**: Embedded Ed25519 signatures within `.wasm` modules with Mixer-level trust roots and countersignature enforcement prior to Rack execution.
+- **Dynamic Catalog Distribution**: Added NATS Snake hot-loading for edge distribution of Wasm logic.
+- **PKI & Catalog CLI**: Introduced `fluxrig keys gen-cluster`, `fluxrig wasm sign`, and `fluxrig wasm import` commands.
+- **Security & Linting Hardening**: Resolved remaining Gosec & Staticcheck warnings (v0.5.1 milestones), achieving zero-warning build state.
+
+## [v0.5.0] - 2026-05-07
 #### Changed
 - **Sovereign Identity Plane (v0.5.0 Foundation)**: Migrated the entire platform identity system to **128-bit UUID v7 (RFC 9562)**. This enhances entropy, ensures global uniqueness without centralized coordination, and provides time-ordered sequence integrity for high-performance storage indexes.
 - **Deduplication Logic**: Updated NATS JetStream deduplication to utilize 128-bit identifiers, ensuring consistent exactly-once delivery across complex telemetry pipelines.
 - **Telemetry Hardening**: Standardized dotted naming schema (e.g., `fluxrig.gear.messages_in`) across OTel, Prometheus, and DuckDB.
+<a name="v050"></a>
 - **Directional Monitoring**: Split unified I/O counters into distinct Inbound and Outbound channels for precise protocol translation metrics.
 - **Resource Guardrails**: Implemented mandatory `MaxHops` (64) and `MaxPayloadSize` (2MB) validation in `fluxmsg` to prevent bus exhaustion and "poison pill" scenarios.
 - **Concurrency Resilience**: Integrated global `PanicMiddleware` to ensure Rack stability during individual Gear failures and hardened mutex locking for atomic hot-reloads.

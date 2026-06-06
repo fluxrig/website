@@ -68,6 +68,17 @@ For persistence, **fluxrig** relies on external or embedded storage engines:
 
 ---
 
+## Wasm Component PKI
+
+The execution of third-party Wasm logic at the edge necessitates strict supply chain security. `fluxrig` utilizes a **Dual-Signature PKI model** for all Wasm modules:
+
+1. **Vendor Roots**: The Mixer maintains a directory of trusted Vendor Ed25519 Public Keys (`data/wasm/keys`). 
+2. **Module Signature**: Third-party developers sign their `.wasm` payloads with their private key, embedding a `fluxrig.signature` directly into the Wasm custom sections.
+3. **Mixer Verification & Countersignature**: During `fluxrig wasm import`, the Mixer cryptographically verifies the vendor signature. If valid, the Mixer applies its own Cluster Authority signature (`fluxrig.cluster.signature`) to the module and publishes it to the registry.
+4. **Rack Execution Guard**: Racks download the Wasm modules via the mTLS NATS Snake. Before JIT compilation via `wazero`, the Rack validates the Mixer's countersignature. Any module lacking a valid signature from the trusted Cluster Authority is immediately dropped and a critical security alert is dispatched.
+
+---
+
 ## Key management CLI
 
 | Command | Purpose | Access |
