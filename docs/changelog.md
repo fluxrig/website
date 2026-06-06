@@ -1,6 +1,10 @@
-# Changelog
+---
+id: changelog
+slug: /changelog
+title: Changelog
+---
 
-## [Unreleased]
+# Changelog
 
 [![Keep a Changelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog%201.0.0-orange.svg)](https://keepachangelog.com/en/1.0.0/)
 [![Semantic Versioning](https://img.shields.io/badge/semver-2.0.0-blue.svg)](https://semver.org/)
@@ -14,8 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Status | Summary |
 | :--- | :--- | :--- | :--- |
-| [Unreleased](#unreleased) | | Active | Wasm Ecosystem & Core Hardening |
-| [v0.5.0](#v050) | 2026-05-07 | Delivered | Sovereign Identity Plane Foundation |
+| [Unreleased](#unreleased) | | Active | Sovereign Identity & Telemetry Hardening |
 | [v0.4.5](#v045) | 2026-04-29 | Delivered | Documentation Hardening & Zero-Config |
 | [v0.4.4](#v044) | 2026-04-23 | Delivered | Logic Extensibility & Secure Enrollment |
 | [v0.4.3](#v043) | 2026-02-19 | Delivered | Operational Resilience & NATS V2 |
@@ -29,11 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <a name="unreleased"></a>
 ### [Unreleased] ({{VERS}}-dev)
 #### Added
-- **Wazero Integration**: Implemented a secure, native Wasm execution environment using `wazero`.
-- **Wasm Supply Chain Security**: Embedded Ed25519 signatures within `.wasm` modules with Mixer-level trust roots and countersignature enforcement prior to Rack execution.
-- **Dynamic Catalog Distribution**: Added NATS Snake hot-loading for edge distribution of Wasm logic.
-- **PKI & Catalog CLI**: Introduced `fluxrig keys gen-cluster`, `fluxrig wasm sign`, and `fluxrig wasm import` commands.
-- **Security & Linting Hardening**: Resolved remaining Gosec & Staticcheck warnings (v0.5.1 milestones), achieving zero-warning build state.
+- 
 
 ## [v0.5.0] - 2026-05-07
 #### Changed
