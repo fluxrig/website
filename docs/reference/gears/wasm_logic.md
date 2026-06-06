@@ -10,10 +10,7 @@ The **Wasm Logic Gear** is the primary extensibility point for the **fluxrig** d
 > [!IMPORTANT]
 > **Technical Foundation**: This gear leverages the **[Wazero](https://wazero.io/)** runtime, the only zero-dependency, 100% Go WebAssembly implementation, to ensure architectural purity and extreme performance without requiring CGO.
 
-> [!NOTE]
-> **[Roadmap]**: The Wasm Logic Gear is currently in the **Technical Preview** phase and is not included in the current release.
-
-The **Wasm Logic Gear** is a secure, sandboxed execution environment that allows developers to run complex, stateful, or computationally heavy business logic written in any language (Rust, C++, Go, AssemblyScript) directly within the fluxrig pipeline.
+The **Wasm Logic Gear** is a secure, sandboxed execution environment that allows developers to run complex, stateful, or computationally heavy business logic written in any language (Rust, C++, Go, Zig, AssemblyScript) directly within the fluxrig pipeline.
 
 ## Why Wasm?
 
@@ -30,6 +27,26 @@ Our implementation strictly adheres to the following industry standards to ensur
 *   **[W3C WebAssembly Core 2.0](https://www.w3.org/TR/wasm-core-2/)**: Ensures deterministic execution and binary portability.
 *   **[WASI (WebAssembly System Interface)](https://wasi.dev/)**: Provides a standardized, capability-based interface for system resources (limited to approved descriptors).
 *   **CBOR-Based ABI**: Uses **[RFC 8949 (CBOR)](https://www.rfc-editor.org/rfc/rfc8949.html)** for high-performance signal passing between the Go host and the Wasm guest, achieving sub-millisecond data-plane latency.
+
+## Wasm Supply Chain Security
+
+To prevent malicious payloads from executing at the edge, `fluxrig` enforces a strict cryptographic supply chain:
+
+1. **Vendor Signatures**: Third-party developers compile their `.wasm` binary and sign it using an Ed25519 private key via `fluxrig wasm sign`. This embeds a `fluxrig.signature` directly into the Wasm custom sections.
+2. **Catalog Import**: Ops engineers import the signed `.wasm` file into the Mixer using `fluxrig wasm import`. The Mixer cryptographically validates the signature against its trusted `data/wasm/keys` directory.
+3. **Mixer Countersignature**: Upon successful validation, the Mixer countersigns the binary with its own Cluster Authority key (`fluxrig.cluster.signature`) and stores it in the Catalog (distributed via NATS Object Store or local filesystem, depending on the topology).
+4. **Edge Validation**: When an edge Rack hot-loads the binary via NATS Snake, it validates the Mixer's countersignature before passing the payload to `wazero` for compilation. Any payload failing signature verification is immediately dropped.
+
+## Filter Architecture & Implicit Ports
+
+> [!NOTE]
+> **Current Topology Role**: The Wasm gear is currently implemented strictly as a **Filter** gear (1-to-1 or 1-to-0). It is designed to receive exactly one input message, process it synchronously, and return exactly one output message (or drop it).
+
+Because of this strict filter pattern, the Wasm gear uses **implicit ports**. You do not need to define a `ports` block in its configuration.
+- **Input (`.in`)**: The router automatically routes incoming messages to the gear's `.in` port, which triggers the Wasm `process()` function.
+- **Output (`.out`)**: The result returned by `process()` is automatically emitted on the `.out` port.
+
+*(Support for Source/Split Wasm gears that generate spontaneous messages via `env.emit` is planned for a future release).*
 
 ## Architecture
 
@@ -62,18 +79,21 @@ To remain useful while sandboxed, the host Rack will expose secure functions to 
 *   `flux_kv_get(key)` / `flux_kv_put(key, val)`: Access to the global NATS KV store.
 *   `flux_log_info(msg)`: Emits structured logs into the system telemetry stream.
 *   `flux_req_http(url, body)`: *Optional* outbound HTTP fetch capability (requires explicit permission in scenario configuration).
+*   `flux_emit(msg)`: **[Roadmap / Future]** Spontaneous message emission to the wire, enabling Source or Fan-out Wasm gears.
 
 ## Integration example
 
 ```yaml
 gears:
-
-  - name: "fraud_evaluator"
-    type: "wasm_logic"
+  - name: "my-wasm-gear"
+    type: "wasm"
     config:
-      # Pulled from the CAS registry via URN
-      module: "urn:wasm:fraud-scorer:v2.1"
-      # Capabilities granted to the sandbox
-      allow_http: false
-      allow_kv: true
+      # Source can be a local file or pulled from the NATS Catalog via URN
+      source: "urn:wasm:fraud-scorer:v2.1"
+      entrypoint: "process"
+      memory_limit_pages: 16
+
+# Note: Because the Wasm gear is currently a pure Filter gear, its ports are implicit.
+# Any message routed to `my-wasm-gear.in` will trigger `process()`, and the returned
+# result will automatically be emitted on `my-wasm-gear.out`.
 ```

@@ -10,6 +10,7 @@ title: Developing specialized gears
 Before dropping into Go code, remember the **Orchestration Spectrum**:
 
 *   **Declarative Logic**: The majority of business logic patterns (including normalization, mapping, and alerting) are most efficiently implemented using the **[Bento Gear](../reference/gears/bento.md)**. This declarative approach significantly reduces development overhead and long-term maintenance complexity.
+*   **Polyglot Business Rules**: For secure, sandboxed execution of custom business logic in languages like Rust, Zig, or AssemblyScript, use the **[Wasm Logic Gear](../reference/gears/wasm_logic.md)**. See the **[Building Wasm Gears in Zig](./building_wasm_gears_zig.md)** tutorial.
 *   **Specialized Protocols**: For high-performance protocol drivers (ISO 8583, Modbus), binary packers, or customized network stacks, you develop **Native Go Gears**.
 
 ## Prerequisites: The gear contract
