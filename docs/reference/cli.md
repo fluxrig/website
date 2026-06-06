@@ -31,6 +31,24 @@ The unified tool for operators and edge runtimes.
 - `-n, --name` - Filename (default: `cluster.key`)
 - `-o, --out` - Full output path (overrides dir/name)
 
+### Wasm catalog operations
+
+Wasm payloads use cryptographic identities to ensure secure edge distribution.
+
+| Command | Description |
+|---------|-------------|
+| `fluxrig wasm sign <file>` | Sign a `.wasm` file using an Ed25519 vendor key |
+| `fluxrig wasm import <file>` | Import and validate a signed Wasm binary into the Mixer catalog |
+
+**Usage**:
+```bash
+# Developer: sign the compiled logic
+fluxrig wasm sign my_logic.wasm --key ./vendor.key
+
+# Operator: import the logic into the sovereign catalog
+fluxrig wasm import my_logic.wasm
+```
+
 ### Administration
 
 | Command | Description |

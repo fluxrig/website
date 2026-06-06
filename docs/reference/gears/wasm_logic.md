@@ -10,10 +10,7 @@ The **Wasm Logic Gear** is the primary extensibility point for the **fluxrig** d
 > [!IMPORTANT]
 > **Technical Foundation**: This gear leverages the **[Wazero](https://wazero.io/)** runtime, the only zero-dependency, 100% Go WebAssembly implementation, to ensure architectural purity and extreme performance without requiring CGO.
 
-> [!NOTE]
-> **[Roadmap]**: The Wasm Logic Gear is currently in the **Technical Preview** phase and is not included in the current release.
-
-The **Wasm Logic Gear** is a secure, sandboxed execution environment that allows developers to run complex, stateful, or computationally heavy business logic written in any language (Rust, C++, Go, AssemblyScript) directly within the fluxrig pipeline.
+The **Wasm Logic Gear** is a secure, sandboxed execution environment that allows developers to run complex, stateful, or computationally heavy business logic written in any language (Rust, C++, Go, Zig, AssemblyScript) directly within the fluxrig pipeline.
 
 ## Why Wasm?
 
@@ -30,6 +27,15 @@ Our implementation strictly adheres to the following industry standards to ensur
 *   **[W3C WebAssembly Core 2.0](https://www.w3.org/TR/wasm-core-2/)**: Ensures deterministic execution and binary portability.
 *   **[WASI (WebAssembly System Interface)](https://wasi.dev/)**: Provides a standardized, capability-based interface for system resources (limited to approved descriptors).
 *   **CBOR-Based ABI**: Uses **[RFC 8949 (CBOR)](https://www.rfc-editor.org/rfc/rfc8949.html)** for high-performance signal passing between the Go host and the Wasm guest, achieving sub-millisecond data-plane latency.
+
+## Wasm Supply Chain Security
+
+To prevent malicious payloads from executing at the edge, `fluxrig` enforces a strict cryptographic supply chain:
+
+1. **Vendor Signatures**: Third-party developers compile their `.wasm` binary and sign it using an Ed25519 private key via `fluxrig wasm sign`. This embeds a `fluxrig.signature` directly into the Wasm custom sections.
+2. **Catalog Import**: Ops engineers import the signed `.wasm` file into the Mixer using `fluxrig wasm import`. The Mixer cryptographically validates the signature against its trusted `data/wasm/keys` directory.
+3. **Mixer Countersignature**: Upon successful validation, the Mixer countersigns the binary with its own Cluster Authority key (`fluxrig.cluster.signature`) and stores it in the registry.
+4. **Edge Validation**: When an edge Rack hot-loads the binary via NATS Snake, it validates the Mixer's countersignature before passing the payload to `wazero` for compilation. Any payload failing signature verification is immediately dropped.
 
 ## Architecture
 
