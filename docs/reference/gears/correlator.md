@@ -1,6 +1,6 @@
 ---
 slug: /reference/gears/correlator
-title: Correlator gear
+title: Correlator gear [Roadmap]
 category: Logic & pattern gears
 excerpt: The parallel mastering side-chain for differential signal analysis.
 ---
@@ -8,12 +8,13 @@ excerpt: The parallel mastering side-chain for differential signal analysis.
 <!-- Copyright (c) 2026 JAAB Tech SAS, Uruguay All Rights Reserved -->
 <!-- See https://jaab.tech -->
 
-# Correlator gear
+# Correlator gear [Roadmap]
 
-> [!WARNING]
-> **Planned Feature**: The Correlator Gear is currently in the **Architectural Proposal** phase. This documentation serves as a technical reference for the intended design of "Parallel Mastering" within the **[Testing & Simulation Architecture](../../architecture/testing_simulation.md)**.
+> **[Roadmap]**: This gear is currently under development and not yet available.
+>
+> The Correlator gear is in the **Architectural Proposal** phase. This documentation serves as a technical reference for the intended design of "Parallel Mastering" within the **[Testing & Simulation Architecture](../../architecture/testing_simulation.md)**.
 
-The `correlator` gear functions as the **Side-Chain Monitor** of the payment mixer. It performs real-time **Differential Analysis** by comparing response signals from two independent signal pathstypically a **Legacy System** and a modernized **Shadow System**.
+The `correlator` gear functions as the **Side-Chain Monitor** of the payment mixer. It performs real-time **Differential Analysis** by comparing response signals from two independent signal paths, typically a **Legacy System** and a modernized **Shadow System**.
 
 By "Monitoring the Mix" in parallel, enterprises can achieve risk-free migrations through continuous **[Parallel Mastering](../../use_cases/payments.md#passive-monitoring-high-fidelity-signal-tap)** of their production logic.
 
