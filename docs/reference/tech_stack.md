@@ -13,7 +13,7 @@ title: Technical stack
 > **Stand on the Shoulders of Giants**: **fluxrig** is proudly built upon the open source ecosystem. We orchestrate best-in-class technologies to deliver a unified enterprise platform, giving full credit and gratitude to the communities maintaining these foundational projects.
 
 ## Mixer & Rack (OSS)
-*   **Language**: [Go (golang) 1.25+](https://go.dev/)
+*   **Language**: [Go (golang) 1.26+](https://go.dev/)
     - **Stability policy**: We adhere to the **level n version policy** (bleeding edge). We track the latest stable Go release.
     - **Rationale**: To support modern integrations (e.g., bento, Wasm) and leverage cutting-edge ergonomics (iterators), we accept the trade-off of being on the latest release.
     - **Deployment targets**: `CGO_ENABLED=0` creates statically linked binaries. Distributed as native Linux executables or `<15MB` scratch Docker containers.
