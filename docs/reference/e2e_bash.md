@@ -25,7 +25,7 @@ Tests are located in `test/e2e/` and organized by component:
 | `03_registry` | Local topology validation and Mixer/Rack handshake. |
 | `04_offline` | Sovereign Rack operation during network disconnection. |
 | `05_cli` | Exhaustive validation of admin CLI commands and filtering. |
-| `06_conflict` | Identity collision handling and certificate rotation. |
+| `06_conflict` | Identity collision handling (zero-downtime certificate rotation is **[Roadmap]**). |
 | `07_load` | High-level stress testing using the **[iso8583-tool](tools/iso8583_tool.md)**. |
 | `08_tls_simple` | Secure channel verification for Rack-to-Mixer links. |
 | `09_io_tcp` | Low-level TCP framing and connection lifecycle validation. |

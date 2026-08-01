@@ -23,7 +23,7 @@ This guide provides the architectural roadmap for navigating the **fluxrig** rep
 │   ├── gears/          # The Gear Ecosystem (Native & Wasm)
 │   ├── fluxMsg/        # Wire Language (CBOR) definitions
 │   ├── snake/          # Transport Layer (NATS JetStream)
-│   ├── idgen/          # Sonyflake distributed ID generation
+│   ├── idgen/          # UUID v7 (RFC 9562) time-ordered ID generation
 │   └── sdk/            # The Gear SDK (Go/Wasm)
 │
 ├── pkg/mixer/          # Control Plane implementation
@@ -94,7 +94,7 @@ The Mixer provides the transport layer locally by embedding NATS JetStream.
 
 To ensure deterministic builds across the engineering fleet, all workstations must adhere to the following stack:
 
-*   **Compiler**: Go 1.25+ (Strictly enforced via `go.mod`).
+*   **Compiler**: Go 1.26+ (Strictly enforced via `go.mod`).
 *   **Linters**: `golangci-lint` v1.60+ and `gosec` for security audits.
 *   **Infrastructure**: Docker with **Testcontainers** support for Tier B/C validation.
 *   **Cryptography**: **Cosign** for artifact signing and verification.

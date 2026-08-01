@@ -28,7 +28,7 @@ While the platform is technically a distributed system, its architecture is insp
 ## Strategic alignment
 
 *   **Industrial (UNS)**: Implements the **Unified Namespace (UNS)** and **Industrial DataOps** principles to transform fragmented OT silos into a contextualized, event-driven hierarchy.
-*   **Payments (PCI-DSS)**: Employs the **Stateless Context (Coat Check)** pattern to ensure sensitive financial data remains isolated while keeping the primary processing path lean and compliant.
+*   **Payments (PCI-DSS)**: Employs the **Stateless Context (Coat Check)** pattern to park correlation context at the edge, keeping the primary processing path lean while the reply is matched back deterministically.
 *   **DevOps & SRE**: Delivers **Zero-Agent Observability** (OpenTelemetry) and **Configuration-as-Code** deployments, reducing operational overhead and firewall complexity.
 
 ---
@@ -47,10 +47,10 @@ The backbone of **fluxrig** is a resilient, distributed messaging mesh that prov
 
 ### Stateless context (The Coat Check)
 
-To maintain performance and compliance (like PCI-DSS), we avoid bloating messages with heavy state. Instead, we use a "Coat Check" pattern where sensitive context is stored in a distributed key-value store and retrieved only when needed.
+To maintain performance and compliance (like PCI-DSS), we avoid bloating messages with heavy state. Instead, we use a "Coat Check" pattern where correlation context is parked in a ticket store (in-process by default, or a shared store when any instance must redeem the reply) and re-attached, unchanged, when the reply returns.
 
 > [!TIP]
-> This pattern keeps the primary processing path lean and ensures sensitive data like PANs never leave secure zones. See the **[Message Flow](../architecture/message_flow.md)** for technical details.
+> This pattern keeps the primary processing path lean. It **parks and restores** context; it does not tokenize (surrogate substitution is a separate, roadmap gear), and it is not at-rest encryption (use in-memory storage, run hardened, for regulated data). See the **[Message Flow](../architecture/message_flow.md)** for technical details.
 
 ## The dual-pipeline strategy
 
@@ -60,7 +60,7 @@ We distinguish sharply between **Business Data** (Transactions) and **Operationa
 *   **Goal**: Process high-performance documents (ISO8583, IoT sensors) and perform flexible data transformations.
 *   **The strategy**: An extensible architecture designed for both performance and custom plugins.
     *   **Native gears**: Optimized Go logic for latency-sensitive protocols like **ISO8583** and financial switching.
-    *   **WebAssembly (Wasm)**: **[Roadmap]** Support for sandboxed, polyglot plugins (Rust, C++, TypeScript), allowing for safe third-party extensions.
+    *   **WebAssembly (Wasm)**: Sandboxed, polyglot plugins (Rust, C++, TypeScript), allowing for safe third-party extensions.
     *   **Bento integration**: A rich ecosystem of standard cloud connectors (File, Stdout, HTTP) and powerful mapping (**bloblang**).
     *   **Side-Chain Inference**: **[Roadmap]** Asynchronous AI logic for non-deterministic tasks like fraud scoring or synthetic test generation.
 
@@ -96,4 +96,4 @@ We distinguish sharply between **Business Data** (Transactions) and **Operationa
 | **ClickHouse** / **DuckDB** | Deep Storage | External DB / Embedded DB |
 | **ARC** | Unified Reporting | External Enterprise Layer [Roadmap] |
 | **Temporal** | Durable Workflow | External Service [Roadmap] |
-| **Wasm** | Sandboxed Logic | Polyglot Plugins [Roadmap] |
+| **Wasm** | Sandboxed Logic | Polyglot Plugins |

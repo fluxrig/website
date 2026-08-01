@@ -5,7 +5,7 @@ slug: /architecture/ai-sidechain
 
 # Side-Chain Inference Pattern
 
-The **Side-Chain Inference** pattern is the architectural standard for integrating Artificial Intelligence (ML/LLM) into the **fluxrig** data plane. It ensures that probabilistic models can provide high-value insights (scoring, categorization, anomaly detection) without compromising the **Determinism** or **Performance** of the primary execution path.
+The **Side-Chain Inference** pattern `[Roadmap]` is the intended architectural standard for integrating Artificial Intelligence (ML/LLM) into the **fluxrig** data plane. It is in the architectural research phase (see the [AI strategy](ai_strategy.md)); the description below is the target design, not a shipped capability. It ensures that probabilistic models can provide high-value insights (scoring, categorization, anomaly detection) without compromising the **Determinism** or **Performance** of the primary execution path.
 
 ## The Theory: Dry vs. Wet Signals
 
@@ -43,7 +43,7 @@ msg.Metadata["flux.ai.rationale"] = "unusual_temporal_cluster"
 ```
 
 ## Security Sovereignty
-In the Side-Chain pattern, the raw sensitive payload (e.g., a credit card number) is often **masked** before being sent to the AI Bridge. The AI engine only receives the "Contextual Vectors" required for analysis, ensuring that PII never leaves the deterministic vault.
+In the Side-Chain pattern, the raw sensitive payload (e.g., a credit card number) should be **masked** before being sent to the AI Bridge, so the AI engine only receives the "Contextual Vectors" required for analysis and PII never leaves the deterministic path. Native deterministic masking is `[Roadmap]`; today this masking must be performed by a logic gear placed ahead of the bridge.
 
 ---
 

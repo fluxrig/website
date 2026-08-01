@@ -31,6 +31,16 @@ Because Gears run in parallel, **fluxrig** enforces a strict separation of conce
 
 ---
 
+## Wire directionality
+
+Every **Wire** is **unidirectional**: it moves messages from exactly one output port to exactly one input port, in one direction only. There are no bidirectional wires, and a "round trip" through the system is always composed of separate one-way wires. Three rules follow:
+
+1.  **Fan-out broadcasts.** Wiring one output port to several input ports duplicates every message to all of them. Fan-out is therefore a deliberate multicast, never a load-balancing mechanism: a gear that must choose *one* of N destinations (routing, pooling) needs one named output port per destination.
+2.  **Fan-in merges.** Any number of wires may feed one input port; their streams merge safely. A gear therefore needs only one input port per *role* of incoming message (for example, "requests to route" vs "replies to match"), regardless of how many sources produce them.
+3.  **Bidirectionality ends at the I/O boundary.** External connections (TCP/TLS sockets) are bidirectional, but they exist only at the outer edge of I/O gears: one socket maps onto two unidirectional ports (received bytes → `out`; `in` → written bytes). A request/response exchange with an external endpoint uses **both ports of the same I/O gear** and a pair of wires. See [the port model](./gear.md#the-port-model) and the [ISO8583 I/O gear](../reference/gears/io_iso8583.md#architectural-signal-path) for the canonical diagrams.
+
+---
+
 ## Wire strategies
 
 Not all data requires the same durability profile. **fluxrig** allows you to optimize the **Wire** per-flow based on the performance and durability requirements.
@@ -59,12 +69,15 @@ When a message moves between Gears or Racks, it carries its context in-band via 
 ### The Coat Check (Stateless Correlation)
 When a message must leave the system to traverse an external network (e.g., raw TCP) that does not support the `fluxMsg` envelope, we implement the **Coat Check** pattern.
 
-*   **The Drop-off**: Before the request exits the Rack, its metadata context is serialized and stored in a high-speed **NATS KV** store.
+*   **The Drop-off**: Before the request exits the Rack, its metadata context is serialized and parked in a **ticket store**. The store is pluggable: `memory` (the default, in-process, RAM-only) for connection-bound flows, or a shared **NATS KV** store when any instance must redeem the reply. Correlation state is local to the Rack by default, not cluster-wide.
 *   **The Ticket**: A unique identifier guaranteed to be returned by the external system (such as a Transaction Stand-in (STAN) or Retrieval Reference Number (RRN)) serves as the correlation key.
-*   **The Pickup**: When the response message arrives, the Rack uses the "Ticket" to retrieve and re-attach the original metadata to the new `fluxMsg`, restoring the message's context and traceability.
+*   **The Pickup**: When the response message arrives, the Rack uses the "Ticket" to retrieve and re-attach the **same** parked context to the new `fluxMsg`, restoring traceability.
 
 > [!IMPORTANT]
-> **Sovereign Security**: The Coat Check is the technical foundation for **Tokenization**. Sensitive data (like PANs) can be "checked in" at the localized Rack and never traverse the central management layer or external telemetry backends, significantly reducing compliance audit scope.
+> **Parking is not tokenization.** The Coat Check *parks* a value and restores the **same** value on the reply, it keeps correlation context (and, optionally, specific fields) off a leg, but it does not substitute a surrogate. **Tokenization** (replacing a PAN with a surrogate backed by a persistent vault) is a distinct, separate gear on the roadmap. Note also that a payment switch must send the PAN to the scheme to authorize, so the PAN is not parked on the primary path.
+
+> [!NOTE]
+> The **[Conductor gear](../reference/gears/conductor.md)** generalizes this pattern: it adds connection routing and reply correlation over a "valet" engine (the ticket store above), and supersedes the standalone Coat Check for switching.
 
 ---
 
@@ -76,7 +89,7 @@ The following sequence illustrates the **Coat Check** pattern during a typical a
 sequenceDiagram
     participant POS as External Device
     participant Rx as Rack
-    participant KV as NATS KV (Coat Check)
+    participant KV as Ticket store (valet)
     participant Bank as External Processor
     
     POS->>Rx: Request A (STAN: 1234, PAN: ***)

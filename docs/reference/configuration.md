@@ -27,7 +27,7 @@ Top-level overrides for troubleshooting:
 **fluxrig** does not store secrets in plaintext TOML. For sensitive values (e.g., database passwords, API keys):
 
 1. Use Environment Variables at runtime (`FLUXRIG_STORE_DATABASE_PASSWORD`).
-2. Use the **[State Envelope (Passport)](security_reference.md#identity-envelopes-stateflux)**, which encrypts secrets at rest once injected.
+2. Use the **[State Envelope (Passport)](security_reference.md#identity-envelopes-stateflux)**: secrets are carried in the signed envelope rather than in plaintext TOML. The envelope is cryptographically **signed** (Ed25519); at-rest **encryption** is not yet implemented (see the security reference).
 
 ---
 
@@ -454,7 +454,7 @@ Query metrics data.
 
 ```bash
 # Filter by metric name
-fluxrig metrics --name fluxrig.rack.heartbeats_sent
+fluxrig metrics --name flux.rack.heartbeats_sent
 
 # Filter by entity
 fluxrig metrics --entity mixer-01

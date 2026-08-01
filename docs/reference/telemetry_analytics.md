@@ -7,7 +7,7 @@ title: Telemetry & analytics
 
 This section provides advanced query patterns for analyzing **fluxrig** observability data across different storage tiers.
 
-In the **Standard Tier**, all telemetry (traces, logs, metrics) and business messages are stored as **Partitioned Parquet** files. This "Cold Storage" strategy provides institutional audit readiness without the overhead of a centralized database, while remaining queryable via the **Operational Ledger** (DuckDB).
+In the **Embedded Tier** (the tier implemented in the current release), all telemetry (traces, logs, metrics) and business messages are stored as **Partitioned Parquet** files. This "Cold Storage" strategy provides institutional audit readiness without the overhead of a centralized database, while remaining queryable via the **Operational Ledger** (DuckDB).
 
 ## Warehouse structure
 Data is automatically exported from the Rack's active buffers to the local Warehouse using an hourly partitioning scheme:

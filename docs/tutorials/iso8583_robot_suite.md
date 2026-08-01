@@ -8,7 +8,7 @@ title: Robot Framework Testing
 This tutorial guides you through using the **fluxrig** integration for **[Robot Framework](https://robotframework.org/)** to build a complete validation and performance rig for mission-critical signal processing.
 
 > [!NOTE]
-> **Universal Applicability**: While this tutorial uses **ISO 8583** as the high-fidelity technical example, the **`FluxRigLibrary`** is a universal verification harness. It can be used to orchestrate and validate any gear, protocol, or business logic orchestrated by the platform.
+> **Universal Applicability**: While this tutorial uses **ISO 8583** as the high-fidelity technical example, the **`fluxrigLibrary`** is a universal verification harness. It can be used to orchestrate and validate any gear, protocol, or business logic orchestrated by the platform.
 
 In the **fluxrig** ecosystem, testing is not an afterthoughtit is a core engineering discipline. A **Verification Suite** is an automated playbook that:
 
@@ -68,7 +68,7 @@ graph LR
 
 ## Step 1: Setting up the suite
 
-Every Robot suite begins with a `*** Settings ***` block. We use the **`FluxRigLibrary`** to manage the lifecycle of our components.
+Every Robot suite begins with a `*** Settings ***` block. We use the **`fluxrigLibrary`** to manage the lifecycle of our components.
 
 ```robot
 # test/robot/suites/iso8583/server_validation.robot
@@ -77,7 +77,7 @@ Documentation     ISO8583 Server Mode Validation (Internal Loopback)
 ...               Validates fluxrig in Server Mode by forwarding traffic back to the source.
 ...               Topology: [Load Gen] -> [Server Gear] -> (Loopback) -> [Server Gear] -> [Load Gen]
 Resource          ../../resources/common.resource
-Library           FluxRigLibrary                #  Core bridge to fluxrig
+Library           fluxrigLibrary                #  Core bridge to fluxrig
 Library           Collections                   #  Standard Robot Library
 Suite Setup       Initialize Server Suite    ${CURDIR}  #  Clean-room orchestration
 Suite Teardown    Teardown Server Suite         #  Resource recovery
@@ -142,7 +142,7 @@ Server Loopback Performance (Baseline 100 TPS)
 
 ## Step 4: Analyzing high-fidelity results
 
-The **`FluxRigLibrary`** automatically renders an interactive dashboard with real-time telemetry extraction.
+The **`fluxrigLibrary`** automatically renders an interactive dashboard with real-time telemetry extraction.
 
 | System Telemetry & Health | Baseline Performance (100 TPS) |
 | :--- | :--- |

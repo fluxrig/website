@@ -32,7 +32,7 @@ All internal platform communications follow two primary subject hierarchies to e
 
 | Subject | Plane | Description |
 | :--- | :--- | :--- |
-| **`fluxrig.agent.>`** | **Management** | Orchestration signals: Hello, Heartbeats, Scenario Updates. |
+| **`flux.agent.>`** | **Management** | Orchestration signals: Hello, Heartbeats, Scenario Updates. |
 | **`flux.telemetry.>`** | **Telemetry** | High-resolution OTel signals (traces, logs, metrics). |
 | **`flux.msg.>`** | **Data** | Primary data-plane business signals between gears. |
 | **`flux.ctrl.>`** | **Control** | Secure control-plane signaling (Kill Switch, Hot Reload). |
