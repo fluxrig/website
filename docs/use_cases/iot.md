@@ -18,8 +18,8 @@ Unlike monolithic IIoT gateways, **fluxrig** provides a flexible spectrum of ope
 ### The autonomous field gateway
 Ideal for disconnected environments (e.g., Cold Chain, AgTech), where the **Rack** acts as a high-reliability persistence node with deterministic finality.
 
-*   **Deterministic Persistence**: Implements a high-concurrency **CBOR-encoded Binary WAL** (Write-Ahead Log) with **Encryption-at-Rest**. This ensures 100% data integrity during LTE or Satellite network dropouts.
-*   **Edge Data Filtering**: Analyzing data locally at the source. By only transmitting "Significant Events" (e.g., Temperature Variance > 0.5C) and discarding redundant heartbeats, organizations can achieve up to a **95% reduction in recurring carrier costs**.
+*   **Deterministic Persistence**: Implements a high-concurrency **CBOR-encoded Binary WAL** (Write-Ahead Log) so buffered data survives LTE or Satellite network dropouts. (At-rest encryption of the WAL is a **[Roadmap]** feature; until it ships, do not persist regulated data unencrypted.)
+*   **Edge Data Filtering**: Analyzing data locally at the source. By only transmitting "Significant Events" (e.g., Temperature Variance > 0.5C) and discarding redundant heartbeats, deployments can substantially cut recurring carrier costs.
 
 ### The transparent asset proxy
 A high-performance deployment model for individual telematic units or industrial vehicles.
@@ -36,31 +36,7 @@ Manage high-density sensor arrays (Zigbee, LoRaWAN) using a multiplexing model f
 
 ## Visualization: The field gateway flow
 
-```mermaid
-graph LR
-    subgraph Sensors ["Distributed Sensors (Ingress)"]
-        LoRa["LoRaWAN Node"]
-        BLE["BLE Tracker"]
-    end
-
-    subgraph Rack ["fluxrig Rack"]
-        Ingress["Multiplex Ingress"]
-        WAL[("CBOR WAL (Persistence)")]
-        Logic["Filtering Logic (Planned)"]
-    end
-
-    subgraph Cloud ["Central Control Plane"]
-        Snake(("Secure Tunnel (mTLS)"))
-        Mixer["Central Orchestrator"]
-    end
-    
-    LoRa == "1. Mesh Data" ==> Ingress
-    BLE == "2. BLE Pulse" ==> Ingress
-    Ingress == "3. fluxMsg" ==> WAL
-    WAL == "4. Reliable Data" ==> Logic
-    Logic == "5. Significant Events" ==> Snake
-    Snake == "6. Encrypted Stream" ==> Mixer
-```
+<LikeC4 project="iot-gateway" view="flow" height={440} />
 
 ### Step-by-step processing
 1.  **Data Multiplexing (1-2)**: Heterogeneous data from mesh and trackers are ingested into the Rack.

@@ -11,7 +11,7 @@ The following domains demonstrate the rig's versatility in handling complex, rea
 
 ## Payments
 *High-Concurrency Financial Signals*
-Orchestrate complex payment flows between POS terminals and banking cores. The rig handles **ISO8583** translation, field-level encryption (PII), and reliable persistence for audit readiness.
+Orchestrate complex payment flows between POS terminals and banking cores. The rig handles **ISO8583** translation, correlation-context parking at the edge, and switching/reply-correlation via the **Conductor**, with durable audit metadata (not clear-text cardholder data) persisted for reconciliation.
 
 - **[Read the Payments Case Study](./payments.md)**
 

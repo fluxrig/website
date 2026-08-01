@@ -65,7 +65,7 @@ graph LR
 > [!CAUTION]
 > **Industrial Warning: The Signaling Overload**
 >
-> Parallel "Digital Twin" mirroring (Shadowing) consumes physical resources on the **Rack** host. In high-throughput environments (>5,000 TPS/Rack), the duplication of high-fidelity signals can lead to interrupt (IRQ) contention.
+> Parallel "Digital Twin" mirroring (Shadowing) consumes physical resources on the **Rack** host. In high-throughput environments, the duplication of high-fidelity signals can lead to interrupt (IRQ) contention.
 >
 > *   **Recommendation**: For mission-critical production environments, use **Hardware-Level Isolation** (e.g., Optical TAPs) instead of in-process mirroring to maintain absolute performance stability.
 

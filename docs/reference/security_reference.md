@@ -26,7 +26,7 @@ type StateEnvelope struct {
 // RackState (The Content)
 type RackState struct {
     ClusterID      string // e.g. "flux-prod"
-    machine_id      uint64 // 64-bit physical ID
+    MachineID      string // 128-bit UUID v7 (Registry-assigned)
     Name           string // Human-readable name
     Status         string // active, pending
     Secret         string // Bearer token
@@ -44,8 +44,8 @@ The Snake tunnel provides the secure mTLS backbone for Rack-to-Mixer communicati
 
 | Parameter | Default Value | Description |
 | :--- | :--- | :--- |
-| **Protocol** | NATS WebSocket (WSS) | Persistent outbound tunnel |
-| **Port** | 4222 / 443 | Configurable tunnel entry point |
+| **Protocol** | NATS TCP + TLS | Persistent outbound tunnel |
+| **Port** | 4222 | Configurable tunnel entry point |
 | **Authentication**| mTLS (X.509) | Client & Server certificate exchange |
 | **Encryption** | TLS 1.3 / AES-256 | High-entropy session encryption |
 
@@ -56,15 +56,19 @@ The Snake tunnel provides the secure mTLS backbone for Rack-to-Mixer communicati
 | Purpose | Algorithm | Implementation |
 | :--- | :--- | :--- |
 | **Signatures** | Ed25519 | Component identity & state |
-| **Encryption** | AES-256-GCM | Data-at-rest (NATS KV and Parquet Logs) |
+| **Encryption** | AES-256-GCM | Transport/session (TLS 1.3). Data-at-rest is **[Roadmap]**, see below |
 | **Hashing** | BLAKE3 / SHA-256| Integrity checks |
 | **IDs** | UUID v7 | Time-sortable unique IDs |
 
 ### Data-at-rest encryption
+
+> [!WARNING]
+> **At-rest encryption is not yet implemented in fluxrig.** Until it ships, do not persist regulated data (PAN, PIN blocks, track data). Use in-memory ticket storage (RAM only), and run the process hardened by the operator: memory locked against swap (`mlock`) and core dumps disabled. Buffer zeroization on release is [Roadmap] and not performed yet, so redeemed ticket state stays in RAM for its retention window before being dropped.
+
 For persistence, **fluxrig** relies on external or embedded storage engines:
 
-*   **NATS KV State**: The state registry and Coat Check keys are stored in NATS JetStream. Enterprise deployments utilize NATS native encryption-at-rest (using AES-256-GCM) with a symmetric encryption key managed by the deployment's orchestrator to secure the underlying JetStream store block files.
-*   **WAL Logs**: The Parquet WAL files on the Rack can be encrypted prior to disk flush (Planned Feature).
+*   **NATS KV state**: the state registry and, when a gear is configured for shared storage, its correlation tickets are stored in NATS JetStream. Correlation state is otherwise **local to the Rack by default**. NATS itself supports native encryption-at-rest in enterprise deployments (a symmetric key managed by the operator, securing the JetStream store files); fluxrig does not yet manage this for you.
+*   **WAL logs**: encrypting the Parquet WAL prior to disk flush is a **[Roadmap]** feature.
 
 ---
 

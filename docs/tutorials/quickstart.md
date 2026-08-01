@@ -13,7 +13,7 @@ This guide will walk you through a fully functional local deployment of **fluxri
 ## Prerequisites
 
 *   **Linux or macOS**
-*   **Go 1.25+** (if compiling from source)
+*   **Go 1.26+** (if compiling from source)
 *   **Make**
 
 ---

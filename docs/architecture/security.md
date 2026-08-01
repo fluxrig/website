@@ -52,8 +52,10 @@ To maintain 100% technical honesty and audit readiness, we distinguish between s
 Unlike heuristic-based masking solutions, **fluxrig** intends to implement **Deterministic Masking** based on the absolute structure of the data:
 
 1.  **SDL Precision**: Fields are tagged as `sensitive` in the Spec Definition Language (SDL).
-2.  **Edge Tokenization**: The Rack identifies the sensitive value and swaps it for a transient session token.
-3.  **Stateless Processing Path**: Downstream modules and telemetry sinks only see the token, isolating clear-text data.
+2.  **Surrogate substitution**: The Rack identifies the sensitive value and swaps it for a masked surrogate on the internal path.
+3.  **Stateless Processing Path**: Downstream modules and telemetry sinks only see the surrogate, isolating clear-text data.
+
+> Note: full **tokenization** (a durable, vault-backed value↔token map, distinct from transient masking) is a separate gear on the roadmap; it is not the same as the Coat Check's parking (which restores the same value).
 
 ### HSM and Cloud KMS integration (Planned future)
 While the current release uses secure file-based keys, the roadmap includes native integration with:

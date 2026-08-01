@@ -20,7 +20,7 @@ This roadmap outlines the strategic direction for **fluxrig**. It defines the jo
 
 | Version | Status | Goal | Description |
 | :--- | :--- | :--- | :--- |
-| v0.1.x | Delivered | Core Data Physics | Defined the fluxMsg model, Sonyflake identity, and Snake Protocol. |
+| v0.1.x | Delivered | Core Data Physics | Defined the fluxMsg model, time-ordered identity (now UUID v7, RFC 9562), and Snake Protocol. |
 
 ## Phase 2: core runtime
 
@@ -33,14 +33,17 @@ This roadmap outlines the strategic direction for **fluxrig**. It defines the jo
 | Version | Status | Goal | Description |
 | :--- | :--- | :--- | :--- |
 | v0.3.x | Delivered | Universal I/O | Integration with the Bento ecosystem for 100+ connectors. |
-| v0.4.x | Active | Public Release | Initial open-source launch and logic extensibility (Native Gears). |
-| Future | Planned | High-Assurance | Distributed state (NATS KV) and Wasm Runtime integration. |
+| v0.4.x | Delivered | Public Release & Native Gears | Open-source launch; ISO 8583 I/O and codec gears, Coat Check correlation, distributed state (NATS KV), and secure enrollment. |
+| v0.5.x | Delivered | Sovereign Identity | UUID v7 (RFC 9562) identity plane and telemetry hardening. |
+| v0.6.x | Delivered | Polyglot Logic | Wasm runtime (wazero) with signed, supply-chain-secure modules. |
 
 ## Phase 4: scale & hardening
 
 | Version | Status | Goal | Description |
 | :--- | :--- | :--- | :--- |
-| Future | Planned | Hardened Integrity | Forensic analytics (DuckLake) and production-ready resilience. |
+| v0.7.x | Active | Payment Switching | Conductor gear: connection routing + reply correlation over the valet ticket store (memory/shared), gear manifests, and native ISO 8583 TLS/mTLS. |
+| Future | Planned | Differential Analysis | Correlator gear: parallel shadow mastering and reconciliation against the immutable archives. |
+| Future | Planned | Hardened Integrity | Forensic analytics (DuckLake), at-rest encryption for persistent stores, durable ticket store (`local_durable`), per-destination circuit breaker, and peer heartbeats. |
 
 ## Phase 5: enterprise control
 

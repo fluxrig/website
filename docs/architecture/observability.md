@@ -23,11 +23,15 @@ In contrast to running resource-heavy sidecars or agents alongside business logi
 
 ### Resource efficiency
 
-| Metric | Industry Standard (Sidecar/Collector) | fluxrig (Embedded Tap) | Improvement |
-| :--- | :--- | :--- | :--- |
-| **Idle Memory (RSS)** | 250MB - 800MB | **< 25MB** | ~90% Reduction |
-| **CPU (Idle)** | 3% - 5% | **< 0.1%** | Negligible |
-| **Operational Surface** | Multi-process / Sidecar | **Single Binary** | Reduced Attack Surface |
+By embedding the telemetry tap in the single Rack binary rather than running a separate sidecar/collector process, fluxrig avoids the memory, CPU, and operational overhead of a multi-process observability stack:
+
+| Dimension | Industry Standard (Sidecar/Collector) | fluxrig (Embedded Tap) |
+| :--- | :--- | :--- |
+| **Footprint** | Separate collector process(es) | In-binary, no extra process |
+| **Operational Surface** | Multi-process / Sidecar | Single Binary (reduced attack surface) |
+
+> [!NOTE]
+> Comparative resource figures will be published once a reproducible benchmark is available; earlier hard numbers were illustrative and have been removed.
 
 ---
 
@@ -122,7 +126,7 @@ To protect the system during backend saturation or network isolation:
 ## Compliance and governance
 
 ### Deterministic sanitization
-Organizations can utilize deterministic masking to scrub sensitive information at the infrastructure boundary before data enters the persistent observability bus. This ensures that sensitive fields (like PANs) never reach the centralized telemetry backend, significantly reducing the audit scope of the central infrastructure.
+Deterministic masking `[Roadmap]` will scrub sensitive information at the infrastructure boundary before data enters the persistent observability bus, so sensitive fields (like PANs) never reach the centralized telemetry backend, significantly reducing the audit scope of the central infrastructure. Until it ships, scrubbing is the responsibility of a logic gear (for example a `bento` mapping) placed before the telemetry path.
 
 > [!CAUTION]
 > **Production Logging**: Enabling `DEBUG` or `TRACE` log levels may output raw hex payloads to the log stream. In production environments, ensure these levels are restricted to verify compliance with institutional "No Storage" security requirements.

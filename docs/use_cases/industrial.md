@@ -37,35 +37,12 @@ In this pattern, **fluxrig** acts as an inline gateway, actively polling OT data
 
 ## Visualization: The industrial verification rig
 
-```mermaid
-graph LR
-    subgraph OT ["Industrial Assets (OT)"]
-        PLC["Legacy PLC"]
-        Sensors["Mesh Sensors (LoRa/Zigbee)"]
-    end
-
-    subgraph Rack ["fluxrig Rack"]
-        Bento["Bento Gear (Aggregation)"]
-        Match["Correlator Gear (Audit)"]
-        Logic["Logic Gear (Planned)"]
-    end
-
-    subgraph IT ["Analytics Tier (IT)"]
-        Lake["Analytics (Data Lake)"]
-        Alert["SRE Deviation Alert"]
-    end
-    
-    PLC == "1. Binary Stream" ==> Bento
-    Sensors == "2. Mesh Data" ==> Bento
-    Bento == "3. fluxMsg" ==> Match
-    Match == "4. Normalized Data" ==> Lake
-    Match -. "5. Logic Trigger" .-> Alert
-```
+<LikeC4 project="industrial-rig" view="flow" height={420} />
 
 ### Step-by-step processing
 1.  **Data Aggregation (1-2)**: Disparate data from PLCs and mesh sensors are merged into a unified internal bus.
 2.  **Data Normalization (3)**: Data is normalized into the standard `fluxMsg` format, attaching sovereign metadata (trace_id, machine_id).
-3.  **Audit Integrity (4)**: The **Correlator Gear** ensures every industrial event is logged to the local immutable archive before external transmission.
+3.  **Audit Integrity (4)**: The **Correlator Gear** `[Roadmap]` ensures every industrial event is logged to the local immutable archive before external transmission.
 4.  **Anomaly Detection (5)**: Real-time deviations are diverted to the SRE alerting tier for immediate operational response.
 
 ---

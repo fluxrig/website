@@ -28,20 +28,20 @@ The **Snake Protocol** is the secure mTLS transport layer connecting distributed
 
 | Scope | Pattern | NATS Strategy | Role |
 | :--- | :--- | :--- | :--- |
-| **Enrollment**| `fluxrig.agent.>` | `Core NATS` | Handshakes, Heartbeats, and Adoption flows. |
-| **Control** | `fluxrig.rack.>` | `WorkQueue` | Targeted scenario updates and remote commands (Shutdown, Log-Level). |
+| **Enrollment**| `flux.agent.>` | `Core NATS` | Handshakes, Heartbeats, and Adoption flows. |
+| **Control** | `flux.rack.>` | `WorkQueue` | Targeted scenario updates and remote commands (Shutdown, Log-Level). |
 | **Data** | `flux.msg.>` | `Stream` | High-volume `fluxMsg` traffic (The Hot Path). |
 | **Telemetry**| `flux.telemetry.>` | `Stream` | System events (Audit logs, Status changes, Metrics). |
 
 ### Detailed subject structure
 
 #### Enrollment & heartbeats
-*   `fluxrig.agent.hello`: Broadcast by new Racks for initial enrollment.
-*   `fluxrig.agent.heartbeat`: Periodic status reports from active Racks.
-*   `fluxrig.agent.notify.{entity_id}`: Targeted commands from Mixer (Adoption, Reconnect).
+*   `flux.agent.hello`: Broadcast by new Racks for initial enrollment.
+*   `flux.agent.heartbeat`: Periodic status reports from active Racks.
+*   `flux.agent.notify.{entity_id}`: Targeted commands from Mixer (Adoption, Reconnect).
 
 #### Control plane
-*   `fluxrig.rack.{rack_name}.scenario`: Pushed scenario updates for a specific Rack.
+*   `flux.rack.{rack_name}.scenario`: Pushed scenario updates for a specific Rack.
 
 #### Data plane (hot path)
 *   `flux.msg.{source_rack}.{gear_name}.{port}`: Stream pattern for inter-gear communication.
@@ -50,7 +50,7 @@ The **Snake Protocol** is the secure mTLS transport layer connecting distributed
 ### Quality of service (QoS) & prioritization
 To ensure the resilience of the platform during high-load scenarios, **fluxrig** implements strict QoS separation:
 
-*   **Business Traffic (`flux.msg.>`):** Given highest priority. NATS memory limits and JetStream buffers are provisioned to guarantee < 500ms delivery latency for transactional (`fluxMsg`) data.
+*   **Business Traffic (`flux.msg.>`):** Given highest priority. NATS memory limits and JetStream buffers are provisioned so transactional (`fluxMsg`) data is delivered ahead of telemetry, keeping business-path latency low under load.
 *   **Telemetry Traffic (`flux.telemetry.>`):** Locally queued (embedded tier) and rate-limited. If uplink bandwidth is constrained, telemetry ingestion is throttled (Token Bucket) to prevent bufferbloat from stalling primary business operations.
 
 ---

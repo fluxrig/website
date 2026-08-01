@@ -5,8 +5,6 @@ title: Technical reference
 
 # Technical reference
 
-# Technical reference
-
 Welcome to the **fluxrig** Technical Reference. The documentation is organized into logical domains that follow the data lifecycle from ingestion to orchestration and final verification.
 
 > [!TIP]

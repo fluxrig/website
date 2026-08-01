@@ -27,7 +27,7 @@ By default, fluxrig components communicate using the following standard ports:
 | **Bento Gear** | `8000` | `18000` | HTTP/JSON Bridge Gear |
 
 > [!IMPORTANT]
-> **Robot Framework Overrides**: Always use the `${MIXER_PORT}` and `${NATS_PORT}` variables in Robot suites. The `FluxRigLibrary` automatically tracks these overrides to ensure telemetry and metrics collection connect to the correct instances.
+> **Robot Framework Overrides**: Always use the `${MIXER_PORT}` and `${NATS_PORT}` variables in Robot suites. The `fluxrigLibrary` automatically tracks these overrides to ensure telemetry and metrics collection connect to the correct instances.
 
 ---
 
@@ -35,7 +35,7 @@ By default, fluxrig components communicate using the following standard ports:
 
 ### Project Branding
 *   **Formal Name**: `fluxrig` (Always lowercase in text, headings, and filenames).
-*   **Avoid**: `Flux`, `fluxrig` (PascalCase), `fluxrig` (unless in ENV vars).
+*   **Avoid**: `Flux`, `FluxRig` (PascalCase), and `FLUXRIG` (uppercase, except in ENV var names like `FLUXRIG_*`).
 
 ### Technical Identifiers
 We use the abbreviated `flux.` prefix for internal system primitives to maintain brevity in high-volume streams:
