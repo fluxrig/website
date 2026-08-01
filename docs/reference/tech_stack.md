@@ -13,17 +13,29 @@ title: Technical stack
 > **Stand on the Shoulders of Giants**: **fluxrig** is proudly built upon the open source ecosystem. We orchestrate best-in-class technologies to deliver a unified enterprise platform, giving full credit and gratitude to the communities maintaining these foundational projects.
 
 ## Mixer & Rack (OSS)
-*   **Language**: [Go (golang) 1.25+](https://go.dev/)
+*   **Language**: [Go (golang) 1.26+](https://go.dev/)
     - **Stability policy**: We adhere to the **level n version policy** (bleeding edge). We track the latest stable Go release.
     - **Rationale**: To support modern integrations (e.g., bento, Wasm) and leverage cutting-edge ergonomics (iterators), we accept the trade-off of being on the latest release.
-    - **Deployment targets**: `CGO_ENABLED=0` creates statically linked binaries. Distributed as native Linux executables or `<15MB` scratch Docker containers.
+    - **Deployment targets**: the **Rack** is pure Go and builds fully static with `CGO_ENABLED=0`, so it ships as a native Linux executable or in a `scratch` container. The **Mixer** requires **CGO** (the embedded DuckDB store), so it cannot be built with `CGO_ENABLED=0`.
 
-*   **Orchestration**: [Temporal.io](https://temporal.io/) (Go SDK)
+### Rack build variants
 
+The Rack ships in two variants. Binaries are stripped (`-ldflags "-w -s"`); sizes below are measured on the current release:
 
-    > [!WARNING]
+| Variant | Build | Size | Contents |
+| :--- | :--- | :--- | :--- |
+| **Full** | `make build` | **~32 MB** | All built-in gears, including [`bento`](../reference/gears/bento.md) |
+| **Lean** | `make build-lite` (`-tags nobento`) | **~13 MB** | Everything except the `bento` gear |
 
-    *   **Wasm sandbox**: **[Roadmap]** Secure, polyglot execution of custom business logic in Rust, Go, or TypeScript.
+The `bento` gear alone accounts for roughly **18 MB (~57%)** of the full Rack, because it links Bento's engine plus protobuf, cue, avro and gojq transitively. Deployments that do not use `type: bento` can drop all of it with the lean build.
+
+> [!IMPORTANT]
+> On a lean Rack, a scenario declaring `type: bento` fails at activation with `unknown gear type: bento`. This is deliberate and loud, rather than a silent no-op. Use `make build-all-variants` to produce both, and check which variant a binary is by the gear types it registers.
+
+For reference, the **Mixer** is ~77 MB, dominated by the statically linked DuckDB engine; it never links the gear factory, so the `nobento` tag does not apply to it.
+
+*   **Orchestration**: [Temporal.io](https://temporal.io/) (Go SDK) - **[Roadmap]**, for durable long-running business workflows. Scenario orchestration today is NATS subject-push from the Mixer, with no Temporal dependency.
+*   **Wasm sandbox**: **[Roadmap]** Secure, polyglot execution of custom business logic in Rust, Go, or TypeScript. (The Wasm *filter* gear itself is already available, see the gear runtime below.)
 
 *   **ISO8583 library**: [Moov-io/iso8583](https://github.com/moov-io/iso8583) (apache 2.0) - core parsing engine (used in both native core and Wasm gears).
 *   **API architecture**: [cbor](https://cbor.org/) (data plane) + [Rest](https://restfulapi.net/) (control plane).
@@ -33,7 +45,7 @@ title: Technical stack
 
 *   **Messaging & streaming**:
     *   **Transport**: [NATS JetStream](https://nats.io/) ([Synadia](https://nats.synadia.com)) - chosen for high-performance, distributed persistence (snake protocol).
-        - **Streams**: See **[wire protocols](../reference/protocols.md)** for the detailed subject topology (`fluxrig.control`, `fluxrig.data`).
+        - **Streams**: See **[wire protocols](../reference/protocols.md)** for the detailed subject topology (`flux.ctrl.>`, `flux.msg.>`, `flux.telemetry.>`).
     *   **Library**: [Watermill](https://watermill.io/) (mit) - Go library for building event-driven applications.
         - **Role**: Standardizes the "publisher/subscriber" interface. Current: **NATS** (durable). Planned: **gochannel** (RAM) for "turbo wire".
         - **Benefits**: Middleware (OTel, pivot tracing), mockability, and router pattern.
@@ -49,11 +61,7 @@ title: Technical stack
         *   `FLUXRIG_TRACE=1` - Override all log levels to `trace` (useful for debugging).
         *   `FLUXRIG_DISABLE_TELEMETRY=1` - Disable telemetry shipping.
 
-*   **Gear runtime**: [Wazero](https://wazero.io/) (apache 2.0)
-
-
-    > [!WARNING]
-    > **[Roadmap]**: Zero dependency WebAssembly runtime for Go. Enables secure, platform-independent gear execution.
+*   **Gear runtime**: [Wazero](https://wazero.io/) (apache 2.0) - zero-dependency WebAssembly runtime for Go, enabling secure, platform-independent gear execution. Available today for the Wasm **filter** gear; polyglot **source** gears are **[Roadmap]**.
 
 ## Integration & ecosystem
 *   **Universal I/O engine**: [Bento](https://github.com/warpstreamlabs/bento) (mit)
@@ -75,11 +83,10 @@ title: Technical stack
     *   **OSS**: AES-256-GCM (software encryption).
     *   **Enterprise**: [HashiCorp Vault](https://developer.hashicorp.com/vault) or [AWS KMS](https://aws.amazon.com/kms/).
 
-## Web management UI (enterprise)
-*   **Framework**: [Reflex](https://reflex.dev/) (apache 2.0) - pure Python web framework that compiles to react/next.js.
-*   **Ui library**: [Tailwindcss](https://tailwindcss.com/) (mit) + [radix ui](https://www.radix-ui.com/) (mit).
-*   **Visual editor**: [React flow](https://reactflow.dev/) (mit) - node-based graph editor for designing scenarios.
-*   **Code editor**: [Monaco editor](https://microsoft.github.io/monaco-editor/) (mit) - embedded for editing specs and scripts.
+## Scenario visualization & management UI
+*   **Topology model & viewer**: [LikeC4](https://likec4.dev/) (mit) - architecture-as-code model with interactive drill-down diagrams. The CLI generates a model from any scenario (`fluxrig scenario viz`); viewing uses the likec4 toolchain at development time, never in the shipped binaries.
+*   **Console framework** `[Roadmap]`: [React](https://react.dev/) (mit) + [Vite](https://vite.dev/) (mit) - the operation console builds on `@likec4/diagram`, which renders via [React flow](https://reactflow.dev/) (mit), and ships embedded inside the Mixer binary (no external toolchain at runtime).
+*   **Code editor** `[Roadmap]`: [Monaco editor](https://microsoft.github.io/monaco-editor/) (mit) - embedded for editing specs and scenarios with server-side validation.
 
 ## AI & analytics (local) (future / research)
 *   **Inference engine**: [ONNX Runtime](https://onnxruntime.ai/) / [llama.cpp](https://github.com/ggerganov/llama.cpp) - for running AI models locally within the container.
@@ -94,7 +101,7 @@ title: Technical stack
 
 | Tier | Backend(s) | Scale | Phase |
 | :--- | :--- | :--- | :--- |
-| **Embedded** | DuckDB + Parquet (S3/Local) | < 100M events/day | **[Roadmap]** |
+| **Embedded** | DuckDB + Parquet (S3/Local) | < 100M events/day | **Stable** (current release) |
 | **Standard** | Arc + OpenSearch | Team deployments | **[Roadmap]** |
 | **Enterprise** | ClickHouse + SigNoz | Petabyte scale | **[Roadmap]** |
 

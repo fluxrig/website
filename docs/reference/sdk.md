@@ -18,10 +18,10 @@ type NativeGear interface {
 
     // Start begins the active lifecycle of the Gear.
     // 'emit' is used by Source Gears to inject signals into the Bus.
-    Start(ctx context.Context, emit func(*fluxmsg.fluxMsg)) error
+    Start(ctx context.Context, emit func(*fluxmsg.FluxMsg)) error
 
     // Process handles an incoming signal and returns a response signal (optional).
-    Process(ctx context.Context, msg *fluxmsg.fluxMsg) (*fluxmsg.fluxMsg, error)
+    Process(ctx context.Context, msg *fluxmsg.FluxMsg) (*fluxmsg.FluxMsg, error)
 
     // Drain signals the gear to stop accepting new input.
     Drain(ctx context.Context) error

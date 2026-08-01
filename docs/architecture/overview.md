@@ -41,20 +41,16 @@ The platform is built on a modular architectural model that strictly separates c
 
 A **Gear** is the primary logic unit. It functions as a pluggable, high-resolution signal processor that can be chained together via **Wires** to form complex, low-latency pipelines.
 
-*   **Execution Strategy**: Supports high-performance **Native Gears** (compiled Go) and agile, sandboxed **Wasm Gears** [Roadmap] (pluggable logic).
+*   **Execution Strategy**: Supports high-performance **Native Gears** (compiled Go) and agile, sandboxed **Wasm Gears** (pluggable polyglot logic).
 *   **The Port Model**: Communication is strictly governed by standardized entry and exit points (**Ports**) that enforce signal integrity.
 *   **Observability**: Every Gear is observable by default, with throughput and latency telemetry tapped directly from the execution path.
 
-```mermaid
-graph LR
-    subgraph Rack ["The Rack (Execution Pipeline)"]
-        Ingress[I/O Gear] --> Codec[Codec Gear]
-        Codec --> Logic[Logic Gear]
-        Logic --> Egress[I/O Gear]
-    end
-    Source((External)) --> Ingress
-    Egress --> Sink((System))
-```
+<LikeC4 project="concepts" view="pipeline" height={260} />
+
+<br />
+
+> [!NOTE]
+> The pipeline above shows a **passthrough** flow: two distinct I/O gears bridge two different external connections, and every arrow is a unidirectional Wire. A **request/response** flow with a single external endpoint looks different: it uses **both ports of the same I/O gear**, with one wire pair carrying the request away from its `out` port and the response back to its `in` port. Only the external sockets are bidirectional; see [the port model](./gear.md#the-port-model).
 
 > [!NOTE]
 > For a deep dive into implementation models, port anatomy, and the Gear lifecycle, see the **[Architecture: Gear](./gear.md)** guide.
@@ -73,22 +69,7 @@ The Rack is the "execution case" running locally or at the edge. It is designed 
 ### Sovereign autonomy
 The Rack is designed for **Sovereign Continuity**. Unlike traditional thin clients, it continues functioning in "offline mode" if the Mixer is unreachable, maintaining local data processing and transformation integrity even during backhaul failure.
 
-```mermaid
-graph LR
-    subgraph "The Rack (Distributed Execution Node)"
-        subgraph Pipeline ["Pipeline Execution"]
-            direction TB
-            Ingress["I/O Gear (In)"] --"fluxMsg"--> Logic["Filter Gear (Wasm)"]
-            Logic --"fluxMsg"--> Egress["I/O Gear (Out)"]
-        end
-        subgraph Services ["Embedded Services"]
-            KV[("NATS JetStream")]
-            OTel["OTel SDK"]
-        end
-        Pipeline <--> Services
-    end
-    Services <--> Snake(("High-Fidelity Tunnel"))
-```
+<LikeC4 project="rack" view="internals" height={440} />
 
 ---
 

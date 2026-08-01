@@ -68,15 +68,19 @@ racks:
 
 gears:
   - name: iso-inbound
-    type: iso8583-server
+    type: io_iso8583
     deploy: edge-gateways        # References a group or specific rack.
     config:
+      mode: "server"
       port: 8080
 
 wires:
   - from: iso-inbound.out
     to:   router.in
 ```
+
+> [!NOTE]
+> **Wires are unidirectional.** Each entry moves messages one way: from an **output** port (`from`) to an **input** port (`to`). External TCP sockets are bidirectional, but that duality ends at the I/O gear boundary: a request/response exchange always requires a **pair** of wires, one carrying requests away from the I/O gear's `out` port and one delivering responses back to its `in` port. See [the port model](../architecture/gear.md#the-port-model).
 
 ## Gear deployment
 
@@ -85,7 +89,7 @@ The `gears` section defines which logic units are active and where they are exec
 ```yaml
 gears:
   - name: iso-inbound
-    type: iso8583
+    type: io_iso8583
     deploy: rack-alpha           # Optional. Target Rack name.
 ```
 
@@ -95,18 +99,23 @@ If a gear does not specify a `deploy` target, it is treated as a **Global Gear**
 
 *   **Behavior**: The gear will be pushed to and executed by **every Rack** that connects to the Mixer and receives the scenario.
 *   **Use Case**: This is ideal for "Zero-Config" Getting Started scenarios or for deploying universal monitoring/diagnostic gears across a distributed cluster without knowing the dynamic Rack names in advance.
-```
 
 ## Pipe configuration
 
 The `wires` (or `pipes`) section defines how data flows between Gears.
+
+> [!NOTE]
+> **Endpoint grammar.** A wire endpoint is `gear.port` (the rack is taken from the gear's `deploy`) or `rack.gear.port` (an explicit rack / replica instance). Every segment is dot-free — **port names use underscores for roles** (`in_reply`, `out_scheme_a`), never dots — so `a.b.c` is always `rack.gear.port`. A wire naming an undefined rack/gear, or a port a gear does not declare, is rejected at import. See [the port model](../architecture/gear.md#wire-endpoint-naming).
 
 ### Transport modes
 
 | Value | Mode | Description |
 | :--- | :--- | :--- |
 | `standard` | **NATS JetStream** | **Default**. Durable, persistent, and observable via NATS CLI. Safe for financial data. |
-| `memory` | **Go Channel** | **Turbo**. Volatile, in-memory pointer passing. Zero-copy (if within same process). Fastest possible speed, but no durability. |
+| `memory` | **Go Channel** | **Turbo** `[Roadmap]`. Volatile, in-memory pointer passing. Zero-copy (if within same process). Fastest possible speed, but no durability. |
+
+> [!NOTE]
+> **Turbo (`transport: memory`) is [Roadmap].** The GoChannel fast lane is in technical design; today all wires use the `standard` (NATS JetStream) transport. The example below shows the intended syntax.
 
 ### Example: hybrid wiring
 

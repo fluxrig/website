@@ -86,7 +86,7 @@ type Hop struct {
  
  | Bit | Hex | Name | Description |
  | :--- | :--- | :--- | :--- |
- | `0` | `0x01` | **`FlagSyncProbe`** | **Data-Plane Sync**: Used by the Relentless Handshake (ADR 0036) to verify data-plane availability. |
+ | `0` | `0x01` | **`FlagSyncProbe`** | **Data-Plane Sync**: Used by the Relentless Handshake to verify data-plane availability. |
  | `1..31` | - | *Reserved* | Reserved for future system orchestration signals. |
  
 ---
@@ -122,14 +122,15 @@ Internal keys follow the **Dot Notation** convention (`namespace.property`).
 | **`iso8583.raw_header`**| Hex String | Preserved raw framing header (Prefixed with `hex:`). | [ISO8583 I/O](gears/io_iso8583.md) |
 | **`iso8583.src_id`** | String | Routing Header Source ID. | [ISO8583 I/O](gears/io_iso8583.md) |
 | **`iso8583.dst_id`** | String | Routing Header Destination ID. | [ISO8583 I/O](gears/io_iso8583.md) |
+| **`conductor.origin`** | String | Origin stamp for cross-Conductor response routing (`out_response_<origin>`). | [Conductor](gears/conductor.md) |
 | **`coatcheck.ttl`** | String | Duration Override (e.g., "5m", "120s"). | [Coat Check](gears/coatcheck.md) |
-| **`event.type`** | String | Event ID (e.g., "fluxrig.event.timeout"). | [Coat Check](gears/coatcheck.md) |
+| **`event.type`** | String | Event ID (e.g., "flux.event.timeout"). | [Coat Check](gears/coatcheck.md) |
 | **`timeout.key`** | String | The key that expired. | [Coat Check](gears/coatcheck.md) |
 | **`timeout.bucket`** | String | The bucket where the key expired. | [Coat Check](gears/coatcheck.md) |
 
 ### Payments glossary (industry standard aliases)
 
-To ensure Coat Check and Correlator logic functions uniformly regardless of the underlying dialect (Visa, Mastercard, Base24), we enforce exact standard aliases mapped within the Codec SDL.
+To ensure correlation logic (Coat Check, the Conductor `[Roadmap]`, and the Correlator `[Roadmap]`) functions uniformly regardless of the underlying dialect, we enforce exact standard aliases mapped within the Codec SDL.
 
 | Alias Key | Type | Description |
 | :--- | :--- | :--- |

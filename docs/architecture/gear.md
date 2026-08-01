@@ -10,19 +10,7 @@ title: Gear Architecture
 
 **Gears** are the modular logic units of the **fluxrig** ecosystem. They function as pluggable processing modules that can be chained together to form complex, low-latency data pipelines.
 
-```mermaid
-graph LR
-    subgraph Rack ["The Rack (Execution Node)"]
-        direction LR
-        Ingress[I/O Gear]:::oss --> Codec[Codec Gear]:::oss
-        Codec --> Logic[Logic Gear]:::oss
-        Logic --> Egress[I/O Gear]:::oss
-    end
-    Source((External Data)):::ext --> Ingress
-    Egress --> Sink((Target System)):::ext
-    classDef oss fill:#f1f3f4,stroke:#3c4043,stroke-width:2px;
-    classDef ext fill:#ffffff,stroke:#9aa0a6,stroke-style:dashed;
-```
+<LikeC4 project="concepts" view="pipeline" height={240} />
 
 ---
 
@@ -61,8 +49,11 @@ Communication between Gears is strictly governed by **Ports**, standardized entr
 Every Gear defines its interaction boundary via named ports:
 
 1.  **Name**: Unique identifier (e.g., `in`, `out`, `err`).
-2.  **Direction**: `Input` (Sink) or `Output` (Source).
+2.  **Direction**: `Input` (Sink) or `Output` (Source). A port carries traffic in exactly **one** direction, and a **Wire** always connects one output port to one input port. There are no bidirectional ports and no bidirectional wires.
 3.  **Contract**: Defines the expected data format (e.g., `raw_bytes`, `parsed_payload`).
+
+> [!IMPORTANT]
+> **The external boundary is different.** Network connections (TCP/TLS sockets) are bidirectional, but they exist only at the outer edge of I/O gears. An I/O gear maps one bidirectional socket onto two unidirectional ports: bytes received from the socket are emitted on `out`; messages arriving on `in` are written to the socket. A request/response exchange with an external endpoint therefore uses **both ports of the same I/O gear**, connected by two separate wires: one carrying the request away, one bringing the response back. See the [ISO8583 I/O gear](../reference/gears/io_iso8583.md#architectural-signal-path) for the canonical diagram.
 
 ### Dynamic ports
 Ports can be allocated at **Configuration Time** to support complex routing topologies.
@@ -72,6 +63,26 @@ Ports can be allocated at **Configuration Time** to support complex routing topo
 
 > [!TIP]
 > **Port Aliasing**: To improve architectural clarity, you can rename standard ports in your **Scenario** YAML (e.g., mapping `out` to `to_settlement_hub`).
+
+### Wire endpoint naming
+
+A **Wire** endpoint is dot-separated, and **every segment is a single token that may not contain a dot.** Dots are pure level separators, so the level is unambiguous by segment count:
+
+| Endpoint | Rack | Gear | Port |
+| :--- | :--- | :--- | :--- |
+| `iso-inbound.out` | *(from the gear's `deploy`)* | `iso-inbound` | `out` |
+| `worker-a.restore.out` | `worker-a` | `restore` | `out` |
+
+- **`gear.port`** — the rack is resolved from the gear's `deploy` target. This is the everyday form; wires stay placement-agnostic (move a gear to another rack by changing one `deploy:` line, no wire edits).
+- **`rack.gear.port`** — an explicit rack or replica instance, for cross-rack wiring and horizontal replication.
+
+Naming rules, enforced at import:
+
+- **Port names carry no dots.** Roles and fan-out use underscores instead — `in_reply`, `out_scheme_a`, `out_response_west`. This is what keeps `a.b.c` unambiguously `rack.gear.port` rather than a gear with a dotted port.
+- Every segment (rack, gear, port) is lowercase `[a-z0-9_-]+`, **non-empty** (no leading, trailing, or doubled dots).
+
+> [!IMPORTANT]
+> **Inconsistencies fail loud at import, not silently at runtime.** The Mixer's pre-flight validation rejects a scenario whose wire names a rack or gear that is not defined, or (for a gear with an explicit `ports` block) references a port the gear does not declare. Without this check such a wire would subscribe to a subject nobody publishes to, and the pipeline would stall with no error.
 
 ---
 
