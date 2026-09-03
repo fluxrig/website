@@ -60,16 +60,40 @@ Sessionless context correlation: parks fields under a key on store, restores the
 |---|---|---|---|---|
 | `bucket` | string | yes | - | NATS KV bucket that holds the parked context. |
 | `mode` | enum: `store`, `restore`, `daemon` | yes | - | store parks fields under the key; restore reattaches them on the matching reply; daemon governs a bucket's TTL. |
+| `await_store` | boolean |  | `true` | store mode: whether the message waits for the entry to be written. True when the reply depends on it (a stripped field that must be reattached). False when the entry only enriches a record, so a slow control plane cannot hold or fail the message; a failed write is logged and the entry is lost. |
 | `default_ttl` | string |  | `1m` | how long a parked entry lives before expiry, e.g. '30s'. |
 | `include_values` | boolean |  | `false` | daemon mode: read entry values (needed to honor per-message TTL overrides). |
 | `key_fields` | array |  | - | message fields whose values form the correlation key. |
+| `key_normalize` | enum: `trim`, `numeric`, `none` |  | `trim` | how key field values are canonicalized before joining: trim removes surrounding whitespace; numeric also drops leading zeros so fixed-width fields agree across differing specs; none joins them exactly as rendered. |
 | `max_ttl` | string |  | `5m` | daemon mode: safety cap on any per-message TTL override. |
 | `merge_strategy` | string |  | - | restore mode: overwrite replaces existing metadata; any other value preserves it. |
 | `on_missing` | enum: `error`, `drop`, `forward` |  | - | restore mode: what to do when no entry is found (expired/never stored): error, drop, or forward without context. |
 | `replicas` | integer |  | - | daemon mode: KV bucket replica count. |
 | `storage` | enum: `file`, `memory` |  | - | bucket backing store: file (durable) or memory. |
+| `store_timeout` | string |  | `5s` | store mode with await_store=false: how long the detached write may take before it is abandoned. |
 | `value_fields` | array |  | - | store mode: fields (or meta.*) to park under the key and restore later. |
 <!-- AUTOGEN:manifest:coatcheck END -->
+
+## A bucket needs an owner
+
+A `store` and a `restore` are not enough on their own. The bucket they use is not created on demand, because expiring entries needs a single owner rather than every Rack sweeping the same keys, so a third instance in `daemon` mode declares the bucket and governs its TTL.
+
+Deploy it once per bucket. Without it the first `store` fails with `bucket not found`.
+
+```yaml
+- name: "in-flight-daemon"
+  type: "coatcheck"
+  config:
+    mode: "daemon"
+    bucket: "auth_in_flight"
+    storage: "memory"
+    replicas: 1
+    default_ttl: "30s"
+```
+
+## Seen in use
+
+[Enriching an authorization with a network signal](../../tutorials/roaming_enrichment.md) uses a store/restore pair to measure an authorizer's round trip, and covers the two things that fail quietly there: the key has to be rendered the same way on both sides (`key_normalize`), and the restore has to overwrite rather than preserve, or the reply is routed back into the wrong connection.
 
 ## Architectural Signal Path
 

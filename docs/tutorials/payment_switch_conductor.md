@@ -655,4 +655,9 @@ Read together: under sustained multi-scheme load the switch never cross-wired a 
 | Conductor Robot Framework suite (stress + chaos) | Available (`make test-robot-conductor`) |
 | Per-destination circuit breaker · peer heartbeats | [Roadmap] (availability-sensing refinements) |
 
+## Related
+
+- [Enriching an authorization with a network signal](roaming_enrichment.md) — the same switch position used to obtain a fact the message does not carry, under a deadline, with the Coat Check correlating the reply so the authorizer can be timed.
+- [Mobile network signals in payments](../use_cases/mobile_network_signals.md) — why an issuer would want that, and what the operator APIs offer.
+
 The Conductor generalizes the existing Coat Check gear (its correlation/TTL machinery is already in production) with routing and reply-return. Field parking stays a Conductor overlay; tokenization (surrogate substitution) will be a separate gear. Follow the changelog for further refinements.

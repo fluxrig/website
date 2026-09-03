@@ -82,6 +82,48 @@ wires:
 > [!NOTE]
 > **Wires are unidirectional.** Each entry moves messages one way: from an **output** port (`from`) to an **input** port (`to`). External TCP sockets are bidirectional, but that duality ends at the I/O gear boundary: a request/response exchange always requires a **pair** of wires, one carrying requests away from the I/O gear's `out` port and one delivering responses back to its `in` port. See [the port model](../architecture/gear.md#the-port-model).
 
+## Labels the diagram reads
+
+`fluxrig scenario viz` derives a topology from gears and wires. Two things it
+cannot derive are who is on the far side of a socket, and what a Rack is for. A
+scenario can say both, and nothing else reads these labels.
+
+```yaml
+racks:
+  - name: rack-fluxrig
+    labels:
+      role: "the switch under test"      # becomes the Rack's description
+
+gears:
+  - name: scheme-in
+    type: io_iso8583
+    labels:
+      peer: "Card scheme"                # names the far side of the socket
+      peer_played_by: "iso8583-tool"     # who stands in for it, if anyone
+    config:
+      mode: "server"
+      bind: ":8583"
+```
+
+Without `peer`, an I/O gear's counterparty is drawn as `External clients
+(:8583)`, which describes a socket rather than who is on it. `peer_played_by` is
+for test topologies: a reader deciding whether a suite proves anything needs to
+know which participants are real and which are simulated, and that belongs on the
+box rather than in prose elsewhere.
+
+### Rendering the diagram
+
+`fluxrig scenario viz <scenario>.yaml -o <dir>` writes a self-contained
+[LikeC4](https://likec4.dev) model (specification, model and views) into `<dir>`.
+The view ids are stable: `index` for the whole scenario, `of_rack_<name>` for one
+Rack expanded, `gear_<name>` for a gear's neighbourhood. Point LikeC4 at the
+directory to render or export it. Because the model is generated from the same
+YAML the Racks run, the diagram and the wiring cannot drift apart.
+
+Neither is needed when both ends are in the scenario. A client whose `connect`
+matches a server's `bind` is drawn as one relationship between those two gears,
+with no external box on either side.
+
 ## Gear deployment
 
 The `gears` section defines which logic units are active and where they are executed.

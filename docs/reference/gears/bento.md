@@ -83,6 +83,10 @@ The Gear automatically bridges `fluxrig` and Bento based on your `ports` definit
     *   If `ports.outputs` are defined and **no Bento output is provided**, the gear **injects** a `flux_out_<gearname>` output sink.
     *   If you define a complex `bento.output` (e.g., a `switch` for routing), you must manually target the `flux_out_<gearname>` plugin for internal ports.
 
+## Seen in use
+
+[Enriching an authorization with a network signal](../../tutorials/roaming_enrichment.md) is one `bento` gear doing a cache lookup, an outbound HTTP call under a hard deadline and a policy decision, plus a second one serving a simulated API from an `http_server` input. It is the case that shows why a gear bringing its own input gets no injected buffer: a buffer would make a synchronous responder answer before the pipeline produced a body.
+
 ## Examples
 
 ### Source (local input)

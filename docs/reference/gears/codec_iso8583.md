@@ -46,7 +46,7 @@ ISO 8583 encode/decode against an SDL spec: raw wire bytes &lt;-&gt; structured 
 | Port | Direction | Role | Summary |
 |---|---|---|---|
 | `in` | input | message | Message to encode or decode. |
-| `out` | output | message | Encoded or decoded message. |
+| `out` | output | message | Encoded or decoded message. A decode also sets iso8583.mti and iso8583.mti_class, the latter being the leading digits a request and its reply share. |
 
 **Configuration**
 

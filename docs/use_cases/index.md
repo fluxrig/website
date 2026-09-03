@@ -14,6 +14,7 @@ The following domains demonstrate the rig's versatility in handling complex, rea
 Orchestrate complex payment flows between POS terminals and banking cores. The rig handles **ISO8583** translation, correlation-context parking at the edge, and switching/reply-correlation via the **Conductor**, with durable audit metadata (not clear-text cardholder data) persisted for reconciliation.
 
 - **[Read the Payments Case Study](./payments.md)**
+- **[Mobile network signals in payments](./mobile_network_signals.md)** — asking a mobile operator what a payment message cannot know, through the GSMA Open Gateway APIs
 
 ## Industrial
 *Hard-Real-Time OT/IT Bridging*
