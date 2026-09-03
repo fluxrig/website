@@ -72,8 +72,45 @@ These libraries provide the following high-level keywords:
 | Keyword | Library | Description |
 | :--- | :--- | :--- |
 | `Run Native Load Test` | `ISO8583Library` | Spawns `iso8583-tool` (Go) for load generation. |
+| `Build ISO Message` | `ISO8583Library` | Packs one exact ASCII message from named fields. |
+| `Acceptor Location` | `ISO8583Library` | Composes `DE 43` with the country in its last two characters. |
+| `Send ISO Message` | `ISO8583Library` | Sends one framed message and returns the reply as hex. |
 | `Publish Flux Msg` | `NATSLibrary` | Publishes a dictionary as a CBOR-encoded fluxMsg to NATS. |
 | `Subscribe And Expect` | `NATSLibrary` | Blocks until a specific key/value pair is received or timeout occurs. |
+
+### Sending one exact message
+
+The load generator builds its own traffic, which is what a benchmark needs and
+the opposite of what a functional test needs. A test asserting that a particular
+card produces a particular outcome has to choose every field, so these three
+keywords cover the other case.
+
+```robotframework
+${location}=    Acceptor Location    SHOP    UY
+${msg}=    Build ISO Message    0100
+...    f2=4111111111111111    f11=000101    f41=TERM0001    f43=${location}
+${reply}=    Send ISO Message    ${msg}    target=127.0.0.1:8583    header_len=2
+```
+
+Fields are named `f<N>` because Robot arguments cannot begin with a digit. Only
+the primary bitmap is emitted, covering fields 1 to 64. `header_len` is the size
+of the big-endian length prefix that frames the message, matching the gear's
+`frame_length_size`.
+
+`Send ISO Message` sends the bytes verbatim and reads the reply without parsing
+or rebuilding it, so a difference between what goes out and what comes back is
+the system under test rather than the harness. That is what makes it usable for
+byte-level fidelity work.
+
+**Fixed alphanumeric fields must be supplied at their exact declared length.**
+They are not padded for you, and `DE 43` is the reason: its country occupies the
+last two characters, so right-padding a short value would silently move the
+country out of the position a comparison reads, and the test would pass or fail
+for the wrong reason. `Acceptor Location` composes that field correctly, and a
+field of the wrong length raises rather than being adjusted.
+
+Numeric fields are left-padded with zeros to their declared width, since that is
+what the ISO 8583 specs here declare.
 
 ## Assertions
 

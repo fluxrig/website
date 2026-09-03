@@ -21,6 +21,13 @@ For environments where touching the transaction cycle is restricted, the **Rack*
 *   **Shadow Mirroring**: Duplicating production traffic to a parallel Rack for logic verification without impacting real-time money movement.
 *   **Differential Integrity**: The system flags bugs by comparing existing switch responses against new logic results before a production cutover.
 
+### Enrichment from outside the message
+
+Some decisions need a fact the transaction does not carry. The Rack sits where it can obtain one, under a deadline it cannot exceed, and hand the authorizer an answer without the authorizer ever calling anyone.
+
+*   **[Mobile network signals](./mobile_network_signals.md)**: comparing where a cardholder's handset is against where the merchant is, through the operator APIs standardised by GSMA Open Gateway.
+*   **[A worked implementation](../tutorials/roaming_enrichment.md)**: the same case built end to end, with the enrichment, the degradation paths and the tests.
+
 ### Protocol orchestration gateway
 As a high-performance orchestration gateway, **fluxrig** connects diverse systems, from cloud-native platforms to established financial networks.
 
